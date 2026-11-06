@@ -1,0 +1,1322 @@
+
+/* Poster & Oral Presentations — Hero only */
+
+.three-mt-page {
+  min-height: 100vh;
+  background: #ffffff;
+  color: #101a5c;
+}
+
+.three-mt-page .three-mt-hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 70px;
+  min-height: 650px;
+  padding: 130px 8% 110px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+/* النصوص */
+.three-mt-page .three-mt-hero-content {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  max-width: 670px;
+  animation: posterHeroReveal 0.9s ease both;
+}
+
+.three-mt-page .three-mt-eyebrow {
+  display: inline-block;
+  margin-bottom: 20px;
+  color: #20aeba;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.three-mt-page .three-mt-hero h1 {
+  margin: 0 0 28px;
+  color: #101a5c;
+  font-size: clamp(38px, 4.5vw, 68px);
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.three-mt-page .three-mt-description {
+  margin: 0;
+  color: #64748b;
+  font-size: 19px;
+  line-height: 2;
+  white-space: pre-line;
+}
+
+/* العنصر البصري المؤقت */
+.three-mt-page .three-mt-visual {
+  position: relative;
+  flex: 0 0 36%;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+}
+
+.three-mt-page .three-mt-orbit {
+  width: 78%;
+  aspect-ratio: 1;
+  border: 1px solid rgba(32, 174, 186, 0.4);
+  border-radius: 50%;
+  position: absolute;
+  animation: posterOrbit 18s linear infinite;
+}
+
+.three-mt-page .three-mt-orbit::before {
+  content: "";
+  position: absolute;
+  top: 12%;
+  right: 10%;
+  width: 15px;
+  height: 15px;
+  background: #20aeba;
+  border-radius: 50%;
+}
+
+.three-mt-page .three-mt-visual-core {
+  width: 53%;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #edfafa;
+  color: #101a5c;
+  font-weight: 800;
+  font-size: clamp(16px, 2vw, 27px);
+  letter-spacing: 3px;
+}
+
+@keyframes posterHeroReveal {
+  from {
+    opacity: 0;
+    transform: translateY(35px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes posterOrbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 768px) {
+  .three-mt-page .three-mt-hero {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 40px;
+    min-height: auto;
+    padding: 85px 7% 75px;
+  }
+
+  .three-mt-page .three-mt-hero h1 {
+    font-size: clamp(32px, 8vw, 46px);
+  }
+
+  .three-mt-page .three-mt-description {
+    font-size: 16px;
+  }
+
+  .three-mt-page .three-mt-visual {
+    flex: none;
+    width: min(75%, 300px);
+    margin: 0 auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .three-mt-page .three-mt-hero-content,
+  .three-mt-page .three-mt-orbit {
+    animation: none;
+  }
+}
+
+/* Poster & Oral Presentations — Timeline */
+
+.three-mt-page .three-mt-timeline {
+  padding: 90px 8% 120px;
+  background: #f8fbfd;
+  color: #101a5c;
+  overflow: hidden;
+}
+
+.three-mt-timeline-heading {
+  text-align: right;
+  margin-bottom: 15px;
+}
+
+.three-mt-timeline-heading span {
+  color: #20aeba;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.three-mt-timeline-heading h2 {
+  font-size: clamp(32px, 4vw, 52px);
+  margin: 12px 0 0;
+  font-weight: 800;
+}
+
+.three-mt-timeline-track {
+  position: relative;
+  width: 85%;
+  max-width: 1000px;
+  height: 500px;
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.three-mt-timeline-line {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  color: #20aeba;
+}
+
+.three-mt-timeline-events {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.three-mt-timeline-event {
+  position: absolute;
+  width: 27%;
+  text-align: center;
+  transform: translateX(-50%);
+}
+
+.three-mt-timeline-event:nth-child(1) {
+  left: 85%;
+  top: 84px;
+}
+
+.three-mt-timeline-event:nth-child(2) {
+  left: 50%;
+  top: 84px;
+}
+
+.three-mt-timeline-event:nth-child(3) {
+  left: 15%;
+  top: 84px;
+}
+
+.three-mt-timeline-event:nth-child(4) {
+  left: 15%;
+  top: 294px;
+}
+
+.three-mt-timeline-event:nth-child(5) {
+  left: 50%;
+  top: 294px;
+}
+
+.three-mt-timeline-event:nth-child(6) {
+  left: 85%;
+  top: 294px;
+}
+
+.three-mt-timeline-number {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  margin: 0 auto 15px;
+  border-radius: 50%;
+  background: #101a5c;
+  border: 2px solid #20aeba;
+  color: white;
+  font-weight: 700;
+}
+
+.three-mt-timeline-event time {
+  display: block;
+  margin-bottom: 8px;
+  color: #2697a6;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.three-mt-timeline-event h3 {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.6;
+  font-weight: 700;
+}
+
+.three-mt-timeline-event p {
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* Mobile: readable vertical timeline */
+@media (max-width: 768px) {
+  .three-mt-page .three-mt-timeline {
+    padding: 65px 7% 85px;
+  }
+
+  .three-mt-timeline-track {
+    height: auto;
+    min-height: 0;
+  }
+
+  .three-mt-timeline-line {
+    display: none;
+  }
+
+  .three-mt-timeline-events {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .three-mt-timeline-event:nth-child(n) {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 100%;
+    transform: none;
+    text-align: right;
+    border-right: 2px solid #20aeba;
+    padding: 12px 25px;
+  }
+
+  .three-mt-timeline-number {
+    margin: 0 0 12px;
+  }
+}
+
+/* Same timeline style as Research Opportunities */
+.three-mt-page .research-timeline {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  width: 70%;
+  max-width: 1050px;
+  margin: 0 0 0 auto;
+  padding: 66px 0 20px;
+  position: relative;
+  list-style: none;
+}
+
+/* Keep all six markers aligned */
+.three-mt-page .research-timeline__event {
+  min-width: 0;
+  text-align: center;
+}
+
+@media (max-width: 760px) {
+  .three-mt-page .research-timeline {
+    grid-template-columns: 1fr;
+    width: 100%;
+    max-width: none;
+    padding: 0;
+    margin-right: 10px;
+  }
+}
+
+/* Timeline sequential reveal */
+
+.three-mt-page .research-timeline__event:nth-child(1) {
+  transition-delay: 0s;
+}
+
+.three-mt-page .research-timeline__event:nth-child(2) {
+  transition-delay: 0.15s;
+}
+
+.three-mt-page .research-timeline__event:nth-child(3) {
+  transition-delay: 0.3s;
+}
+
+.three-mt-page .research-timeline__event:nth-child(4) {
+  transition-delay: 0.45s;
+}
+
+.three-mt-page .research-timeline__event:nth-child(5) {
+  transition-delay: 0.6s;
+}
+
+.three-mt-page .research-timeline__event:nth-child(6) {
+  transition-delay: 0.75s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .three-mt-page .research-timeline__event {
+    transition: none;
+    transition-delay: 0s;
+  }
+}
+/* Hide the timeline before scrolling */
+.three-mt-page .research-timeline::before {
+  background: transparent;
+}
+
+/* Reveal the colored line from right to left */
+.three-mt-page .research-timeline::after {
+  right: 0;
+  left: auto;
+  width: var(--research-progress, 0%);
+  transition: width 0.8s cubic-bezier(.23, 1, .32, 1);
+}
+
+/* Poster & Oral Presentations — Requirements */
+
+.three-mt-page .three-mt-requirements {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.6fr) minmax(0, 1.4fr);
+  gap: 48px;
+  max-width: 1250px;
+  margin: 84px auto 100px;
+  padding: 44px 7% 0;
+  border-top: 1px solid #e6edf1;
+  color: #0c0a65;
+}
+
+.three-mt-requirements-heading span {
+  color: #39b6bd;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.three-mt-requirements-heading h2 {
+  margin: 16px 0 0;
+  font-size: clamp(34px, 4vw, 58px);
+  line-height: 1.3;
+}
+
+.three-mt-requirements-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.three-mt-requirement {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  padding: 17px 16px;
+  border: 1px solid #e6edf1;
+  border-radius: 16px;
+  background: linear-gradient(145deg, #ffffff, #f7fcfb);
+}
+
+.three-mt-requirement-number {
+  display: grid;
+  place-items: center;
+  flex: 0 0 30px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  color: #0c0a65;
+  background: #dffff7;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.three-mt-requirement p {
+  margin: 2px 0 0;
+  color: #68749a;
+  font-size: 14px;
+  line-height: 1.9;
+  white-space: pre-line;
+}
+
+/* Mobile */
+@media (max-width: 760px) {
+  .three-mt-page .three-mt-requirements {
+    display: block;
+    margin: 58px auto 75px;
+    padding: 32px 22px 0;
+  }
+
+  .three-mt-requirements-heading {
+    margin-bottom: 24px;
+  }
+
+  .three-mt-requirements-list {
+    grid-template-columns: 1fr;
+    gap: 11px;
+  }
+
+  .three-mt-requirement p {
+    font-size: 13px;
+  }
+}
+
+/* Requirements Scrollytelling */
+
+.three-mt-page .three-mt-requirement {
+  opacity: 0;
+  transform: translateY(35px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s cubic-bezier(.23, 1, .32, 1);
+}
+
+.three-mt-page .three-mt-requirement.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.three-mt-page .three-mt-requirement:nth-child(2) {
+  transition-delay: 0.12s;
+}
+
+.three-mt-page .three-mt-requirement:nth-child(3) {
+  transition-delay: 0.24s;
+}
+
+.three-mt-page .three-mt-requirement:nth-child(4) {
+  transition-delay: 0.36s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .three-mt-page .three-mt-requirement {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+/* Fix mobile timeline gradient */
+@media (max-width: 760px) {
+  .three-mt-page .research-timeline::before {
+    display: none;
+  }
+
+  .three-mt-page .research-timeline::after {
+    top: 0;
+    bottom: auto;
+    right: 26px;
+    left: auto;
+
+    width: 2px;
+    height: var(--research-progress, 0%);
+
+    background: linear-gradient(
+      180deg,
+      #39b6bd,
+      #8f46df
+    );
+
+    transition: height 0.7s ease;
+  }
+}
+
+/* Timeline and registration layout — desktop */
+
+@media (min-width: 761px) {
+  .three-mt-page .three-mt-timeline {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 360px;
+    column-gap: 42px;
+    align-items: center;
+  }
+
+  .three-mt-page .three-mt-timeline-heading {
+    grid-column: 1 / -1;
+  }
+
+  .three-mt-page .three-mt-timeline > .research-timeline {
+    grid-column: 1;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    min-width: 0;
+    align-self: start;
+    top: -50px;
+  }
+
+  .three-mt-page .three-mt-registration {
+    grid-column: 2;
+    position: relative;
+    top: auto;
+    width: 100%;
+    align-self: center;
+  }
+}
+
+/* Registration below timeline — mobile */
+
+@media (max-width: 760px) {
+  .three-mt-page .three-mt-registration {
+    position: relative;
+    top: auto;
+    width: 100%;
+    max-width: 420px;
+    margin: 45px auto 0;
+  }
+}
+@media (min-width: 761px) {
+  /* تقريب الشروط من الخط الزمني */
+  .three-mt-page .three-mt-timeline-main > .research-timeline {
+    margin-bottom: -65px;
+  }
+
+  /* رفع بطاقة التسجيل */
+  .three-mt-page .three-mt-registration {
+    align-self: start;
+  }
+}
+
+/* Compact timeline and requirements — desktop */
+
+@media (min-width: 761px) {
+  /* Give the timeline more horizontal space */
+  .three-mt-page .three-mt-timeline {
+    grid-template-columns: minmax(0, 1fr) 320px;
+    column-gap: 24px;
+    padding-left: 3%;
+    padding-right: 3%;
+  }
+
+  /* Keep the timeline wide */
+  .three-mt-page .three-mt-timeline-main > .research-timeline {
+    width: 100%;
+    max-width: none;
+    margin-bottom: -110px;
+  }
+
+  /* Requirements directly below timeline */
+  .three-mt-page .three-mt-timeline-main .three-mt-requirements {
+    margin: 0;
+    padding: 0;
+    border-top: none;
+    width: 100%;
+  }
+
+  /* Compact 2 x 2 requirements layout */
+  .three-mt-page .three-mt-requirements-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .three-mt-page .three-mt-requirement {
+    padding: 11px 12px;
+    gap: 9px;
+    border-radius: 12px;
+  }
+
+  .three-mt-page .three-mt-requirement-number {
+    flex-basis: 25px;
+    width: 25px;
+    height: 25px;
+    font-size: 10px;
+  }
+
+  .three-mt-page .three-mt-requirement p {
+    font-size: 12px;
+    line-height: 1.7;
+  }
+}
+
+/* Hide the separate requirements heading */
+.three-mt-page .three-mt-timeline-main
+.three-mt-requirements-heading {
+  display: none;
+}
+
+@media (min-width: 761px) {
+  /* Move timeline and requirements together */
+  .three-mt-page .three-mt-timeline-main {
+    position: relative;
+    top: -50px;
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* Remove the overlap without changing marker alignment */
+  .three-mt-page .three-mt-timeline-main > .research-timeline {
+    top: 0;
+    margin-bottom: 24px;
+  }
+
+  /* Give requirements the full timeline width */
+  .three-mt-page .three-mt-timeline-main > .three-mt-requirements {
+    display: block;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .three-mt-page .three-mt-timeline-main .three-mt-requirements-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    gap: 12px;
+  }
+
+  .three-mt-page .three-mt-timeline-main .three-mt-requirement {
+    min-width: 0;
+    padding: 12px 14px;
+  }
+
+  .three-mt-page .three-mt-timeline-main .three-mt-requirement p {
+    font-size: 12px;
+    line-height: 1.8;
+    overflow-wrap: break-word;
+  }
+}
+/* Center requirements title below timeline */
+
+.three-mt-page .three-mt-timeline-main
+.three-mt-requirements-heading {
+  display: block;
+  text-align: center;
+  margin: 0 0 20px;
+}
+
+.three-mt-page .three-mt-timeline-main
+.three-mt-requirements-heading span {
+  display: none;
+}
+
+.three-mt-page .three-mt-timeline-main
+.three-mt-requirements-heading h2 {
+  margin: 0;
+  font-size: 35px;
+  font-weight: 800;
+  color: #39b6bd;
+}
+@media (min-width: 761px) {
+  .three-mt-page .three-mt-timeline-main > .three-mt-requirements {
+    margin-top: -65px;
+  }
+}
+@media (min-width: 761px) {
+  .three-mt-page .three-mt-registration {
+    width: 290px;
+    max-width: 100%;
+    height: auto;
+    padding: 20px;
+    justify-self: start;
+  }
+
+  .three-mt-page .three-mt-registration .research-cta__icon {
+    margin: 22px 0 15px;
+  }
+
+  .three-mt-page .three-mt-registration h2 {
+    font-size: 27px;
+  }
+
+  .three-mt-page .three-mt-registration p {
+    margin: 10px 0 18px;
+  }
+}
+/* Requirements title scroll animation */
+
+.three-mt-page .three-mt-requirements-heading h2 {
+  opacity: 0;
+  transform: translateY(25px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s cubic-bezier(.23, 1, .32, 1);
+}
+
+.three-mt-page .three-mt-requirements-heading h2.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .three-mt-page .three-mt-requirements-heading h2 {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Registration card — Scroll Reveal */
+
+.three-mt-page .three-mt-registration {
+  opacity: 0;
+  transform: translateY(35px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s cubic-bezier(.23, 1, .32, 1);
+}
+
+.three-mt-page .three-mt-registration.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .three-mt-page .three-mt-registration {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+/* Reduce empty space above timeline section — desktop only */
+
+@media (min-width: 761px) {
+  .three-mt-page .three-mt-hero {
+    min-height: 560px;
+    padding-bottom: 65px;
+  }
+
+  .three-mt-page .three-mt-timeline {
+    padding-top: 40px;
+  }
+}
+/* Make requirement cards fit their content */
+
+.three-mt-page .three-mt-requirements-list {
+  align-items: start;
+}
+
+.three-mt-page .three-mt-requirement {
+  height: fit-content;
+  min-height: 0;
+  align-self: start;
+}
+
+/* Masonry requirements layout */
+
+.three-mt-page .three-mt-timeline-main
+.three-mt-requirements-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 14px;
+}
+
+.three-mt-page .three-mt-requirements-column {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+
+.three-mt-page .three-mt-requirements-column
+.three-mt-requirement {
+  width: 100%;
+  height: auto;
+  margin: 0;
+  align-self: auto;
+}
+
+/* Mobile: original numeric order */
+@media (max-width: 760px) {
+  .three-mt-page .three-mt-timeline-main
+  .three-mt-requirements-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .three-mt-page .three-mt-requirements-column {
+    display: contents;
+  }
+
+  .three-mt-page .three-mt-requirement {
+    width: 100%;
+  }
+}
+
+/* Balanced 2-column requirements */
+
+.three-mt-page .three-mt-timeline-main
+.three-mt-requirements-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 14px;
+}
+
+.three-mt-page .three-mt-requirement {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  align-self: stretch;
+}
+
+/* Mobile */
+@media (max-width: 760px) {
+  .three-mt-page .three-mt-timeline-main
+  .three-mt-requirements-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Requirements cards — refined design */
+
+@media (min-width: 761px) {
+  .three-mt-page .three-mt-timeline-main
+  .three-mt-requirements-list {
+    gap: 12px;
+  }
+
+  .three-mt-page .three-mt-timeline-main
+  .three-mt-requirement {
+    padding: 11px 14px;
+    gap: 10px;
+    align-items: flex-start;
+    border-radius: 14px;
+  }
+
+  .three-mt-page .three-mt-timeline-main
+  .three-mt-requirement p {
+    margin: 0;
+    color: #435579;
+    font-size: 13px;
+    line-height: 1.55;
+    white-space: pre-line;
+  }
+}
+/* Mobile: show hero image above text */
+@media (max-width: 768px) {
+  .three-mt-page .three-mt-visual {
+    order: -1;
+  }
+
+  .three-mt-page .three-mt-hero-content {
+    order: 1;
+  }
+}
+
+/* Center the last requirement — desktop */
+
+@media (min-width: 761px) {
+  .three-mt-page
+  .three-mt-timeline-main
+  .three-mt-requirements-list
+  > .three-mt-requirement:last-child {
+    grid-column: 1 / -1;
+    width: calc(50% - 6px);
+    justify-self: center;
+  }
+}
+
+/* 3MT — compact mobile timeline */
+
+@media (max-width: 760px) {
+  .three-mt-page .research-timeline__event {
+    min-height: 90px;
+    padding-bottom: 16px;
+  }
+}
+
+/* =========================================
+   HPC - 3MT Final Design
+   Orange #FF914D / Navy #0C0A65
+   ========================================= */
+
+.three-mt-page {
+  background: #0C0A65;
+  color: #FFFFFF;
+}
+
+/* HERO */
+.three-mt-page .three-mt-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: #0C0A65;
+}
+
+.three-mt-page .three-mt-hero-image {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.three-mt-page .three-mt-hero-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Orange to navy gradient */
+.three-mt-page .three-mt-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(255,145,77,0.82) 0%,
+    rgba(255,145,77,0.60) 22%,
+    rgba(12,30,133,0.55) 45%,
+    rgba(12,10,101,0.85) 70%,
+    rgba(12,10,101,0.97) 88%,
+    #0C0A65 100%
+  );
+}
+
+.three-mt-page .three-mt-hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+/* Hide old decorative RESEARCH circle */
+.three-mt-page .three-mt-visual {
+  visibility: hidden;
+}
+
+/* Hero text */
+.three-mt-page .three-mt-eyebrow,
+.three-mt-page .three-mt-hero h1 {
+  color: #FFFFFF;
+}
+
+.three-mt-page .three-mt-description {
+  color: #E2E7FF;
+}
+
+/* TIMELINE */
+.three-mt-page .three-mt-timeline {
+  background: #0C0A65;
+  color: #FFFFFF;
+}
+
+.three-mt-page .three-mt-timeline-heading h2 {
+  color: #FFFFFF;
+}
+
+.three-mt-page .three-mt-timeline-heading span {
+  color: #FF914D;
+}
+
+.three-mt-page .research-timeline::before {
+  background: rgba(255,145,77,0.20);
+}
+
+.three-mt-page .research-timeline::after {
+  background: linear-gradient(
+    270deg,
+    #FF914D,
+    #FFC49D
+  );
+}
+
+.three-mt-page .research-timeline__marker,
+.three-mt-page
+.research-timeline__event.is-visible
+.research-timeline__marker {
+  background: #FFF5EE;
+  border-color: #FF914D;
+  color: #0C0A65;
+  box-shadow: 0 0 0 8px #FFFFFF;
+}
+
+.three-mt-page .research-timeline__copy time {
+  color: #FF914D;
+}
+
+.three-mt-page .research-timeline__copy h3 {
+  color: #FFFFFF;
+}
+
+/* REQUIREMENTS */
+.three-mt-page .three-mt-requirements {
+  color: #FFFFFF;
+  border-top-color: rgba(255,255,255,0.15);
+}
+
+.three-mt-page
+.three-mt-timeline-main
+.three-mt-requirements-heading h2 {
+  color: #FF914D;
+}
+
+.three-mt-page .three-mt-requirement {
+  background: #F8F9FF;
+  border-color: rgba(255,145,77,0.35);
+}
+
+.three-mt-page .three-mt-requirement-number {
+  background: #FF914D;
+  color: #0C0A65;
+}
+
+.three-mt-page .three-mt-requirement p {
+  color: #435579;
+}
+
+/* REGISTRATION */
+.three-mt-page .three-mt-registration {
+  background: linear-gradient(
+    145deg,
+    #FFFFFF,
+    #FFF3E9
+  );
+  border-color: rgba(255,145,77,0.5);
+}
+
+.three-mt-page
+.three-mt-registration
+.research-cta__number {
+  color: #0C0A65;
+}
+
+.three-mt-page
+.three-mt-registration
+.research-cta__icon {
+  background: #FF914D;
+  color: #0C0A65;
+}
+
+.three-mt-page .three-mt-registration h2 {
+  color: #0C0A65;
+}
+
+.three-mt-page
+.three-mt-registration
+.research-cta__button {
+  background: #0C0A65;
+  color: #FFFFFF;
+}
+
+.three-mt-page
+.three-mt-registration
+.research-cta__button:hover:not(:disabled) {
+  background: #C9682F;
+}
+
+/* REQUIREMENTS ANIMATION */
+/* Each card appears with its number and text */
+
+.three-mt-page .three-mt-requirement {
+  opacity: 0;
+  transform: translateY(35px);
+  filter: blur(7px);
+  transition:
+    opacity 0.75s ease,
+    transform 0.75s cubic-bezier(.22,1,.36,1),
+    filter 0.75s ease;
+  transition-delay: 0ms;
+}
+
+.three-mt-page .three-mt-requirement.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+/* Remove old staggered delays */
+.three-mt-page
+.three-mt-requirements-list
+> .three-mt-requirement:nth-child(n) {
+  transition-delay: 0ms;
+}
+
+/* Avoid separately animating card text */
+.three-mt-page
+.three-mt-requirement
+.hpc-scroll-reveal {
+  opacity: 1;
+  transform: none;
+  filter: none;
+  transition: none;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .three-mt-page .three-mt-hero {
+    min-height: 0;
+    height: auto;
+    padding: 120px 7% 220px;
+    gap: 0;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .three-mt-page .three-mt-visual {
+    display: none;
+  }
+
+  .three-mt-page .three-mt-hero-content {
+    order: 0;
+    flex: none;
+    width: 100%;
+    max-width: 100%;
+    text-align: right;
+  }
+
+  .three-mt-page .three-mt-eyebrow {
+    margin-bottom: 18px;
+    font-size: 14px;
+    color: #FFFFFF;
+  }
+
+  .three-mt-page .three-mt-hero h1 {
+    margin: 0 0 24px;
+    font-size: clamp(30px, 8vw, 40px);
+    line-height: 1.4;
+    color: #FFFFFF;
+  }
+
+  .three-mt-page .three-mt-description {
+    margin: 0;
+    font-size: 15px;
+    line-height: 2;
+    color: #E2E7FF;
+  }
+
+  .three-mt-page .three-mt-hero::after {
+    background: linear-gradient(
+      to bottom,
+      rgba(255,145,77,0.82) 0%,
+      rgba(255,145,77,0.55) 22%,
+      rgba(12,30,133,0.60) 45%,
+      rgba(12,10,101,0.88) 70%,
+      #0C0A65 100%
+    );
+  }
+
+  .three-mt-page .three-mt-timeline {
+    padding-top: 55px;
+  }
+}
+
+/* MOBILE TIMELINE */
+/* Hide line until the first event appears */
+
+@media (max-width: 760px) {
+  .three-mt-page .research-timeline::before {
+    display: none;
+  }
+
+  .three-mt-page .research-timeline::after {
+    opacity: 0;
+    visibility: hidden;
+    background: linear-gradient(
+      to bottom,
+      #FF914D,
+      #FFC49D
+    );
+    transition:
+      height 0.7s ease,
+      opacity 0.4s ease;
+  }
+
+  .three-mt-page
+  .research-timeline:has(
+    > .research-timeline__event.is-visible
+  )::after {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+/* ACCESSIBILITY */
+@media (prefers-reduced-motion: reduce) {
+  .three-mt-page .three-mt-requirement {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+  }
+}
+
+/* Poster & Oral - Requirements Reveal Fix */
+
+/* Each card animates independently */
+.poster-oral-page
+.poster-oral-requirements-list
+> .poster-oral-requirement {
+  opacity: 0;
+  transform: translateY(30px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: 0ms;
+}
+
+/* Show the whole card on scroll */
+.poster-oral-page
+.poster-oral-requirements-list
+> .poster-oral-requirement.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0ms;
+}
+
+/* Number and text appear together */
+.poster-oral-page
+.poster-oral-requirement
+.hpc-scroll-reveal,
+.poster-oral-page
+.poster-oral-requirement
+.poster-oral-requirement-number,
+.poster-oral-page
+.poster-oral-requirement p {
+  opacity: 1 !important;
+  visibility: visible;
+  transform: none !important;
+  filter: none !important;
+  animation: none !important;
+  transition: none !important;
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .poster-oral-page
+  .poster-oral-requirements-list
+  > .poster-oral-requirement {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* HPC - 3MT Back to Pathways */
+
+.three-mt-page .three-mt-hero-content .hpc-pathways-back {
+  display: flex !important;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 0 24px !important;
+  padding: 0 !important;
+
+  color: #55DDE6 !important;
+  font-size: 17px !important;
+  font-weight: 700;
+  line-height: 1.5;
+  text-decoration: none;
+}
+
+.three-mt-page .three-mt-hero-content .hpc-pathways-back:hover {
+  color: #FFFFFF !important;
+}
+
+/* Keep pathway number below the back link */
+.three-mt-page .three-mt-hero-content .three-mt-eyebrow {
+  display: block !important;
+  margin: 0 0 16px !important;
+}
+
+/* Mobile */
+@media (max-width: 700px) {
+  .three-mt-page .three-mt-hero-content .hpc-pathways-back {
+    font-size: 13px !important;
+    margin-bottom: 20px !important;
+  }
+}

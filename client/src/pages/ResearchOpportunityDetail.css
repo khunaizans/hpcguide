@@ -1,0 +1,1295 @@
+.research-opportunity-detail .research-requirements{display:grid;grid-template-columns:minmax(220px,.6fr) minmax(0,1.4fr);gap:48px;max-width:1250px;margin:84px auto 0;padding:44px 0 0;border-top:1px solid #e6edf1}.research-opportunity-detail .research-requirements__heading h2{margin:0;color:#0c0a65;font-size:clamp(34px,4vw,58px);letter-spacing:-.06em}.research-opportunity-detail .research-requirements__list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 18px;margin:0;padding:0;list-style:none}.research-opportunity-detail .research-requirements__list li{display:flex;align-items:flex-start;gap:13px;padding:17px 16px;border:1px solid #e6edf1;border-radius:16px;background:linear-gradient(145deg,#fff,#f7fcfb)}.research-opportunity-detail .research-requirements__list li>span{display:grid;place-items:center;flex:0 0 30px;width:30px;height:30px;border-radius:50%;color:#0c0a65;background:#dffff7;font-size:10px;font-weight:800}.research-opportunity-detail .research-requirements__list p{margin:2px 0 0;color:#68749a;font-size:14px;line-height:1.9}@media (max-width:760px){.research-opportunity-detail .research-requirements{display:block;margin-top:58px;padding-top:32px}.research-opportunity-detail .research-requirements__heading{margin-bottom:24px}.research-opportunity-detail .research-requirements__list{grid-template-columns:1fr;gap:11px}.research-opportunity-detail .research-requirements__list p{font-size:13px;line-height:1.8}}
+
+/* Research Opportunities — unified layout */
+
+@media (min-width: 761px) {
+
+  .research-opportunity-detail .research-timeline-main {
+    grid-column: 1;
+    min-width: 0;
+  }
+
+  .research-opportunity-detail .research-timeline-wrap {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .research-opportunity-detail .research-cta {
+    grid-column: 2;
+    position: relative;
+    top: auto;
+    width: 100%;
+    align-self: start;
+  }
+}
+
+/* Research Opportunities — compact requirements */
+
+@media (min-width: 761px) {
+  .research-opportunity-detail .research-timeline-main .research-requirements {
+    display: block;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 15px 0 0;
+    border-top: none;
+  }
+
+  .research-opportunity-detail .research-timeline-main .research-requirements__heading {
+    text-align: center;
+    margin: 0 0 20px;
+  }
+
+  .research-opportunity-detail .research-timeline-main .research-requirements__heading .detail-label {
+    display: none;
+  }
+
+  .research-opportunity-detail .research-timeline-main .research-requirements__heading h2 {
+    margin: 0;
+    color: #39b6bd;
+    font-weight: 800;
+  }
+
+  .research-opportunity-detail .research-timeline-main .research-requirements__list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    width: 100%;
+  }
+
+  .research-opportunity-detail .research-timeline-main .research-requirements__list li {
+    min-width: 0;
+    padding: 12px 14px;
+    border-radius: 14px;
+    align-items: flex-start;
+  }
+
+  .research-opportunity-detail .research-timeline-main .research-requirements__list li p {
+    margin: 0;
+    color: #435579;
+    font-size: 13px;
+    line-height: 1.6;
+    white-space: pre-line;
+  }
+}
+
+
+/* Research timeline — right to left animation */
+
+@media (min-width: 761px) {
+  /* Hide the static background line */
+  .research-opportunity-detail .research-timeline::before {
+    background: transparent;
+  }
+
+  /* Draw the colored line from right to left */
+  .research-opportunity-detail .research-timeline::after {
+    right: 0;
+    left: auto;
+    width: var(--research-progress, 0%);
+    background: linear-gradient(
+      270deg,
+      #39b6bd,
+      #8f46df
+    );
+    transition: width 0.7s cubic-bezier(.23, 1, .32, 1);
+  }
+}
+
+/* Research Opportunities — Scroll Reveal */
+
+.research-opportunity-detail .research-reveal {
+  opacity: 0;
+  transform: translateY(35px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s cubic-bezier(.23, 1, .32, 1);
+}
+
+.research-opportunity-detail .research-reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .research-opportunity-detail .research-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Research Opportunities — Mobile Hero Layout */
+
+@media (max-width: 760px) {
+  .research-opportunity-detail .research-intro__grid {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .research-opportunity-detail .research-intro__signal {
+    order: -1;
+    min-height: 260px;
+    margin: 0 0 30px;
+  }
+
+  .research-opportunity-detail .research-intro__copy {
+    order: 1;
+    width: 100%;
+  }
+}
+
+/* Unified timeline section — desktop */
+
+@media (min-width: 769px) {
+  .research-opportunity-detail .research-timeline-section {
+    padding: 40px 3% 120px;
+    background: #f8fbfd;
+  }
+}
+
+
+/* Research Opportunities — Hero illustration */
+
+@media (min-width: 769px) {
+  .research-opportunity-detail .research-intro__signal {
+    width: 100%;
+    max-width: 430px;
+    min-height: 320px;
+    justify-self: center;
+    align-self: center;
+  }
+}
+
+/* Reduce space above research timeline */
+
+@media (min-width: 761px) {
+  .research-opportunity-detail .research-section-heading {
+    margin-bottom: 15px;
+  }
+
+  .research-opportunity-detail .research-timeline {
+    padding-top: 25px;
+  }
+}
+
+/* Requirements — staggered reveal */
+
+.research-opportunity-detail
+.research-requirements__list li {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s cubic-bezier(.23, 1, .32, 1);
+}
+
+.research-opportunity-detail
+.research-requirements.is-visible
+.research-requirements__list li {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.research-opportunity-detail
+.research-requirements.is-visible
+.research-requirements__list li:nth-child(1) {
+  transition-delay: 0.1s;
+}
+
+.research-opportunity-detail
+.research-requirements.is-visible
+.research-requirements__list li:nth-child(2) {
+  transition-delay: 0.2s;
+}
+
+.research-opportunity-detail
+.research-requirements.is-visible
+.research-requirements__list li:nth-child(3) {
+  transition-delay: 0.3s;
+}
+
+.research-opportunity-detail
+.research-requirements.is-visible
+.research-requirements__list li:nth-child(4) {
+  transition-delay: 0.4s;
+}
+
+/* Sequential reveal — requirements 05 and 06 */
+
+.research-opportunity-detail
+.research-requirements.is-visible
+.research-requirements__list li:nth-child(5) {
+  transition-delay: 0.5s;
+}
+
+.research-opportunity-detail
+.research-requirements.is-visible
+.research-requirements__list li:nth-child(6) {
+  transition-delay: 0.6s;
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  .research-opportunity-detail
+  .research-requirements__list li {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Research Opportunities — balanced desktop layout */
+
+@media (min-width: 761px) {
+
+
+  /* Timeline */
+  .research-opportunity-detail .research-timeline {
+    padding-top: 66px;
+    padding-bottom: 20px;
+    width: 100%;
+  }
+
+  /* Keep the line centered through the circles */
+  .research-opportunity-detail .research-timeline::before,
+  .research-opportunity-detail .research-timeline::after {
+    top: 86px;
+  }
+
+  /* Requirements section */
+  .research-opportunity-detail
+  .research-timeline-main .research-requirements {
+    margin-top: -30px;
+    padding-top: 0;
+  }
+
+  /* Consistent spacing between requirement cards */
+  .research-opportunity-detail
+  .research-requirements__list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .research-opportunity-detail
+  .research-requirements__list li {
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    padding: 14px 16px;
+    border-radius: 14px;
+  }
+
+  .research-opportunity-detail
+  .research-requirements__list li p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.7;
+    color: #435579;
+  }
+
+}
+/* Match Poster & Oral layout — desktop */
+
+@media (min-width: 761px) {
+  .research-opportunity-detail .research-timeline-layout {
+    display: grid;
+    gap: 24px;
+    align-items: start;
+  }
+
+  /* Timeline and requirements on the right */
+  .research-opportunity-detail .research-timeline-main {
+    min-width: 0;
+    width: 100%;
+  }
+
+  /* Registration card on the left */
+  .research-opportunity-detail .research-cta {
+    width: 290px;
+    max-width: 100%;
+    padding: 20px;
+    align-self: start;
+    justify-self: start;
+    position: relative;
+    top: 0;
+  }
+
+  /* Requirements: two cards per row */
+  .research-opportunity-detail .research-requirements__list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    align-items: stretch;
+  }
+
+  .research-opportunity-detail .research-requirements__list li {
+    min-width: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 14px;
+    padding: 11px 14px;
+  }
+
+  .research-opportunity-detail .research-requirements__list li p {
+    font-size: 13px;
+    line-height: 1.55;
+    color: #435579;
+  }
+
+  /* Requirements title */
+  .research-opportunity-detail
+  .research-requirements__heading h2 {
+    font-size: 35px;
+    color: #39b6bd;
+    text-align: center;
+  }
+}
+
+
+@media (min-width: 761px) {
+  .research-opportunity-detail .research-timeline-layout {
+    grid-template-columns: minmax(0, 1fr) 290px;
+  }
+
+}
+
+/* Match Poster & Oral registration card */
+
+@media (min-width: 761px) {
+  .research-opportunity-detail
+  .research-timeline-layout > .research-cta {
+    width: 290px;
+    max-width: 100%;
+    height: auto;
+    padding: 20px;
+    box-sizing: border-box;
+    justify-self: start;
+    align-self: start;
+    position: relative;
+    top: auto;
+  }
+
+  .research-opportunity-detail
+  .research-cta .research-cta__icon {
+    margin: 22px 0 15px;
+  }
+
+  .research-opportunity-detail
+  .research-cta h2 {
+    font-size: 27px;
+  }
+
+  .research-opportunity-detail
+  .research-cta p {
+    margin: 10px 0 18px;
+  }
+}
+
+/* Unified Hero — match Poster & Oral */
+
+@media (min-width: 769px) {
+  .research-opportunity-detail .research-intro {
+    min-height: 560px;
+    padding: 130px 8% 65px;
+    background: #ffffff;
+  }
+
+  .research-opportunity-detail .research-intro__glow {
+    display: none;
+  }
+
+  .research-opportunity-detail .research-intro__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 36%);
+    align-items: center;
+    gap: 70px;
+    max-width: none;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .research-opportunity-detail .research-intro__copy {
+    max-width: 670px;
+    min-width: 0;
+  }
+
+  .research-opportunity-detail .research-intro__copy h1 {
+    font-size: clamp(38px, 4.5vw, 68px);
+    font-weight: 800;
+    line-height: 1.35;
+    letter-spacing: normal;
+  }
+
+  .research-opportunity-detail .research-intro__description {
+    max-width: 670px;
+    font-size: 19px;
+    line-height: 2;
+    color: #64748b;
+  }
+
+  .research-opportunity-detail .research-intro__signal {
+    width: 100%;
+    max-width: 430px;
+    min-height: 320px;
+    justify-self: center;
+  }
+}
+
+/* Match Poster & Oral — Timeline spacing */
+
+@media (min-width: 769px) {
+
+  /* Smaller timeline heading */
+  .research-opportunity-detail
+  .research-section-heading h2 {
+    font-size: clamp(32px, 4vw, 52px);
+    font-weight: 800;
+    line-height: 1.2;
+  }
+
+  /* Reduce spacing below heading */
+  .research-opportunity-detail
+  .research-section-heading {
+    margin-bottom: 10px;
+  }
+
+  /* Raise timeline events */
+  .research-opportunity-detail
+  .research-timeline {
+    padding-top: 20px;
+  }
+
+  /* Keep line centered through markers */
+  .research-opportunity-detail
+  .research-timeline::before,
+  .research-opportunity-detail
+  .research-timeline::after {
+    top: 40px;
+  }
+}
+
+/* Match Poster & Oral — full desktop layout width */
+
+@media (min-width: 769px) {
+  .research-opportunity-detail .research-timeline-layout {
+    width: 100%;
+    max-width: none;
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+/* Align timeline heading with Poster & Oral */
+
+@media (min-width: 769px) {
+  .research-opportunity-detail .research-section-heading {
+    max-width: none;
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+/* Match Poster & Oral — desktop left spacing */
+
+@media (min-width: 769px) {
+  .research-opportunity-detail .research-timeline-section {
+    padding-left: 5%;
+  }
+}
+
+/* Research Opportunities — Poster-style Hero Visual */
+
+.research-opportunity-detail
+.research-intro__signal .poster-oral-visual {
+  position: relative;
+  width: 100%;
+  max-width: 430px;
+  aspect-ratio: 1;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  margin: 0 auto;
+}
+
+.research-opportunity-detail
+.research-intro__signal .poster-oral-orbit {
+  position: absolute;
+  width: 78%;
+  aspect-ratio: 1;
+  border: 1px solid rgba(32, 174, 186, 0.4);
+  border-radius: 50%;
+  animation: researchPosterOrbit 18s linear infinite;
+}
+
+.research-opportunity-detail
+.research-intro__signal .poster-oral-orbit::before {
+  content: "";
+  position: absolute;
+  top: 12%;
+  right: 10%;
+  width: 15px;
+  height: 15px;
+  background: #20aeba;
+  border-radius: 50%;
+}
+
+.research-opportunity-detail
+.research-intro__signal .poster-oral-visual-core {
+  width: 53%;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #edfafa;
+  color: #101a5c;
+  font-weight: 800;
+  font-size: clamp(16px, 2vw, 27px);
+  letter-spacing: 3px;
+}
+
+@keyframes researchPosterOrbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .research-opportunity-detail
+  .research-intro__signal .poster-oral-orbit {
+    animation: none;
+  }
+}
+
+/* Mobile timeline — align line with markers */
+
+@media (max-width: 760px) {
+  .research-opportunity-detail .research-timeline::before,
+  .research-opportunity-detail .research-timeline::after {
+    right: 21px;
+    left: auto;
+  }
+}
+
+/* Mobile timeline — compact event spacing */
+
+@media (max-width: 760px) {
+  .research-opportunity-detail .research-timeline__event {
+    min-height: 90px;
+    padding-bottom: 16px;
+  }
+}
+
+/* Compact registration card — mobile only */
+
+@media (max-width: 760px) {
+  .research-opportunity-detail .research-cta {
+    padding: 20px;
+  }
+
+  .research-opportunity-detail .research-cta__icon {
+    margin: 18px 0 14px;
+  }
+
+  .research-opportunity-detail .research-cta h2 {
+    font-size: 27px;
+  }
+
+  .research-opportunity-detail .research-cta p {
+    margin: 10px 0 18px;
+  }
+}
+
+/* Match Poster & Oral requirements heading — mobile */
+
+@media (max-width: 760px) {
+  .research-opportunity-detail .research-requirements {
+    border-top: 1px solid #e6edf1;
+    padding-top: 42px;
+  }
+
+  .research-opportunity-detail
+  .research-requirements__heading {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+
+  .research-opportunity-detail
+  .research-requirements__heading .detail-label {
+    display: none;
+  }
+
+  .research-opportunity-detail
+  .research-requirements__heading h2 {
+    margin: 0;
+    color: #39b6bd;
+    font-size: clamp(32px, 9vw, 42px);
+    font-weight: 800;
+    line-height: 1.3;
+    letter-spacing: normal;
+    text-align: center;
+  }
+}
+
+/* =========================================
+   HPC - Research Opportunities Brand
+   Mint #4EC6B1 + Navy #0C0A65
+   ========================================= */
+
+.research-opportunity-detail {
+  background: #0C0A65;
+  color: #FFFFFF;
+}
+
+/* HERO */
+.research-opportunity-detail .research-intro {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: #0C0A65;
+}
+
+/* Image behind content */
+.research-opportunity-detail .research-intro__image {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.research-opportunity-detail .research-intro__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Mint to navy gradient */
+.research-opportunity-detail .research-intro::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(78, 198, 177, 0.70) 0%,
+    rgba(78, 198, 177, 0.48) 22%,
+    rgba(12, 30, 133, 0.55) 45%,
+    rgba(12, 10, 101, 0.85) 70%,
+    rgba(12, 10, 101, 0.97) 88%,
+    #0C0A65 100%
+  );
+}
+
+/* Keep original text positions */
+.research-opportunity-detail .research-intro__grid {
+  position: relative;
+  z-index: 2;
+}
+
+/* Hide old decorative illustration */
+.research-opportunity-detail .research-intro__glow {
+  display: none;
+}
+
+.research-opportunity-detail .research-intro__signal {
+  visibility: hidden;
+}
+
+/* Hero typography */
+.research-opportunity-detail
+.research-intro__copy h1,
+.research-opportunity-detail
+.research-intro__copy .eyebrow,
+.research-opportunity-detail
+.research-intro__copy .detail-back {
+  color: #FFFFFF;
+}
+
+.research-opportunity-detail
+.research-intro__description {
+  color: #E2E7FF;
+}
+
+/* TIMELINE */
+.research-opportunity-detail
+.research-timeline-section {
+  background: #0C0A65;
+  color: #FFFFFF;
+}
+
+.research-opportunity-detail
+.research-section-heading h2 {
+  color: #FFFFFF;
+}
+
+.research-opportunity-detail
+.research-section-heading .detail-label {
+  color: #4EC6B1;
+}
+
+/* Timeline progress */
+.research-opportunity-detail
+.research-timeline::before {
+  background: rgba(78, 198, 177, 0.22);
+}
+
+.research-opportunity-detail
+.research-timeline::after {
+  background: linear-gradient(
+    270deg,
+    #4EC6B1,
+    #A6EBDF
+  );
+}
+
+/* Timeline markers */
+.research-opportunity-detail
+.research-timeline__marker,
+.research-opportunity-detail
+.research-timeline__event.is-visible
+.research-timeline__marker {
+  background: #F0FFFA;
+  border-color: #4EC6B1;
+  color: #0C0A65;
+  box-shadow: 0 0 0 8px #FFFFFF;
+}
+
+.research-opportunity-detail
+.research-timeline__copy time {
+  color: #4EC6B1;
+}
+
+.research-opportunity-detail
+.research-timeline__copy h3 {
+  color: #FFFFFF;
+}
+
+/* REQUIREMENTS */
+.research-opportunity-detail
+.research-requirements {
+  border-top-color: rgba(255,255,255,0.15);
+}
+
+.research-opportunity-detail
+.research-requirements__heading h2,
+.research-opportunity-detail
+.research-timeline-main
+.research-requirements__heading h2 {
+  color: #4EC6B1;
+}
+
+.research-opportunity-detail
+.research-requirements__list li {
+  background: #F8F9FF;
+  border-color: rgba(78,198,177,0.35);
+}
+
+.research-opportunity-detail
+.research-requirements__list li > span {
+  background: #4EC6B1;
+  color: #0C0A65;
+}
+
+.research-opportunity-detail
+.research-requirements__list li p {
+  color: #435579;
+}
+
+/* REGISTRATION CARD */
+.research-opportunity-detail .research-cta {
+  background: linear-gradient(
+    145deg,
+    #FFFFFF,
+    #EDFCF8
+  );
+  border-color: rgba(78,198,177,0.5);
+}
+
+.research-opportunity-detail
+.research-cta__number {
+  color: #0C0A65;
+}
+
+.research-opportunity-detail
+.research-cta__icon {
+  background: #4EC6B1;
+  color: #0C0A65;
+}
+
+.research-opportunity-detail
+.research-cta h2 {
+  color: #0C0A65;
+}
+
+.research-opportunity-detail
+.research-cta__button {
+  background: #0C0A65;
+  color: #FFFFFF;
+}
+
+.research-opportunity-detail
+.research-cta__button:hover {
+  background: #278C81;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .research-opportunity-detail .research-intro {
+    min-height: 0;
+    height: auto;
+    padding: 120px 7% 160px;
+  }
+
+  .research-opportunity-detail
+  .research-intro__grid {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  /* Remove unused illustration space */
+  .research-opportunity-detail
+  .research-intro__signal {
+    display: none;
+  }
+
+  .research-opportunity-detail
+  .research-intro__copy {
+    order: 0;
+    width: 100%;
+    max-width: 100%;
+    text-align: right;
+  }
+
+  .research-opportunity-detail
+  .research-intro__copy h1 {
+    font-size: clamp(32px, 8vw, 42px);
+    line-height: 1.35;
+    letter-spacing: normal;
+  }
+
+  .research-opportunity-detail
+  .research-intro__description {
+    font-size: 15px;
+    line-height: 2;
+  }
+
+  .research-opportunity-detail
+  .research-intro::after {
+    background: linear-gradient(
+      to bottom,
+      rgba(78, 198, 177, 0.80) 0%,
+      rgba(78, 198, 177, 0.55) 22%,
+      rgba(12, 30, 133, 0.60) 45%,
+      rgba(12, 10, 101, 0.88) 70%,
+      #0C0A65 100%
+    );
+  }
+
+  .research-opportunity-detail
+  .research-timeline-section {
+    padding-top: 55px;
+  }
+
+  .research-opportunity-detail
+  .research-timeline::after {
+    background: linear-gradient(
+      180deg,
+      #4EC6B1,
+      #A6EBDF
+    );
+  }
+}
+
+/* =========================================
+   Research Opportunities - Mobile Alignment
+   Match Posters & Scientific Debates
+   ========================================= */
+
+@media (max-width: 768px) {
+
+  /* Same hero spacing as other pathways */
+  .research-opportunity-detail .research-intro {
+    min-height: 0;
+    height: auto;
+    padding: 120px 7% 250px;
+  }
+
+  /* Keep the original content order */
+  .research-opportunity-detail
+  .research-intro__grid {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  /* Remove unused illustration space */
+  .research-opportunity-detail
+  .research-intro__signal {
+    display: none;
+  }
+
+  /* Text alignment */
+  .research-opportunity-detail
+  .research-intro__copy {
+    order: 0;
+    width: 100%;
+    max-width: 100%;
+    text-align: right;
+  }
+
+  /* Back link */
+  .research-opportunity-detail
+  .research-intro__copy .detail-back {
+    margin-bottom: 20px;
+    color: #FFFFFF;
+  }
+
+  /* Pathway number */
+  .research-opportunity-detail
+  .research-intro__copy .eyebrow {
+    margin-bottom: 20px;
+    color: #FFFFFF;
+  }
+
+  /* Main title */
+  .research-opportunity-detail
+  .research-intro__copy h1 {
+    margin: 0 0 26px;
+    font-size: clamp(32px, 8vw, 40px);
+    font-weight: 800;
+    line-height: 1.35;
+    letter-spacing: normal;
+    color: #FFFFFF;
+  }
+
+  /* Description */
+  .research-opportunity-detail
+  .research-intro__description {
+    margin: 0;
+    font-size: 15px;
+    line-height: 2;
+    color: #E2E7FF;
+  }
+
+  /* Timeline section */
+  .research-opportunity-detail
+  .research-timeline-section {
+    padding-top: 55px;
+  }
+
+  /* Timeline title - match other pathways */
+  .research-opportunity-detail
+  .research-section-heading h2 {
+    font-size: clamp(32px, 8vw, 40px);
+    font-weight: 800;
+    line-height: 1.35;
+    letter-spacing: normal;
+    color: #FFFFFF;
+  }
+
+  /* Timeline label */
+  .research-opportunity-detail
+  .research-section-heading .detail-label {
+    color: #4EC6B1;
+  }
+}
+
+/* =========================================
+   Research Opportunities - Mobile Typography
+   ========================================= */
+
+@media (max-width: 768px) {
+
+  /* Text alignment */
+  .research-opportunity-detail
+  .research-intro__copy {
+    width: 100%;
+    max-width: 100%;
+    text-align: right;
+  }
+
+  /* Back link */
+  .research-opportunity-detail
+  .research-intro__copy .detail-back {
+    margin-bottom: 22px;
+    font-size: 13px;
+    color: #FFFFFF;
+  }
+
+  /* Pathway number */
+  .research-opportunity-detail
+  .research-intro__copy .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 18px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #FFFFFF;
+  }
+
+  /* Main heading */
+  .research-opportunity-detail
+  .research-intro__copy h1 {
+    margin: 0 0 24px;
+    font-size: clamp(29px, 8vw, 38px);
+    font-weight: 800;
+    line-height: 1.4;
+    letter-spacing: normal;
+    text-align: right;
+    color: #FFFFFF;
+  }
+
+  /* Description */
+  .research-opportunity-detail
+  .research-intro__description {
+    margin: 0;
+    width: 100%;
+    max-width: 100%;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 2;
+    letter-spacing: normal;
+    text-align: right;
+    color: #E2E7FF;
+  }
+}
+
+
+/* Research Opportunities - Sync Timeline Line */
+
+@media (max-width: 760px) {
+
+  /* Always hide the static line */
+  .research-opportunity-detail
+  .research-timeline::before {
+    display: none !important;
+  }
+
+  /* Hide progress line before first event */
+  .research-opportunity-detail
+  .research-timeline::after {
+    opacity: 0;
+    visibility: hidden;
+
+    background: linear-gradient(
+      to bottom,
+      #4EC6B1,
+      #A6EBDF
+    );
+
+    transition:
+      height 0.7s ease,
+      opacity 0.4s ease;
+  }
+
+  /* Show the line only when an event appears */
+  .research-opportunity-detail
+  .research-timeline:has(
+    > .research-timeline__event.is-visible
+  )::after {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+/* Research Opportunities - Requirements Animation Fix */
+
+/* Let the entire card animate as one element */
+.research-opportunity-detail
+.research-requirements__list li p.hpc-scroll-reveal {
+  opacity: 1;
+  transform: none;
+  filter: none;
+  transition: none;
+  transition-delay: 0ms;
+}
+
+/* Keep numbers and text together */
+.research-opportunity-detail
+.research-requirements__list li p {
+  opacity: 1;
+  filter: none;
+}
+
+/* Research Requirements - Individual Scroll Reveal */
+
+.research-opportunity-detail
+.research-requirements__list > li {
+  opacity: 0;
+  transform: translateY(35px);
+  filter: blur(7px);
+  transition:
+    opacity 0.75s ease,
+    transform 0.75s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.75s ease;
+  transition-delay: 0ms;
+}
+
+/* Each card appears independently */
+.research-opportunity-detail
+.research-requirements__list > li.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+/* Keep number and text together */
+.research-opportunity-detail
+.research-requirements__list > li
+.hpc-scroll-reveal {
+  opacity: 1;
+  transform: none;
+  filter: none;
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .research-opportunity-detail
+  .research-requirements__list > li {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+  }
+}
+
+/* Research Opportunities - Sequential Timeline */
+
+/* No delay when events disappear */
+.research-opportunity-detail
+.research-timeline__event:nth-child(n) {
+  transition-delay: 0s;
+}
+
+/* Desktop: reveal events in numerical order */
+@media (min-width: 761px) {
+  .research-opportunity-detail
+  .research-timeline__event:nth-child(1).is-visible {
+    transition-delay: 0s;
+  }
+
+  .research-opportunity-detail
+  .research-timeline__event:nth-child(2).is-visible {
+    transition-delay: 0.12s;
+  }
+
+  .research-opportunity-detail
+  .research-timeline__event:nth-child(3).is-visible {
+    transition-delay: 0.24s;
+  }
+
+  .research-opportunity-detail
+  .research-timeline__event:nth-child(4).is-visible {
+    transition-delay: 0.36s;
+  }
+
+  .research-opportunity-detail
+  .research-timeline__event:nth-child(5).is-visible {
+    transition-delay: 0.48s;
+  }
+
+  .research-opportunity-detail
+  .research-timeline__event:nth-child(6).is-visible {
+    transition-delay: 0.60s;
+  }
+
+  .research-opportunity-detail
+  .research-timeline__event:nth-child(7).is-visible {
+    transition-delay: 0.72s;
+  }
+}
+
+/* Mobile: reveal each event as it enters */
+@media (max-width: 760px) {
+  .research-opportunity-detail
+  .research-timeline__event:nth-child(n) {
+    transition-delay: 0s;
+  }
+
+  /* Hide static timeline line */
+  .research-opportunity-detail
+  .research-timeline::before {
+    display: none;
+  }
+
+  /* Keep progress line synchronized */
+  .research-opportunity-detail
+  .research-timeline::after {
+    opacity: 0;
+    visibility: hidden;
+    background: linear-gradient(
+      to bottom,
+      #4EC6B1,
+      #A6EBDF
+    );
+    transition:
+      height 0.7s ease,
+      opacity 0.4s ease;
+  }
+
+  .research-opportunity-detail
+  .research-timeline:has(
+    > .research-timeline__event.is-visible
+  )::after {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+/* HPC - Research Opportunities Back Link */
+
+.research-opportunity-detail
+.research-intro__copy .detail-back {
+  display: flex !important;
+  align-items: center;
+  gap: 10px;
+
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 0 28px !important;
+  padding: 0 !important;
+
+  color: #55DDE6 !important;
+  font-size: 17px !important;
+  font-weight: 700;
+  line-height: 1.5;
+  text-decoration: none;
+}
+
+.research-opportunity-detail
+.research-intro__copy .detail-back:hover {
+  color: #FFFFFF !important;
+}
+
+/* Mobile */
+@media (max-width: 700px) {
+  .research-opportunity-detail
+  .research-intro__copy .detail-back {
+    font-size: 13px !important;
+    margin-bottom: 20px !important;
+  }
+}
+
+/* HPC - Center Last Research Requirement */
+/* Desktop Only */
+
+@media (min-width: 761px) {
+  .research-opportunity-detail
+  .research-requirements__list
+  > li:last-child:nth-child(odd) {
+    grid-column: 1 / -1 !important;
+    width: calc(50% - 7px) !important;
+    justify-self: center !important;
+    margin: 0 !important;
+  }
+}
