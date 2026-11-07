@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import {
   ArrowDown,
   ArrowUpLeft,
@@ -429,6 +429,7 @@ function Pathways({ content }: { content: HomeContent }) {
 
 function Resources({ content }: { content: HomeContent }) {
   const [towerRaised, setTowerRaised] = useState(false);
+  const [, navigate] = useLocation();
 
   return (
     <section
@@ -496,11 +497,9 @@ onClick={(event) => {
 
   const destination = location.link_url;
 
-  window.setTimeout(() => {
-    window.location.assign(
-      `${import.meta.env.BASE_URL}${destination.replace(/^\//, "")}`
-    );
-  }, 450);
+window.setTimeout(() => {
+  navigate(destination);
+}, 450);
 }}
 >
                   {isTower ? (
