@@ -15,7 +15,7 @@ export const pathwayCards: Pathway[] = [
     slug: "scientific-program",
     eyebrow: "01",
     title: "مسار البرنامج العلمي",
-    image:"/images/pathway-scientific_9a22bedb.png",
+    image: `${import.meta.env.BASE_URL}images/pathway-scientific_9a22bedb.png`,
     tone: "mint",
     text: "جلسات متخصصة وحوارات علمية تفتح أبواب المعرفة أمام المهتمين بالتخصصات الصحية.",
     details: "رحلة معرفية تجمع الخبراء والطلاب حول أحدث الأفكار والممارسات في التخصصات الصحية، عبر جلسات مركزة وحوارات تفاعلية.",
