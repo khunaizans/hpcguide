@@ -474,11 +474,35 @@ className={`resource-card ${
 }`}
 
               >
-                <Link
-                  href={location.link_url}
-                  className="resource-card__link"
-                  aria-label={`استكشف ${location.title}`}
-                >
+               <Link
+  href={location.link_url}
+  className="resource-card__link"
+  aria-label={`استكشف ${location.title}`}
+onClick={(event) => {
+  if (!isTower) return;
+
+  // Allow normal browser actions such as opening in a new tab
+  if (
+    event.ctrlKey ||
+    event.metaKey ||
+    event.shiftKey ||
+    event.altKey ||
+    event.button !== 0
+  ) return;
+
+  event.preventDefault();
+
+  setTowerRaised(true);
+
+  const destination = location.link_url;
+
+  window.setTimeout(() => {
+    window.location.assign(
+      `${import.meta.env.BASE_URL}${destination.replace(/^\//, "")}`
+    );
+  }, 450);
+}}
+>
                   {isTower ? (
                     <>
 
