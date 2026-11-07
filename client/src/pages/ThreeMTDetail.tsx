@@ -1,3 +1,4 @@
+import { getMediaUrl } from "@/lib/mediaUrl";
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 

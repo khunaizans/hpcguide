@@ -3244,7 +3244,7 @@ transform: scale(1.18) !important;
   pointer-events: none;
 
   background-image:
-    url("/images/graduate-studies-card-portrait.webp");
+    url("../public/images/graduate-studies-card-portrait.webp");
 
   background-size: cover;
   background-position: center center;
@@ -3506,11 +3506,11 @@ transform: scale(1.18) !important;
   inset: 0;
   z-index: 3;
   pointer-events: none;
-  background: url("/images/graduate-studies-card-portrait.webp") center / cover no-repeat !important;
+  background: url("../public/images/graduate-studies-card-portrait.webp") center / cover no-repeat !important;
   clip-path: none !important;
   -webkit-clip-path: none !important;
-  mask-image: url("/images/graduate-facade-mask.png") !important;
-  -webkit-mask-image: url("/images/graduate-facade-mask.png") !important;
+  mask-image: url("../public/images/graduate-facade-mask.png") !important;
+  -webkit-mask-image: url("../public/images/graduate-facade-mask.png") !important;
   mask-size: cover !important;
   -webkit-mask-size: cover !important;
   mask-position: center !important;
@@ -5737,9 +5737,9 @@ transition:
   pointer-events: none;
 
   -webkit-mask-image:
-    url("/images/clinical-simulation-facade-mask.png");
+    url("../public/images/clinical-simulation-facade-mask.png");
   mask-image:
-    url("/images/clinical-simulation-facade-mask.png");
+    url("../public/images/clinical-simulation-facade-mask.png");
 
   -webkit-mask-size: cover;
   mask-size: cover;

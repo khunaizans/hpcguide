@@ -1,3 +1,4 @@
+import { getMediaUrl } from "@/lib/mediaUrl";
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 
@@ -211,10 +212,7 @@ const posterImage =
   (route ? routeToPathway(route).image : null) ||
   getPathway("posters-research")?.image;
 
-const posterImageSrc =
-  posterImage?.includes("supabase.com/dashboard/")
-    ? `/images/${posterImage.split("website").pop()}`
-    : posterImage?.replace("/manus-storage/", "/images/");
+const posterImageSrc = getMediaUrl(posterImage);
 
 
   return (

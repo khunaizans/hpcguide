@@ -51,7 +51,7 @@ export default function SiteFooter() {
   }, []);
 
   if (loading) return null;
-  if (!customized) return <footer className="site-footer"><div className="container footer-inner"><a href="/" className="footer-logo" aria-label="العودة للرئيسية"><img src="/images/hpc-logo_739bab33.png" alt="مؤتمر التخصصات الصحية" /></a><p>نلتقي لنحوّل المعرفة إلى أثر.</p><div className="footer-meta">
+  if (!customized) return <footer className="site-footer"><div className="container footer-inner"><a href="/" className="footer-logo" aria-label="العودة للرئيسية"><img src={`${import.meta.env.BASE_URL}images/hpc-logo_739bab33.png`} alt="مؤتمر التخصصات الصحية" /></a><p>نلتقي لنحوّل المعرفة إلى أثر.</p><div className="footer-meta">
   <div className="footer-copyright">
     <span>مؤتمر التخصصات الصحية</span>
     <span>© HPC 2027</span>

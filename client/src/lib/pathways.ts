@@ -45,7 +45,7 @@ export const pathwayCards: Pathway[] = [
     slug: "research-opportunities",
     eyebrow: "04",
     title: "مسار الفرص البحثية",
-    image: "/images/pathway-presentations_13b4274a.png",
+    image: `${import.meta.env.BASE_URL}images/pathway-presentations_13b4274a.png`,
     tone: "ink",
     text: "لقاء بين الباحثين والطلاب لاكتشاف فرص جديدة للتعاون والتطوير.",
     details: "تعرّف على مساحات التعاون والفرص التي تساعدك على تحويل فضولك البحثي إلى مشروع وخطوة عملية قادمة.",

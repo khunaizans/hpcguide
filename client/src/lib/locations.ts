@@ -11,7 +11,7 @@ export const locations: Location[] = [
   {
     slug: "administrative-tower",
     title: "البرج الإداري",
-    image: "/images//images/",
+    image: `${import.meta.env.BASE_URL}images/tower-card-new.png`,
     description: "نقطة الوصول الرئيسية للمؤتمر ومركز الخدمات الإدارية.",
     details: "استخدم هذا الدليل للوصول إلى البرج الإداري، والتعرّف على نقطة الاستقبال والخدمات التي تساعدك منذ لحظة وصولك.",
     highlights: ["نقطة الاستقبال الرئيسية", "خدمات وإرشادات الزوار", "معلومات التسجيل والدعم"],
@@ -19,7 +19,7 @@ export const locations: Location[] = [
   {
     slug: "postgraduate-studies",
     title: "الدراسات العليا",
-    image: "/images/postgraduate-building_d0f7d595.png",
+    image: `${import.meta.env.BASE_URL}images/postgraduate-building_d0f7d595.png`,
     description: "مساحة أكاديمية للتعلّم، البحث، وبناء الخطوة القادمة.",
     details: "تعرّف على مبنى الدراسات العليا والمساحات الأكاديمية القريبة من فعاليات المؤتمر، حيث تتحول المعرفة إلى فرص جديدة.",
     highlights: ["المساحات الأكاديمية", "البرامج والفرص البحثية", "بيئة للتعلم والتطوير"],
@@ -27,7 +27,7 @@ export const locations: Location[] = [
   {
     slug: "nearby-facilities",
     title: "المرافق المجاورة",
-    image: "/images/nearby-map_c38385fb.png",
+    image: `${import.meta.env.BASE_URL}images/nearby-map_c38385fb.png`,
     description: "خريطة سريعة لما يحيط بموقع المؤتمر من مرافق وخدمات.",
     details: "استكشف المرافق المجاورة التي تساعدك على التنقل براحة أكبر، وخطط مسارك بين الجلسات والوجهات القريبة.",
     highlights: ["خريطة للمرافق القريبة", "وجهات وخدمات مساندة", "تنقل أسهل بين المواقع"],
@@ -35,7 +35,7 @@ export const locations: Location[] = [
   {
     slug: "parking",
     title: "مواقف السيارات",
-    image: "/images/parking_91b91608.png",
+    image: `${import.meta.env.BASE_URL}images/parking_91b91608.png`,
     description: "إرشادات مختصرة تساعدك على الوصول إلى مواقف السيارات.",
     details: "خطط لوصولك بسلاسة عبر معرفة مسارات الدخول ومناطق الوقوف القريبة من موقع المؤتمر.",
     highlights: ["مسارات وصول واضحة", "مواقف قريبة من الموقع", "وصول أكثر سلاسة"],

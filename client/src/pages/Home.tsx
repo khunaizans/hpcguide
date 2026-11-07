@@ -526,7 +526,7 @@ className={`resource-card ${
 <div className="tower-seamless">
   <div className="tower-seamless__frame">
     <img
-      src="/images/tower-card-new.png"
+      src={`${import.meta.env.BASE_URL}images/tower-card-new.png`}
       alt="البرج الإداري"
       className="tower-seamless__base"
     />
@@ -534,7 +534,7 @@ className={`resource-card ${
 
   <div className="tower-seamless__cap" aria-hidden="true">
     <img
-      src="/images/tower-roof-from-original-aligned.png"
+      src={`${import.meta.env.BASE_URL}images/tower-roof-from-original-aligned.png`}
       alt=""
       className="tower-seamless__roof"
     />
@@ -555,7 +555,7 @@ className={`resource-card ${
 {isGraduate ? (
   <div className="graduate-photo-window">
     <img
-      src="/images/graduate-studies-card-portrait.webp"
+      src={`${import.meta.env.BASE_URL}images/graduate-studies-card-portrait.webp`}
       alt="الدراسات العليا"
       className="graduate-photo-image"
     />
@@ -567,7 +567,7 @@ className={`resource-card ${
   {/* الصورة الكاملة داخل البطاقة */}
   <div className="simulation-photo-window">
     <img
-      src="/images/clinical-simulation-center.webp"
+      src={`${import.meta.env.BASE_URL}images/clinical-simulation-center.webp`}
       alt="مركز المحاكاة السريرية"
       className="simulation-photo-base"
     />
@@ -575,7 +575,7 @@ className={`resource-card ${
 
   {/* طبقة المبنى المعزولة */}
   <img
-    src="/images/clinical-simulation-building-cutout.png"
+    src={`${import.meta.env.BASE_URL}images/clinical-simulation-building-cutout.png`}
     alt=""
     aria-hidden="true"
     className="simulation-building-popout"

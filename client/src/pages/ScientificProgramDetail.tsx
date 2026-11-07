@@ -1,3 +1,4 @@
+import { getMediaUrl } from "@/lib/mediaUrl";
 
 import { useEffect, useState } from "react";
 import { ArrowRight, Sparkles } from "lucide-react";

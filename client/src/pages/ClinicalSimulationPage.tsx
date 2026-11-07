@@ -26,7 +26,7 @@ export default function ClinicalSimulationPage() {
         >
           <img
             className="tower-detail__hero-image"
-            src="/images/clinical-simulation-center.webp"
+            src={`${import.meta.env.BASE_URL}images/clinical-simulation-center.webp`}
             alt="مبنى الدراسات العليا"
           />
 

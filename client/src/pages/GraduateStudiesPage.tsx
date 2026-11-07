@@ -26,7 +26,7 @@ export default function GraduateStudiesPage() {
         >
           <img
             className="tower-detail__hero-image"
-            src="/images/graduate-studies-hero.webp"
+            src={`${import.meta.env.BASE_URL}images/graduate-studies-hero.webp`}
             alt="مبنى الدراسات العليا"
           />
 

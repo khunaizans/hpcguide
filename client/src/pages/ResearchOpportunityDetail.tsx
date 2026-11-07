@@ -1,3 +1,4 @@
+import { getMediaUrl } from "@/lib/mediaUrl";
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, ExternalLink, Sparkles } from "lucide-react";
 import { useLocation } from "wouter";
@@ -270,13 +271,7 @@ useEffect(() => {
   };
 
 
-const researchImageSrc =
-  researchImage.includes("supabase.com/dashboard/")
-    ? `/images/${researchImage.split("website").pop()}`
-    : researchImage.replace(
-        "/manus-storage/",
-        "/images/"
-      );
+const researchImageSrc = getMediaUrl(researchImage);
 
 
 if (isLoading) {
