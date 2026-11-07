@@ -95,10 +95,19 @@ const heroImage =
     ? routeToPathway(route).image
     : getPathway("scientific-program")?.image;
 
-const heroImageSrc =
-  heroImage?.includes("supabase.com/dashboard/")
+const heroImageSrc = (() => {
+  if (!heroImage) return "";
+
+  if (heroImage.startsWith("http") && !heroImage.includes("supabase.com/dashboard/")) {
+    return heroImage;
+  }
+
+  const path = heroImage.includes("supabase.com/dashboard/")
     ? `/images/${heroImage.split("website").pop()}`
-    : heroImage?.replace("/manus-storage/", "/images/");
+    : heroImage.replace(/^\/manus-storage\//, "/images/");
+
+  return `${import.meta.env.BASE_URL}${path.replace(/^\//, "")}`;
+})();
 
   return (
     <main className="scientific-program-page" dir="rtl">
