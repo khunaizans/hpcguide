@@ -419,11 +419,15 @@ function Pathways({ content }: { content: HomeContent }) {
 >
 
               <div className="pathway-image-wrap"><img
-  src={
-    card.image?.includes("supabase.com/dashboard/")
-      ? `/images/${card.image.split("website").pop()}`
-      : card.image?.replace("/manus-storage/", "/images/")
-  }
+ src={(() => {
+  const image = card.image || "";
+
+  if (image.startsWith("http")) return image;
+
+  const path = image.replace(/^\/manus-storage\//, "/images/");
+
+  return `${import.meta.env.BASE_URL}${path.replace(/^\//, "")}`;
+})()}
   alt={card.title}
   className="pathway-image"
 />
