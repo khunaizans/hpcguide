@@ -480,9 +480,6 @@ className={`resource-card ${
   className="resource-card__link"
   aria-label={`استكشف ${location.title}`}
 onClick={(event) => {
-  if (!isTower) return;
-
-  // Allow normal browser actions such as opening in a new tab
   if (
     event.ctrlKey ||
     event.metaKey ||
@@ -491,15 +488,19 @@ onClick={(event) => {
     event.button !== 0
   ) return;
 
+  if (!window.matchMedia("(hover: none)").matches && !isTower) {
+    return;
+  }
+
   event.preventDefault();
 
-  setTowerRaised(true);
+  if (isTower) {
+    setTowerRaised(true);
+  }
 
-  const destination = location.link_url;
-
-window.setTimeout(() => {
-  navigate(destination);
-}, 450);
+  window.setTimeout(() => {
+    navigate(location.link_url);
+  }, 450);
 }}
 >
                   {isTower ? (

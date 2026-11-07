@@ -6258,3 +6258,14 @@ transition:
     font-size: 22px !important;
   }
 }
+/* Clinical Simulation - Mobile Tap Animation */
+@media (hover: none) and (pointer: coarse) {
+  .resources-section
+  .resource-card--simulation:focus-within
+  .simulation-photo-base,
+  .resources-section
+  .resource-card--simulation:focus-within
+  .simulation-building-popout {
+    transform: scale(1.04) !important;
+  }
+}
