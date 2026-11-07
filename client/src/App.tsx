@@ -113,7 +113,7 @@ export default function App() {
       <ThemeProvider defaultTheme="light">
         <TooltipProvider>
           <Toaster />
-          <Router base="/hpcguide">
+          <Router base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
             <ScrollToTop />
             <AppRoutes />
             <PublicAssistant />
