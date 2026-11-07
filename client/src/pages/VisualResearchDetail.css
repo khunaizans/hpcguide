@@ -1,0 +1,1337 @@
+
+/* Poster & Oral Presentations — Hero only */
+
+.poster-oral-page {
+  min-height: 100vh;
+  background: #ffffff;
+  color: #101a5c;
+}
+
+.poster-oral-page .poster-oral-hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 70px;
+  min-height: 650px;
+  padding: 130px 8% 110px;
+  overflow: hidden;
+  background: #ffffff;
+}
+
+/* النصوص */
+.poster-oral-page .poster-oral-hero-content {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  max-width: 670px;
+  animation: posterHeroReveal 0.9s ease both;
+}
+
+.poster-oral-page .poster-oral-eyebrow {
+  display: inline-block;
+  margin-bottom: 20px;
+  color: #20aeba;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.poster-oral-page .poster-oral-hero h1 {
+  margin: 0 0 28px;
+  color: #101a5c;
+  font-size: clamp(38px, 4.5vw, 68px);
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.poster-oral-page .poster-oral-description {
+  margin: 0;
+  color: #64748b;
+  font-size: 19px;
+  line-height: 2;
+  white-space: pre-line;
+}
+
+/* العنصر البصري المؤقت */
+.poster-oral-page .poster-oral-visual {
+  position: relative;
+  flex: 0 0 36%;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+}
+
+.poster-oral-page .poster-oral-orbit {
+  width: 78%;
+  aspect-ratio: 1;
+  border: 1px solid rgba(32, 174, 186, 0.4);
+  border-radius: 50%;
+  position: absolute;
+  animation: posterOrbit 18s linear infinite;
+}
+
+.poster-oral-page .poster-oral-orbit::before {
+  content: "";
+  position: absolute;
+  top: 12%;
+  right: 10%;
+  width: 15px;
+  height: 15px;
+  background: #20aeba;
+  border-radius: 50%;
+}
+
+.poster-oral-page .poster-oral-visual-core {
+  width: 53%;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #edfafa;
+  color: #101a5c;
+  font-weight: 800;
+  font-size: clamp(16px, 2vw, 27px);
+  letter-spacing: 3px;
+}
+
+@keyframes posterHeroReveal {
+  from {
+    opacity: 0;
+    transform: translateY(35px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes posterOrbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 768px) {
+  .poster-oral-page .poster-oral-hero {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 40px;
+    min-height: auto;
+    padding: 85px 7% 75px;
+  }
+
+  .poster-oral-page .poster-oral-hero h1 {
+    font-size: clamp(32px, 8vw, 46px);
+  }
+
+  .poster-oral-page .poster-oral-description {
+    font-size: 16px;
+  }
+
+  .poster-oral-page .poster-oral-visual {
+    flex: none;
+    width: min(75%, 300px);
+    margin: 0 auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .poster-oral-page .poster-oral-hero-content,
+  .poster-oral-page .poster-oral-orbit {
+    animation: none;
+  }
+}
+
+/* Poster & Oral Presentations — Timeline */
+
+.poster-oral-page .poster-oral-timeline {
+  padding: 90px 8% 120px;
+  background: #f8fbfd;
+  color: #101a5c;
+  overflow: hidden;
+}
+
+.poster-oral-timeline-heading {
+  text-align: right;
+  margin-bottom: 15px;
+}
+
+.poster-oral-timeline-heading span {
+  color: #20aeba;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.poster-oral-timeline-heading h2 {
+  font-size: clamp(32px, 4vw, 52px);
+  margin: 12px 0 0;
+  font-weight: 800;
+}
+
+.poster-oral-timeline-track {
+  position: relative;
+  width: 85%;
+  max-width: 1000px;
+  height: 500px;
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.poster-oral-timeline-line {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  color: #20aeba;
+}
+
+.poster-oral-timeline-events {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.poster-oral-timeline-event {
+  position: absolute;
+  width: 27%;
+  text-align: center;
+  transform: translateX(-50%);
+}
+
+.poster-oral-timeline-event:nth-child(1) {
+  left: 85%;
+  top: 84px;
+}
+
+.poster-oral-timeline-event:nth-child(2) {
+  left: 50%;
+  top: 84px;
+}
+
+.poster-oral-timeline-event:nth-child(3) {
+  left: 15%;
+  top: 84px;
+}
+
+.poster-oral-timeline-event:nth-child(4) {
+  left: 15%;
+  top: 294px;
+}
+
+.poster-oral-timeline-event:nth-child(5) {
+  left: 50%;
+  top: 294px;
+}
+
+.poster-oral-timeline-event:nth-child(6) {
+  left: 85%;
+  top: 294px;
+}
+
+.poster-oral-timeline-number {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  margin: 0 auto 15px;
+  border-radius: 50%;
+  background: #101a5c;
+  border: 2px solid #20aeba;
+  color: white;
+  font-weight: 700;
+}
+
+.poster-oral-timeline-event time {
+  display: block;
+  margin-bottom: 8px;
+  color: #2697a6;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.poster-oral-timeline-event h3 {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.6;
+  font-weight: 700;
+}
+
+.poster-oral-timeline-event p {
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* Mobile: readable vertical timeline */
+@media (max-width: 768px) {
+  .poster-oral-page .poster-oral-timeline {
+    padding: 65px 7% 85px;
+  }
+
+  .poster-oral-timeline-track {
+    height: auto;
+    min-height: 0;
+  }
+
+  .poster-oral-timeline-line {
+    display: none;
+  }
+
+  .poster-oral-timeline-events {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .poster-oral-timeline-event:nth-child(n) {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 100%;
+    transform: none;
+    text-align: right;
+    border-right: 2px solid #20aeba;
+    padding: 12px 25px;
+  }
+
+  .poster-oral-timeline-number {
+    margin: 0 0 12px;
+  }
+}
+
+/* Same timeline style as Research Opportunities */
+.poster-oral-page .research-timeline {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  width: 70%;
+  max-width: 1050px;
+  margin: 0 0 0 auto;
+  padding: 66px 0 20px;
+  position: relative;
+  list-style: none;
+}
+
+/* Keep all six markers aligned */
+.poster-oral-page .research-timeline__event {
+  min-width: 0;
+  text-align: center;
+}
+
+@media (max-width: 760px) {
+  .poster-oral-page .research-timeline {
+    grid-template-columns: 1fr;
+    width: 100%;
+    max-width: none;
+    padding: 0;
+    margin-right: 10px;
+  }
+}
+
+/* Timeline sequential reveal */
+
+.poster-oral-page .research-timeline__event:nth-child(1) {
+  transition-delay: 0s;
+}
+
+.poster-oral-page .research-timeline__event:nth-child(2) {
+  transition-delay: 0.15s;
+}
+
+.poster-oral-page .research-timeline__event:nth-child(3) {
+  transition-delay: 0.3s;
+}
+
+.poster-oral-page .research-timeline__event:nth-child(4) {
+  transition-delay: 0.45s;
+}
+
+.poster-oral-page .research-timeline__event:nth-child(5) {
+  transition-delay: 0.6s;
+}
+
+.poster-oral-page .research-timeline__event:nth-child(6) {
+  transition-delay: 0.75s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .poster-oral-page .research-timeline__event {
+    transition: none;
+    transition-delay: 0s;
+  }
+}
+/* Hide the timeline before scrolling */
+.poster-oral-page .research-timeline::before {
+  background: transparent;
+}
+
+/* Reveal the colored line from right to left */
+.poster-oral-page .research-timeline::after {
+  right: 0;
+  left: auto;
+  width: var(--research-progress, 0%);
+  transition: width 0.8s cubic-bezier(.23, 1, .32, 1);
+}
+
+/* Poster & Oral Presentations — Requirements */
+
+.poster-oral-page .poster-oral-requirements {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.6fr) minmax(0, 1.4fr);
+  gap: 48px;
+  max-width: 1250px;
+  margin: 84px auto 100px;
+  padding: 44px 7% 0;
+  border-top: 1px solid #e6edf1;
+  color: #0c0a65;
+}
+
+.poster-oral-requirements-heading span {
+  color: #39b6bd;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.poster-oral-requirements-heading h2 {
+  margin: 16px 0 0;
+  font-size: clamp(34px, 4vw, 58px);
+  line-height: 1.3;
+}
+
+.poster-oral-requirements-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.poster-oral-requirement {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  padding: 17px 16px;
+  border: 1px solid #e6edf1;
+  border-radius: 16px;
+  background: linear-gradient(145deg, #ffffff, #f7fcfb);
+}
+
+.poster-oral-requirement-number {
+  display: grid;
+  place-items: center;
+  flex: 0 0 30px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  color: #0c0a65;
+  background: #dffff7;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.poster-oral-requirement p {
+  margin: 2px 0 0;
+  color: #68749a;
+  font-size: 14px;
+  line-height: 1.9;
+  white-space: pre-line;
+}
+
+/* Mobile */
+@media (max-width: 760px) {
+  .poster-oral-page .poster-oral-requirements {
+    display: block;
+    margin: 58px auto 75px;
+    padding: 32px 22px 0;
+  }
+
+  .poster-oral-requirements-heading {
+    margin-bottom: 24px;
+  }
+
+  .poster-oral-requirements-list {
+    grid-template-columns: 1fr;
+    gap: 11px;
+  }
+
+  .poster-oral-requirement p {
+    font-size: 13px;
+  }
+}
+
+/* Requirements Scrollytelling */
+
+.poster-oral-page .poster-oral-requirement {
+  opacity: 0;
+  transform: translateY(35px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s cubic-bezier(.23, 1, .32, 1);
+}
+
+.poster-oral-page .poster-oral-requirement.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.poster-oral-page .poster-oral-requirement:nth-child(2) {
+  transition-delay: 0.12s;
+}
+
+.poster-oral-page .poster-oral-requirement:nth-child(3) {
+  transition-delay: 0.24s;
+}
+
+.poster-oral-page .poster-oral-requirement:nth-child(4) {
+  transition-delay: 0.36s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .poster-oral-page .poster-oral-requirement {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+/* Fix mobile timeline gradient */
+@media (max-width: 760px) {
+  .poster-oral-page .research-timeline::before {
+    display: none;
+  }
+
+  .poster-oral-page .research-timeline::after {
+    top: 0;
+    bottom: auto;
+    right: 26px;
+    left: auto;
+
+    width: 2px;
+    height: var(--research-progress, 0%);
+
+    background: linear-gradient(
+      180deg,
+      #39b6bd,
+      #8f46df
+    );
+
+    transition: height 0.7s ease;
+  }
+}
+
+/* Timeline and registration layout — desktop */
+
+@media (min-width: 761px) {
+  .poster-oral-page .poster-oral-timeline {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 360px;
+    column-gap: 42px;
+    align-items: center;
+  }
+
+  .poster-oral-page .poster-oral-timeline-heading {
+    grid-column: 1 / -1;
+  }
+
+  .poster-oral-page .poster-oral-timeline > .research-timeline {
+    grid-column: 1;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    min-width: 0;
+    align-self: start;
+    top: -50px;
+  }
+
+  .poster-oral-page .poster-oral-registration {
+    grid-column: 2;
+    position: relative;
+    top: auto;
+    width: 100%;
+    align-self: center;
+  }
+}
+
+/* Registration below timeline — mobile */
+
+@media (max-width: 760px) {
+  .poster-oral-page .poster-oral-registration {
+    position: relative;
+    top: auto;
+    width: 100%;
+    max-width: 420px;
+    margin: 45px auto 0;
+  }
+}
+@media (min-width: 761px) {
+  /* تقريب الشروط من الخط الزمني */
+  .poster-oral-page .poster-oral-timeline-main > .research-timeline {
+    margin-bottom: -65px;
+  }
+
+  /* رفع بطاقة التسجيل */
+  .poster-oral-page .poster-oral-registration {
+    align-self: start;
+  }
+}
+
+/* Compact timeline and requirements — desktop */
+
+@media (min-width: 761px) {
+  /* Give the timeline more horizontal space */
+  .poster-oral-page .poster-oral-timeline {
+    grid-template-columns: minmax(0, 1fr) 320px;
+    column-gap: 24px;
+    padding-left: 3%;
+    padding-right: 3%;
+  }
+
+  /* Keep the timeline wide */
+  .poster-oral-page .poster-oral-timeline-main > .research-timeline {
+    width: 100%;
+    max-width: none;
+    margin-bottom: -110px;
+  }
+
+  /* Requirements directly below timeline */
+  .poster-oral-page .poster-oral-timeline-main .poster-oral-requirements {
+    margin: 0;
+    padding: 0;
+    border-top: none;
+    width: 100%;
+  }
+
+  /* Compact 2 x 2 requirements layout */
+  .poster-oral-page .poster-oral-requirements-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .poster-oral-page .poster-oral-requirement {
+    padding: 11px 12px;
+    gap: 9px;
+    border-radius: 12px;
+  }
+
+  .poster-oral-page .poster-oral-requirement-number {
+    flex-basis: 25px;
+    width: 25px;
+    height: 25px;
+    font-size: 10px;
+  }
+
+  .poster-oral-page .poster-oral-requirement p {
+    font-size: 12px;
+    line-height: 1.7;
+  }
+}
+
+/* Hide the separate requirements heading */
+.poster-oral-page .poster-oral-timeline-main
+.poster-oral-requirements-heading {
+  display: none;
+}
+
+@media (min-width: 761px) {
+  /* Move timeline and requirements together */
+  .poster-oral-page .poster-oral-timeline-main {
+    position: relative;
+    top: -50px;
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* Remove the overlap without changing marker alignment */
+  .poster-oral-page .poster-oral-timeline-main > .research-timeline {
+    top: 0;
+    margin-bottom: 24px;
+  }
+
+  /* Give requirements the full timeline width */
+  .poster-oral-page .poster-oral-timeline-main > .poster-oral-requirements {
+    display: block;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .poster-oral-page .poster-oral-timeline-main .poster-oral-requirements-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+    gap: 12px;
+  }
+
+  .poster-oral-page .poster-oral-timeline-main .poster-oral-requirement {
+    min-width: 0;
+    padding: 12px 14px;
+  }
+
+  .poster-oral-page .poster-oral-timeline-main .poster-oral-requirement p {
+    font-size: 12px;
+    line-height: 1.8;
+    overflow-wrap: break-word;
+  }
+}
+/* Center requirements title below timeline */
+
+.poster-oral-page .poster-oral-timeline-main
+.poster-oral-requirements-heading {
+  display: block;
+  text-align: center;
+  margin: 0 0 20px;
+}
+
+.poster-oral-page .poster-oral-timeline-main
+.poster-oral-requirements-heading span {
+  display: none;
+}
+
+.poster-oral-page .poster-oral-timeline-main
+.poster-oral-requirements-heading h2 {
+  margin: 0;
+  font-size: 35px;
+  font-weight: 800;
+  color: #39b6bd;
+}
+@media (min-width: 761px) {
+  .poster-oral-page .poster-oral-timeline-main > .poster-oral-requirements {
+    margin-top: -65px;
+  }
+}
+@media (min-width: 761px) {
+  .poster-oral-page .poster-oral-registration {
+    width: 290px;
+    max-width: 100%;
+    height: auto;
+    padding: 20px;
+    justify-self: start;
+  }
+
+  .poster-oral-page .poster-oral-registration .research-cta__icon {
+    margin: 22px 0 15px;
+  }
+
+  .poster-oral-page .poster-oral-registration h2 {
+    font-size: 27px;
+  }
+
+  .poster-oral-page .poster-oral-registration p {
+    margin: 10px 0 18px;
+  }
+}
+/* Requirements title scroll animation */
+
+.poster-oral-page .poster-oral-requirements-heading h2 {
+  opacity: 0;
+  transform: translateY(25px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s cubic-bezier(.23, 1, .32, 1);
+}
+
+.poster-oral-page .poster-oral-requirements-heading h2.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .poster-oral-page .poster-oral-requirements-heading h2 {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Registration card — Scroll Reveal */
+
+.poster-oral-page .poster-oral-registration {
+  opacity: 0;
+  transform: translateY(35px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s cubic-bezier(.23, 1, .32, 1);
+}
+
+.poster-oral-page .poster-oral-registration.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .poster-oral-page .poster-oral-registration {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+/* Reduce empty space above timeline section — desktop only */
+
+@media (min-width: 761px) {
+  .poster-oral-page .poster-oral-hero {
+    min-height: 560px;
+    padding-bottom: 65px;
+  }
+
+  .poster-oral-page .poster-oral-timeline {
+    padding-top: 40px;
+  }
+}
+/* Make requirement cards fit their content */
+
+.poster-oral-page .poster-oral-requirements-list {
+  align-items: start;
+}
+
+.poster-oral-page .poster-oral-requirement {
+  height: fit-content;
+  min-height: 0;
+  align-self: start;
+}
+
+/* Masonry requirements layout */
+
+.poster-oral-page .poster-oral-timeline-main
+.poster-oral-requirements-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 14px;
+}
+
+.poster-oral-page .poster-oral-requirements-column {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+
+.poster-oral-page .poster-oral-requirements-column
+.poster-oral-requirement {
+  width: 100%;
+  height: auto;
+  margin: 0;
+  align-self: auto;
+}
+
+/* Mobile: original numeric order */
+@media (max-width: 760px) {
+  .poster-oral-page .poster-oral-timeline-main
+  .poster-oral-requirements-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .poster-oral-page .poster-oral-requirements-column {
+    display: contents;
+  }
+
+  .poster-oral-page .poster-oral-requirement {
+    width: 100%;
+  }
+}
+
+/* Balanced 2-column requirements */
+
+.poster-oral-page .poster-oral-timeline-main
+.poster-oral-requirements-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 14px;
+}
+
+.poster-oral-page .poster-oral-requirement {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  align-self: stretch;
+}
+
+/* Mobile */
+@media (max-width: 760px) {
+  .poster-oral-page .poster-oral-timeline-main
+  .poster-oral-requirements-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Requirements cards — refined design */
+
+@media (min-width: 761px) {
+  .poster-oral-page .poster-oral-timeline-main
+  .poster-oral-requirements-list {
+    gap: 12px;
+  }
+
+  .poster-oral-page .poster-oral-timeline-main
+  .poster-oral-requirement {
+    padding: 11px 14px;
+    gap: 10px;
+    align-items: flex-start;
+    border-radius: 14px;
+  }
+
+  .poster-oral-page .poster-oral-timeline-main
+  .poster-oral-requirement p {
+    margin: 0;
+    color: #435579;
+    font-size: 13px;
+    line-height: 1.55;
+    white-space: pre-line;
+  }
+}
+/* Mobile: show hero image above text */
+@media (max-width: 768px) {
+  .poster-oral-page .poster-oral-visual {
+    order: -1;
+  }
+
+  .poster-oral-page .poster-oral-hero-content {
+    order: 1;
+  }
+}
+
+/* =========================================
+   HPC - Posters Pathway Brand Colors
+   Colors only - preserve existing layout
+   ========================================= */
+
+.poster-oral-page {
+  background: #0C0A65;
+  color: #FFFFFF;
+}
+
+/* Hero: preserve the background image
+   and gradient from the TSX file */
+.poster-oral-page .poster-oral-hero {
+  background-color: #0C0A65;
+}
+
+/* Hero typography */
+.poster-oral-page .poster-oral-hero h1 {
+  color: #FFFFFF;
+}
+
+.poster-oral-page .poster-oral-description {
+  color: #E2E7FF;
+}
+
+.poster-oral-page .poster-oral-eyebrow {
+  color: #FFD067;
+}
+
+/* Existing decorative element */
+.poster-oral-page .poster-oral-orbit {
+  border-color: rgba(255, 208, 103, 0.5);
+}
+
+.poster-oral-page .poster-oral-orbit::before {
+  background: #FFD067;
+}
+
+.poster-oral-page .poster-oral-visual-core {
+  background: rgba(255, 208, 103, 0.15);
+  color: #FFD067;
+}
+
+/* Timeline section */
+.poster-oral-page .poster-oral-timeline {
+  background: #0C0A65;
+  color: #FFFFFF;
+}
+
+/* Timeline headings */
+.poster-oral-page .poster-oral-timeline-heading h2 {
+  color: #FFFFFF;
+}
+
+.poster-oral-page .poster-oral-timeline-heading span {
+  color: #FFD067;
+}
+
+/* Timeline event text */
+.poster-oral-page .research-timeline__event h3 {
+  color: #FFFFFF;
+}
+
+.poster-oral-page .research-timeline__event time {
+  color: #FFD067;
+}
+
+/* Requirements heading */
+.poster-oral-page .poster-oral-requirements {
+  color: #FFFFFF;
+  border-top-color: rgba(255,255,255,0.15);
+}
+
+.poster-oral-page
+.poster-oral-requirements-heading h2 {
+  color: #FFD067;
+}
+
+.poster-oral-page
+.poster-oral-requirements-heading span {
+  color: #FFD067;
+}
+
+/* Keep requirement cards light and readable */
+.poster-oral-page .poster-oral-requirement {
+  background: linear-gradient(
+    145deg,
+    #FFFFFF,
+    #F7F9FF
+  );
+  border-color: rgba(255,208,103,0.3);
+}
+
+.poster-oral-page
+.poster-oral-requirement-number {
+  background: #FFD067;
+  color: #0C0A65;
+}
+
+/* Preserve readability inside cards */
+.poster-oral-page .poster-oral-requirement p {
+  color: #435579;
+}
+
+/* Timeline mobile progress line */
+@media (max-width: 760px) {
+  .poster-oral-page .research-timeline::after {
+    background: linear-gradient(
+      180deg,
+      #FFD067,
+      #8F46DF
+    );
+  }
+}
+
+/* Posters - Hero Image and Gradient */
+
+.poster-oral-page .poster-oral-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background-color: #0C0A65;
+}
+
+/* Full background image */
+.poster-oral-page .poster-oral-hero-image {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.poster-oral-page .poster-oral-hero-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+
+/* Posters - Yellow to Navy Image Overlay */
+
+.poster-oral-page .poster-oral-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 208, 103, 0.55) 0%,
+    rgba(255, 208, 103, 0.30) 25%,
+    rgba(12, 30, 133, 0.55) 50%,
+    rgba(12, 10, 101, 0.90) 78%,
+    #0C0A65 100%
+  );
+}
+
+
+/* Preserve hero text position */
+.poster-oral-page .poster-oral-hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+/* Hide old decorative circle without
+   changing its reserved layout space */
+.poster-oral-page .poster-oral-visual {
+  visibility: hidden;
+}
+
+/* Posters - White Pathway Label */
+.poster-oral-page .poster-oral-eyebrow {
+  color: #FFFFFF;
+}
+
+/* =====================================
+   Posters - Final Mobile Hero Design
+   ===================================== */
+
+@media (max-width: 768px) {
+
+  /* Hero layout */
+  .poster-oral-page .poster-oral-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+
+    min-height: 610px;
+    padding: 135px 7% 125px;
+    gap: 0;
+
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Background image */
+  .poster-oral-page .poster-oral-hero-image img {
+    object-fit: cover;
+    object-position: 55% center;
+  }
+
+  /* Smooth gradient for readable text */
+  .poster-oral-page .poster-oral-hero::after {
+
+background: linear-gradient(
+  to bottom,
+  rgba(255, 208, 103, 0.58) 0%,
+  rgba(255, 208, 103, 0.36) 20%,
+  rgba(12, 30, 133, 0.48) 42%,
+  rgba(12, 10, 101, 0.82) 65%,
+  rgba(12, 10, 101, 0.96) 85%,
+  #0C0A65 100%
+);
+  }
+
+  /* Remove unused decorative circle */
+  .poster-oral-page .poster-oral-visual {
+    display: none;
+  }
+
+  /* Text container */
+  .poster-oral-page .poster-oral-hero-content {
+    position: relative;
+    z-index: 2;
+    order: 0;
+    flex: none;
+    width: 100%;
+    max-width: 100%;
+    text-align: right;
+  }
+
+  /* Pathway number */
+  .poster-oral-page .poster-oral-eyebrow {
+    display: inline-block;
+    margin-bottom: 24px;
+    color: #FFFFFF;
+    font-size: 14px;
+  }
+
+  /* Main title */
+  .poster-oral-page .poster-oral-hero h1 {
+    font-size: clamp(30px, 8vw, 40px);
+    line-height: 1.4;
+    margin: 0 0 30px;
+    color: #FFFFFF;
+  }
+
+  /* Description */
+  .poster-oral-page .poster-oral-description {
+    font-size: 15px;
+    line-height: 2;
+    max-width: 100%;
+    color: #E2E7FF;
+  }
+}
+
+/* =========================================
+   HPC - Posters Unified Color Palette
+   Colors only - preserve layout & animation
+   ========================================= */
+
+/* Timeline line */
+.poster-oral-page .research-timeline::before {
+  background: rgba(255, 208, 103, 0.22);
+}
+
+.poster-oral-page .research-timeline::after {
+  background: linear-gradient(
+    90deg,
+    #FFD067,
+    #FFE5A6
+  );
+}
+
+/* Timeline number circles */
+.poster-oral-page .research-timeline__marker,
+.poster-oral-page
+.research-timeline__event.is-visible
+.research-timeline__marker {
+  background: #FFF9E9;
+  border-color: #FFD067;
+  color: #0C0A65;
+  box-shadow: 0 0 0 8px #FFFFFF;
+}
+
+/* Timeline dates */
+.poster-oral-page .research-timeline__copy time {
+  color: #FFD067;
+}
+
+/* Timeline event titles */
+.poster-oral-page .research-timeline__copy h3 {
+  color: #FFFFFF;
+}
+
+/* Requirements heading */
+.poster-oral-page
+.poster-oral-requirements-heading h2 {
+  color: #FFD067;
+}
+
+/* Requirements cards */
+.poster-oral-page .poster-oral-requirement {
+  background: #F8F9FF;
+  border-color: rgba(255, 208, 103, 0.35);
+}
+
+/* Requirement numbers */
+.poster-oral-page
+.poster-oral-requirement-number {
+  background: #FFD067;
+  color: #0C0A65;
+}
+
+/* Requirement text */
+.poster-oral-page .poster-oral-requirement p {
+  color: #435579;
+}
+
+/* Registration card */
+.poster-oral-page .poster-oral-registration {
+  background: linear-gradient(
+    145deg,
+    #FFFFFF,
+    #FFF8E6
+  );
+  border-color: rgba(255, 208, 103, 0.5);
+}
+
+/* Registration number */
+.poster-oral-page
+.poster-oral-registration
+.research-cta__number {
+  color: #0C0A65;
+}
+
+/* Registration icon */
+.poster-oral-page
+.poster-oral-registration
+.research-cta__icon {
+  background: #FFD067;
+  color: #0C0A65;
+}
+
+/* Registration title */
+.poster-oral-page .poster-oral-registration h2 {
+  color: #0C0A65;
+}
+
+/* Registration button */
+.poster-oral-page
+.poster-oral-registration
+.research-cta__button {
+  background: #0C0A65;
+  color: #FFFFFF;
+}
+
+.poster-oral-page
+.poster-oral-registration
+.research-cta__button:hover {
+  background: #172493;
+}
+
+/* Mobile timeline line */
+@media (max-width: 760px) {
+  .poster-oral-page .research-timeline::after {
+    background: linear-gradient(
+      180deg,
+      #FFD067,
+      #FFE5A6
+    );
+  }
+}
+
+/* Posters - Requirements Heading Color Fix */
+
+.poster-oral-page
+.poster-oral-timeline-main
+.poster-oral-requirements-heading h2 {
+  color: #FFD067;
+}
+
+/* HPC - Posters Pathway Back Link */
+
+
+.poster-oral-page .poster-oral-hero-content .hpc-pathways-back {
+  display: flex !important;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+
+  width: fit-content;
+  max-width: 100%;
+
+  margin: 0 0 28px !important;
+  padding: 0 !important;
+
+  color: #55DDE6 !important;
+  font-size: 17px !important;
+  font-weight: 700;
+  line-height: 1.5;
+  text-decoration: none;
+}
+
+.poster-oral-page .poster-oral-hero-content .hpc-pathways-back:hover {
+  color: #FFFFFF !important;
+}
+
+
+.poster-oral-page .poster-oral-hero-content .hpc-pathways-back:hover {
+  color: #FFFFFF !important;
+}
+
+.poster-oral-page .hpc-pathways-back svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+/* Mobile */
+@media (max-width: 700px) {
+  .poster-oral-page .poster-oral-hero-content .hpc-pathways-back {
+    font-size: 13px !important;
+    margin-bottom: 22px !important;
+  }
+}
+
+.poster-oral-page .poster-oral-hero-content .poster-oral-eyebrow {
+  display: block !important;
+  margin: 0 0 16px !important;
+}
+
+@media (max-width: 700px) {
+  .poster-oral-page .poster-oral-hero-content .hpc-pathways-back {
+    font-size: 13px !important;
+    margin-bottom: 22px !important;
+  }
+}

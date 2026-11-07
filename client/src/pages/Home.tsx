@@ -392,42 +392,16 @@ function Pathways({ content }: { content: HomeContent }) {
         <div className="pathway-grid">
           {content.pathways.cards.map((card, index) => (
 
-<Reveal
+  <Reveal
   key={card.eyebrow}
   delay={index * 65}
   className={`pathway-card pathway-card--${card.tone} ${
     touchedCard === index ? "mobile-touched" : ""
   }`}
-  onClickCapture={(event) => {
-    const isTouchDevice = window.matchMedia(
-      "(hover: none) and (pointer: coarse)"
-    ).matches;
-
-    if (!isTouchDevice) return;
-
-    event.preventDefault();
-    event.stopPropagation();
-
-    if (navigationTimer.current !== null) return;
-
-    setTouchedCard(index);
-
-    navigationTimer.current = setTimeout(() => {
-      window.location.assign(card.link_url);
-    }, 200);
-  }}
 >
 
               <div className="pathway-image-wrap"><img
- src={(() => {
-  const image = card.image || "";
-
-  if (image.startsWith("http")) return image;
-
-  const path = image.replace(/^\/manus-storage\//, "/images/");
-
-  return `${import.meta.env.BASE_URL}${path.replace(/^\//, "")}`;
-})()}
+ src={getMediaUrl(card.image)}
   alt={card.title}
   className="pathway-image"
 />

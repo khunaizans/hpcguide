@@ -11,7 +11,7 @@ import PosterOralDetail from "@/pages/PosterOralDetail";
 import ScientificDebatesDetail from "@/pages/ScientificDebatesDetail";
 import ClinicalSkillsDetail from "@/pages/ClinicalSkillsDetail";
 import ThreeMTDetail from "@/pages/ThreeMTDetail";
-
+import VisualResearchDetail from "@/pages/VisualResearchDetail";
 
 
 function DetailVisual({ tone, title }: { tone: string; title: string }) {
@@ -133,7 +133,9 @@ if (pathway.slug === "clinical-skills") {
 if (pathway.slug === "3mt") {
   return <ThreeMTDetail />;
 }
-
+if (pathway.title === "مسار العرض المرئي للأبحاث") {
+  return <VisualResearchDetail />;
+}
 
   return (
     <main className="pathway-detail" dir="rtl">
