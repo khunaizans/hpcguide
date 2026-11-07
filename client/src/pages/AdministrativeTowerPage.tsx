@@ -12,11 +12,11 @@ import "./AdministrativeTowerPage.css";
  * The other three names are placeholders for your actual map and hall plans.
  */
 const MEDIA = {
-  tower: "/images/administrative-tower-hero1.png",
-  map: "/images/tower-map.png",
-  planOne: "/images/tower-plan-1.png",
-  planTwo: "/images/tower-plan-2.png",
-  };
+  tower: `${import.meta.env.BASE_URL}images/administrative-tower-hero1.png`,
+  map: `${import.meta.env.BASE_URL}images/nearby-map_c38385fb.png`,
+  planOne: `${import.meta.env.BASE_URL}images/tower-plan-1.png`,
+  planTwo: `${import.meta.env.BASE_URL}images/tower-plan-2.png`,
+};
 const TOWER_MAP_QUERY =
   "مركز المؤتمرات جامعة الملك سعود بن عبدالعزيز للعلوم الصحية الرياض";
 
