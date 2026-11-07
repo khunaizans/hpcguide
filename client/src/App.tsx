@@ -2,7 +2,7 @@ import { useLayoutEffect } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
-import { Route, Switch, useLocation } from "wouter";
+import { Router, Route, Switch, useLocation } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import GraduateStudiesPage from "./pages/GraduateStudiesPage";
@@ -38,7 +38,7 @@ function ScrollToTop() {
 }
 
 // Website Routes
-function Router() {
+function AppRoutes() {
   return (
     <Switch>
       <Route
@@ -113,9 +113,11 @@ export default function App() {
       <ThemeProvider defaultTheme="light">
         <TooltipProvider>
           <Toaster />
-          <ScrollToTop />
-          <Router />
-          <PublicAssistant />
+          <Router base="/hpcguide">
+            <ScrollToTop />
+            <AppRoutes />
+            <PublicAssistant />
+          </Router>
         </TooltipProvider>
       </ThemeProvider>
     </ErrorBoundary>
