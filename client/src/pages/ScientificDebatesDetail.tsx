@@ -13,7 +13,7 @@ import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import "./ScientificDebatesDetail.css";
 import { Sparkles, ExternalLink, ArrowRight } from "lucide-react";
-
+import { getMediaUrl } from "@/lib/mediaUrl";
 
 type PosterTimelineEvent = {
   date: string;
@@ -129,18 +129,6 @@ export default function ScientificDebatesDetail() {
       if (active) setRoute(data ?? null);
     });
 
-const debatesImage =
-  (route ? routeToPathway(route).image : null) ||
-  getPathway("scientific-debates")?.image;
-
-const debatesImageSrc =
-  debatesImage?.includes("supabase.com/dashboard/")
-    ? `/images/${debatesImage.split("website").pop()}`
-    : debatesImage?.replace(
-        "/manus-storage/",
-        "/images/"
-      );
-
     return () => {
       active = false;
     };
@@ -234,14 +222,7 @@ const debatesImage =
   (route ? routeToPathway(route).image : null) ||
   getPathway("scientific-debates")?.image;
 
-const debatesImageSrc =
-  debatesImage?.includes("supabase.com/dashboard/")
-    ? `/images/${debatesImage.split("website").pop()}`
-    : debatesImage?.replace(
-        "/manus-storage/",
-        "/images/"
-      );
-
+const debatesImageSrc = getMediaUrl(debatesImage);
 
   return (
     <main className="scientific-debates-page" dir="rtl">

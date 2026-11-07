@@ -13,7 +13,7 @@ import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import "./ClinicalSkillsDetail.css";
 import { Sparkles, ExternalLink, ArrowRight } from "lucide-react";
-
+import { getMediaUrl } from "@/lib/mediaUrl";
 
 type PosterTimelineEvent = {
   date: string;
@@ -225,13 +225,7 @@ const clinicalImage =
   (route ? routeToPathway(route).image : null) ||
   getPathway("clinical-skills")?.image;
 
-const clinicalImageSrc =
-  clinicalImage?.includes("supabase.com/dashboard/")
-    ? `/images/${clinicalImage.split("website").pop()}`
-    : clinicalImage?.replace(
-        "/manus-storage/",
-        "/images/"
-      );
+const clinicalImageSrc = getMediaUrl(clinicalImage);
 
 if (isLoading) {
   return (
