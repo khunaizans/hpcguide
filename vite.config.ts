@@ -203,7 +203,28 @@ function vitePluginStorageProxy(): Plugin {
   };
 }
 
-const plugins = [react(), tailwindcss(), jsxLocPlugin(), vitePluginManusRuntime(), vitePluginManusDebugCollector(), vitePluginStorageProxy()];
+const githubPagesFallback: Plugin = {
+  name: "github-pages-fallback",
+  closeBundle() {
+    const outputDir = path.resolve(import.meta.dirname, "dist/public");
+    const indexFile = path.join(outputDir, "index.html");
+    const fallbackFile = path.join(outputDir, "404.html");
+
+    if (fs.existsSync(indexFile)) {
+      fs.copyFileSync(indexFile, fallbackFile);
+    }
+  },
+};
+
+const plugins = [
+  react(),
+  tailwindcss(),
+  jsxLocPlugin(),
+  vitePluginManusRuntime(),
+  vitePluginManusDebugCollector(),
+  vitePluginStorageProxy(),
+  githubPagesFallback,
+];
 
 export default defineConfig({
   plugins,
