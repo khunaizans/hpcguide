@@ -478,18 +478,6 @@ className={`resource-card ${
                   href={location.link_url}
                   className="resource-card__link"
                   aria-label={`استكشف ${location.title}`}
-                  onClick={(event) => {
-                    if (!isTower) return;
-
-                    const isTouch = window.matchMedia(
-                      "(hover: none) and (pointer: coarse)"
-                    ).matches;
-
-                    if (isTouch && !towerRaised) {
-                      event.preventDefault();
-                      setTowerRaised(true);
-                    }
-                  }}
                 >
                   {isTower ? (
                     <>

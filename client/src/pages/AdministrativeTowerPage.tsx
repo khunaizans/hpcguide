@@ -221,13 +221,13 @@ useEffect(() => {
 
 <div className="tower-detail__hero-copy">
 
-  <Link
-    href={`${import.meta.env.BASE_URL}#pathways`}
-    className="tower-detail__hero-back"
-  >
-    <ArrowRight size={18} />
-    الرجوع إلى دليل المكان
-  </Link>
+  <a
+  href={`${import.meta.env.BASE_URL}#resources`}
+  className="tower-detail__hero-back"
+>
+  <ArrowRight size={18} />
+  الرجوع إلى دليل المكان
+</a>
 
   <h1 id="tower-page-title">
     البرج الإداري
