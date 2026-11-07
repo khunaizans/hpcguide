@@ -16,7 +16,7 @@ import { locations } from "@/lib/locations";
 import { fallbackHomeContent, HomeContent, mapHomeContent } from "@/lib/homeCms";
 import { loadPublishedRouteRecords, routeToPathway } from "@/lib/routesCms";
 import { supabase } from "@/lib/supabase";
-
+import { getMediaUrl } from "@/lib/mediaUrl";
 const ASSETS = {
   hero: "/images/hpc-hero_4791d5fd.png",
   logo: "/images/hpc-logo_739bab33.png",
@@ -116,7 +116,7 @@ function Hero({ content, pageTitle }: { content: HomeContent; pageTitle: string 
           </div>
         </Reveal>
         <Reveal delay={180} className="hero-visual-wrap">
-          <img className="hero-visual hero-visual--xd" src={content.hero.image || ASSETS.hero} alt={content.hero.imageAlt || "فريق من المختصين الصحيين يعملون معاً"} />
+          <img className="hero-visual hero-visual--xd" src={getMediaUrl(content.hero.image || ASSETS.hero)} alt={content.hero.imageAlt || "فريق من المختصين الصحيين يعملون معاً"} />
           <div className="hero-float hero-float--left"><span>6</span><small>مسارات للتعلم<br />والمشاركة</small></div>
           <div className="hero-float hero-float--right"><Sparkles size={16} /><small>فكرة<br />تتحول إلى أثر</small></div>
         </Reveal>
