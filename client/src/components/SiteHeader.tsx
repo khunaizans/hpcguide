@@ -39,7 +39,7 @@ useEffect(() => {
 
 
 useEffect(() => {
-  if (window.location.pathname !== "/") return;
+  if (!isHome) return;
 
   const sectionId = window.location.hash.replace("#", "");
   if (!sectionId) return;
@@ -148,7 +148,7 @@ const goToSection = (link: ShellLink) => {
       behavior: "smooth",
     });
   } else {
-    navigate(`/#${id}`);
+    window.location.assign(`${import.meta.env.BASE_URL}#${id}`);
   }
 };
 
@@ -161,7 +161,9 @@ if (!shellReady) {
 }
 
   const logo = <img src={shell.header.logoUrl || defaultShell.header.logoUrl} alt="مؤتمر التخصصات الصحية" />;
-  return <header className={`site-header shell-header--${shell.header.background} shell-header-text--${shell.header.textColor} shell-header-height--${shell.header.height} shell-header-logo--${shell.header.logoSize}`}><div className="header-inner"><button className="mobile-menu" onClick={() => setMenuOpen(!menuOpen)} aria-label="فتح القائمة">{menuOpen ? <X size={20} /> : <Menu size={20} />}</button><a className="header-logo" href={import.meta.env.BASE_URL} aria-label="العودة للرئيسية" onClick={() => setActiveSection("hero")}><div className="brand-mark brand-mark--compact">{logo}</div></a><nav ref={navRef} className={menuOpen ? "nav-links nav-links--open" : "nav-links"} aria-label="التنقل الرئيسي">{links.map((item) => { const href = !isHome && item.kind === "section" ? `/#${item.href.replace(/^#/, "")}` : item.href; return isHome && item.kind === "section" ? <button ref={(node) => { itemRefs.current[item.href] = node; }} key={`${item.order}-${item.label}`} onClick={() => goToSection(item)} className={isHome && activeSection === item.href.slice(1) ? "active" : ""}>{item.label}</button> : <a ref={(node) => { itemRefs.current[item.href] = node; }} key={`${item.order}-${item.label}`} href={href}
+  return <header className={`site-header shell-header--${shell.header.background} shell-header-text--${shell.header.textColor} shell-header-height--${shell.header.height} shell-header-logo--${shell.header.logoSize}`}><div className="header-inner"><button className="mobile-menu" onClick={() => setMenuOpen(!menuOpen)} aria-label="فتح القائمة">{menuOpen ? <X size={20} /> : <Menu size={20} />}</button><a className="header-logo" href={import.meta.env.BASE_URL} aria-label="العودة للرئيسية" onClick={() => setActiveSection("hero")}><div className="brand-mark brand-mark--compact">{logo}</div></a><nav ref={navRef} className={menuOpen ? "nav-links nav-links--open" : "nav-links"} aria-label="التنقل الرئيسي">{links.map((item) => { const href = !isHome && item.kind === "section"
+  ? `${import.meta.env.BASE_URL}#${item.href.replace(/^#/, "")}`
+  : item.href; return isHome && item.kind === "section" ? <button ref={(node) => { itemRefs.current[item.href] = node; }} key={`${item.order}-${item.label}`} onClick={() => goToSection(item)} className={isHome && activeSection === item.href.slice(1) ? "active" : ""}>{item.label}</button> : <a ref={(node) => { itemRefs.current[item.href] = node; }} key={`${item.order}-${item.label}`} href={href}
 onClick={(event) => {
   if (item.kind === "section") {
     event.preventDefault();
