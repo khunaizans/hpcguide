@@ -222,7 +222,7 @@ useEffect(() => {
 <div className="tower-detail__hero-copy">
 
   <Link
-    href="/#pathways"
+    href={`${import.meta.env.BASE_URL}#pathways`}
     className="tower-detail__hero-back"
   >
     <ArrowRight size={18} />

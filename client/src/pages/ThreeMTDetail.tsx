@@ -295,7 +295,7 @@ return (
   <div className="three-mt-hero-content">
 
 <a
-  href="/#pathways"
+  href={`${import.meta.env.BASE_URL}#pathways`}
   className="detail-back hpc-pathways-back"
 >
   <ArrowRight size={18} />

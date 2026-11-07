@@ -224,7 +224,7 @@ const posterImageSrc = getMediaUrl(posterImage);
   <div className="poster-oral-hero-content">
 
 <a
-  href="/#pathways"
+  href={`${import.meta.env.BASE_URL}#pathways`}
   className="detail-back hpc-pathways-back"
 >
   <ArrowRight size={18} />

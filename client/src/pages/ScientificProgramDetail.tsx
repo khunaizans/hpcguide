@@ -123,7 +123,7 @@ const heroImageSrc = (() => {
 </div>
 
         <div className="scientific-program-hero-content">
-          <Link href="/#pathways" className="detail-back">
+          <Link href={`${import.meta.env.BASE_URL}#pathways`} className="detail-back">
             <ArrowRight size={16} />
             الرجوع إلى المسارات
           </Link>

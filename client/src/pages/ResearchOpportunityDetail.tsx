@@ -303,7 +303,7 @@ if (isLoading) {
         <div className="research-intro__glow" aria-hidden="true" />
         <div className="research-intro__grid">
           <Reveal className="research-intro__copy">
-            <a className="detail-back" href="/#pathways" onClick={returnToPathways}><ArrowRight size={16} /> الرجوع إلى المسارات</a>
+            <a className="detail-back" href={`${import.meta.env.BASE_URL}#pathways`} onClick={returnToPathways}><ArrowRight size={16} /> الرجوع إلى المسارات</a>
             <p className="eyebrow"><span />04</p>
             <h1>مسار الفرص البحثية</h1>
             <p className="research-intro__description">{content.description}</p>

@@ -119,7 +119,7 @@ useEffect(() => {
   };
 
   if (!pathway) {
-    return <main className="pathway-not-found" dir="rtl"><h1>المسار غير موجود</h1><Link href="/#pathways">العودة إلى المسارات</Link></main>;
+    return <main className="pathway-not-found" dir="rtl"><h1>المسار غير موجود</h1><Link href={`${import.meta.env.BASE_URL}#pathways`}>العودة إلى المسارات</Link></main>;
   }
 
   if (pathway.slug === "research-opportunities") return <ResearchOpportunityDetail />;
@@ -143,7 +143,7 @@ if (pathway.title === "مسار العرض المرئي للأبحاث") {
       <div className="detail-pattern detail-pattern--top" aria-hidden="true"><span /><span /><span /><i>AI</i></div>
       <section className={`detail-hero detail-hero--${pathway.tone}`}>
         <div className="detail-hero-copy">
-          <a className="detail-back" href="/#pathways" onClick={returnToPathways}><ArrowRight size={16} /> الرجوع إلى المسارات</a>
+          <a className="detail-back" href={`${import.meta.env.BASE_URL}#pathways`} onClick={returnToPathways}><ArrowRight size={16} /> الرجوع إلى المسارات</a>
           <p className="eyebrow"><span /> المسار {pathway.eyebrow}</p>
           <h1>{pathway.title}</h1>
           <p>{pathway.details}</p>
