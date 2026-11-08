@@ -21,7 +21,7 @@ const suggestedFields: Record<CmsTable, string[]> = {
 
 export async function readTable(table: CmsTable) {
   if (!supabase) throw new Error("اتصال Supabase غير مهيأ");
-  const { data, error } = await supabase.from(table).select("*").limit(100);
+  const { data, error } = await supabase.from(table).select("*").limit(1000);
   if (error) throw new Error(error.message);
   return (data ?? []) as CmsRow[];
 }

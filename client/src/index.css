@@ -6269,3 +6269,236 @@ transition:
     transform: scale(1.04) !important;
   }
 }
+/* HPC - Temporary backgrounds for pathways 07 and 08 */
+
+/* 07 - Visual Research */
+.pathway-card--visual-research .pathway-image-wrap {
+  background:
+    radial-gradient(
+      ellipse at 70% 25%,
+      rgba(85, 221, 230, 0.30),
+      transparent 65%
+    ),
+    linear-gradient(145deg, #173D83, #0C0A65);
+}
+
+/* 08 - Research Review */
+.pathway-card--research-review .pathway-image-wrap {
+  background:
+    radial-gradient(
+      ellipse at 30% 25%,
+      rgba(174, 142, 240, 0.28),
+      transparent 65%
+    ),
+    linear-gradient(145deg, #39226F, #0C0A65);
+}
+/* HPC - Remove mobile pathway section divider */
+
+@media (max-width: 768px) {
+  .poster-oral-page .poster-oral-hero,
+  .scientific-debates-page .scientific-debates-hero,
+  .scientific-program-page .scientific-program-hero,
+  .clinical-skills-page .clinical-skills-hero,
+  .three-mt-page .three-mt-hero,
+  .research-opportunity-detail .research-intro {
+    border-bottom: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+  .poster-oral-page .poster-oral-timeline,
+  .scientific-debates-page .scientific-debates-timeline,
+  .clinical-skills-page .clinical-skills-timeline,
+  .three-mt-page .three-mt-timeline,
+  .research-opportunity-detail .research-timeline-section {
+    border-top: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+}
+/* HPC - Mobile seamless pathway sections */
+@media (max-width: 768px) {
+  .poster-oral-page .poster-oral-timeline,
+  .scientific-debates-page .scientific-debates-timeline,
+  .clinical-skills-page .clinical-skills-timeline,
+  .three-mt-page .three-mt-timeline,
+  .research-opportunity-detail .research-timeline-section,
+  .scientific-program-page .scientific-program-board {
+    position: relative;
+    z-index: 2;
+    box-shadow: 0 -3px 0 0 #0C0A65 !important;
+  }
+}
+/* HPC - Center pathways 07 and 08 on desktop */
+@media (min-width: 901px) {
+  .pathway-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .pathway-grid > .pathway-card {
+    grid-column: span 2;
+  }
+
+  .pathway-grid > .pathway-card:nth-child(7) {
+    grid-column: 2 / span 2;
+  }
+
+  .pathway-grid > .pathway-card:nth-child(8) {
+    grid-column: 4 / span 2;
+  }
+}
+/* HPC - Pathways heading and previous statistics */
+
+.pathways-intro-layout {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1.35fr)
+    minmax(340px, 0.9fr);
+  align-items: center;
+  gap: clamp(24px, 4vw, 70px);
+  direction: rtl;
+}
+
+.pathways-intro-layout > * {
+  min-width: 0;
+}
+
+.pathways-intro-layout .pathways-history-stats {
+  align-self: center;
+}
+
+/* Tablet and mobile */
+@media (max-width: 900px) {
+  .pathways-intro-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 42px;
+  }
+
+  .pathways-intro-layout .pathways-history-stats {
+    width: 100%;
+  }
+}
+
+/* HPC - Chatbot Size and Smooth Animation */
+
+.assistant-popup,
+.assistant-popup.has-answer {
+  width: min(330px, calc(100vw - 32px)) !important;
+  height: var(--hpc-chat-height, 240px) !important;
+  max-height: min(600px, calc(100dvh - 120px)) !important;
+
+  transition: height 420ms
+    cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+/* Display pathways vertically */
+.assistant-popup .assistant-question-list.is-pathways-list {
+  display: flex !important;
+  flex-direction: column !important;
+  flex-wrap: nowrap !important;
+  align-items: stretch !important;
+  gap: 9px !important;
+}
+
+.assistant-popup .assistant-question-list.is-pathways-list button {
+  width: 100% !important;
+  max-width: 100% !important;
+  flex: 0 0 auto !important;
+  justify-content: space-between !important;
+}
+
+/* Animate navigation between chatbot pages */
+.assistant-popup .assistant-question-list {
+  animation: hpcChatPageEnter 300ms
+    cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes hpcChatPageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .assistant-popup,
+  .assistant-popup .assistant-question-list {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* HPC - Chatbot Final Layout */
+
+.assistant-popup {
+  width: min(330px, calc(100vw - 32px)) !important;
+  height: var(--hpc-chat-height, 240px) !important;
+  max-height: calc(100dvh - 120px) !important;
+  overflow: hidden !important;
+
+  transition: height 420ms
+    cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+/* Scroll inside chatbot without visible scrollbar */
+
+.assistant-popup .assistant-popup-body {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none;
+}
+
+.assistant-popup::-webkit-scrollbar,
+.assistant-popup .assistant-popup-body::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Content wrapper used to measure natural height */
+
+.assistant-popup-content {
+  display: flow-root;
+}
+
+/* Pathway buttons - vertical and right aligned */
+
+.assistant-popup .assistant-question-list.is-pathways-list {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: 9px !important;
+  direction: rtl;
+}
+
+.assistant-popup .assistant-question-list.is-pathways-list button {
+  width: max-content !important;
+  max-width: 100% !important;
+  flex: 0 0 auto !important;
+  align-self: flex-start !important;
+  margin: 0 !important;
+}
+
+/* HPC - Keep Pathways Navigation Buttons Visible */
+
+.assistant-popup
+.assistant-popup-content:has(.is-pathways-list)
+> .assistant-action-buttons {
+  position: sticky !important;
+  bottom: 0 !important;
+  z-index: 10;
+
+  width: 100%;
+  margin-top: 12px !important;
+  padding: 12px 0 5px !important;
+
+  background: #0c0a65;
+  justify-content: flex-start !important;
+}

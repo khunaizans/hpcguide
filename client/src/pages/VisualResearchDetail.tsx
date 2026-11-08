@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type CSSProperties } from "react";
 
 import {
   loadPublishedRoute,
+  loadRouteRecords,
   routeToPathway,
   type RouteRecord,
 } from "@/lib/routesCms";
@@ -118,56 +119,57 @@ export default function VisualResearchDetail() {
   const [, params] = useRoute<{ slug: string }>("/pathways/:slug");
   const slug = params?.slug;
 
-  const [route, setRoute] = useState<RouteRecord | null>(null);
+const [route, setRoute] = useState<RouteRecord | null>(null);
+
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (!slug) {
-      setRoute(null);
-      return;
-    }
+  let active = true;
 
-    let active = true;
-    setRoute(null);
+  setIsLoading(true);
+  setRoute(null);
 
-    void loadPublishedRoute(slug)
-      .then((data) => {
-        if (active) setRoute(data ?? null);
-      })
-      .catch((error) => {
-        console.error("Failed to load route:", error);
-        if (active) setRoute(null);
-      });
-
+  if (!slug) {
+    setIsLoading(false);
     return () => {
       active = false;
     };
-  }, [slug]);
+  }
+
+  const request = import.meta.env.DEV
+    ? loadRouteRecords().then(
+        (routes) => routes.find((item) => item.slug === slug) ?? null
+      )
+    : loadPublishedRoute(slug);
+
+  void request
+    .then((data) => {
+      if (!active) return;
+
+      setRoute(data ?? null);
+      setIsLoading(false);
+    })
+    .catch((error) => {
+      console.error("Failed to load route:", error);
+
+      if (!active) return;
+
+      setRoute(null);
+      setIsLoading(false);
+    });
+
+  return () => {
+    active = false;
+  };
+}, [slug]);
 
 const timelineEvents = (route?.events ?? [])
   .filter((event) => event.visible)
   .sort((a, b) => a.order - b.order);
 
-const previewRequirements = [
-  "أن يكون البحث متعلقًا بأحد المجالات الصحية.",
-  "أن يتضمن البحث العناصر الأساسية، وهي:\n• المقدمة والأهداف (Introduction & Objectives)\n• المنهجية (Methods)\n• النتائج والمناقشة (Results & Discussion)\n• الخاتمة (Conclusion)",
-  "وجود مشرف رئيسي للبحث، ولا يشترط حضوره خلال أيام المؤتمر.",
-  "أن يكون المشارك طالبًا جامعيًا أو أعلى (مثل طلاب الامتياز، الدراسات العليا، أو الممارسين الصحيين)، ولا يُسمح بمشاركة طلاب المرحلة الثانوية أو ما دونها.",
-].map((text, index) => ({
-  id: `preview-requirement-${index}`,
-  text,
-  visible: true,
-  order: index,
-}));
-
-const participationRequirements = [
-  ...(import.meta.env.DEV && !route?.requirements?.length
-    ? previewRequirements
-    : route?.requirements ?? []),
-]
+const participationRequirements = (route?.requirements ?? [])
   .filter((item) => item.visible)
   .sort((a, b) => a.order - b.order);
-
-
 
 useEffect(() => {
   const cards = document.querySelectorAll(
@@ -206,6 +208,23 @@ const posterImage =
 
 const posterImageSrc = getMediaUrl(posterImage);
 
+if (isLoading) {
+  return (
+    <main className="poster-oral-page" dir="rtl">
+      <SiteHeader />
+
+      <section className="poster-oral-hero" aria-busy="true">
+        <div className="poster-oral-hero-content">
+          <p className="poster-oral-description">
+            جارٍ تحميل بيانات المسار...
+          </p>
+        </div>
+      </section>
+
+      <SiteFooter />
+    </main>
+  );
+}
 
   return (
     <main className="poster-oral-page" dir="rtl">
@@ -235,12 +254,12 @@ const posterImageSrc = getMediaUrl(posterImage);
   className="poster-oral-eyebrow"
   style={{ color: "#FFFFFF" }}
 >
-  المسار 07
+  المسار {route?.eyebrow || "—"}
 </span>
 
 
     <h1>
-      {route?.title || "مسار الملصقات والعروض الشفهية"}
+      {route?.title || "جاري تحميل بيانات المسار..."}
     </h1>
 
     <p className="poster-oral-description">
@@ -301,7 +320,7 @@ const posterImageSrc = getMediaUrl(posterImage);
 <aside className="research-cta poster-oral-registration">
 
   <span className="research-cta__number">
-    07 <i></i>
+    {route?.eyebrow || "—"} <i></i>
   </span>
 
   <div className="research-cta__icon">

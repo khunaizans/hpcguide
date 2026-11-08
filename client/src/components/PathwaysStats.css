@@ -1,0 +1,272 @@
+
+/* HPC - Previous Editions Statistics */
+
+.pathways-history-stats {
+  width: 100%;
+  color: #fff;
+  font-family: inherit;
+  direction: rtl;
+  animation: hpcStatsReveal 0.8s ease both;
+}
+
+.pathways-stats-header {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.pathways-stats-header > span {
+  color: #55DDE6;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.pathways-stats-header h3 {
+  margin: 8px 0 0;
+  color: #fff;
+  font-size: clamp(21px, 2vw, 28px);
+  font-weight: 700;
+}
+
+/* Year selector */
+
+.pathways-stats-years {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.pathways-stats-years button {
+  flex: 1;
+  min-height: 38px;
+  padding: 8px 12px;
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 10px;
+  color: #C7D5ED;
+  background: rgba(255,255,255,.05);
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background .25s ease, border-color .25s ease;
+}
+
+.pathways-stats-years button.active {
+  color: #0C0A65;
+  background: #55DDE6;
+  border-color: #55DDE6;
+  font-weight: 800;
+}
+
+.pathways-stats-years button:focus-visible {
+  outline: 2px solid #55DDE6;
+  outline-offset: 3px;
+}
+
+.pathways-stats-edition {
+  margin: 0 0 14px;
+  color: #BBC9EC;
+  font-size: 13px;
+}
+
+/* Statistics grid */
+
+.pathways-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.pathways-stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 0;
+  min-height: 85px;
+  padding: 14px 9px;
+  text-align: center;
+  border: 1px solid rgba(85,221,230,.18);
+  border-radius: 14px;
+  background: rgba(255,255,255,.055);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: background .25s ease, border-color .25s ease;
+}
+
+.pathways-stat-card:first-child {
+  grid-column: span 2;
+}
+
+.pathways-stat-card:hover {
+  background: rgba(85,221,230,.10);
+  border-color: rgba(85,221,230,.45);
+}
+
+.pathways-stat-card strong {
+  color: #55DDE6;
+  font-size: clamp(23px, 2vw, 32px);
+  font-weight: 800;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+}
+
+.pathways-stat-card span {
+  color: #DBE4F5;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* Mobile */
+
+@media (max-width: 760px) {
+  .pathways-history-stats {
+    max-width: 100%;
+  }
+
+  .pathways-stats-header {
+    margin-bottom: 16px;
+  }
+
+  .pathways-stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+  }
+
+  .pathways-stat-card {
+    min-height: 86px;
+    padding: 12px 8px;
+  }
+
+  .pathways-stat-card:first-child {
+    grid-column: span 2;
+  }
+
+  .pathways-stat-card strong {
+    font-size: 27px;
+  }
+
+  .pathways-stat-card span {
+    font-size: 11px;
+  }
+}
+
+/* Entrance animation */
+
+@keyframes hpcStatsReveal {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pathways-history-stats {
+    animation: none;
+  }
+
+  .pathways-stats-years button,
+  .pathways-stat-card {
+    transition: none;
+  }
+}
+/* HPC - Statistics Title Refinement */
+
+.pathways-stats-header {
+  width: 100%;
+  margin-bottom: 28px;
+  text-align: center;
+}
+
+.pathways-stats-header h3 {
+  width: 100%;
+  margin: 0;
+  color: #FFFFFF;
+  font-size: clamp(28px, 2.5vw, 38px);
+  font-weight: 800;
+  line-height: 1.4;
+  text-align: center;
+}
+
+@media (max-width: 760px) {
+  .pathways-stats-header h3 {
+    font-size: 29px;
+  }
+
+  .pathways-stats-header {
+    margin-bottom: 22px;
+  }
+}
+
+/* HPC - Smooth Statistics Scroll Reveal */
+
+.pathways-history-stats {
+  animation: none !important;
+}
+
+/* Header and year selector */
+.pathways-history-stats .pathways-stats-header,
+.pathways-history-stats .pathways-stats-years,
+.pathways-history-stats .pathways-stats-edition {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 0.55s ease,
+    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.pathways-history-stats.is-visible .pathways-stats-header,
+.pathways-history-stats.is-visible .pathways-stats-years,
+.pathways-history-stats.is-visible .pathways-stats-edition {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.pathways-history-stats.is-visible .pathways-stats-years {
+  transition-delay: 100ms !important;
+}
+
+.pathways-history-stats.is-visible .pathways-stats-edition {
+  transition-delay: 160ms !important;
+}
+
+/* Statistics cards */
+.pathways-history-stats .pathways-stat-card {
+  opacity: 0;
+  transform: translateY(22px);
+  animation: none !important;
+
+  transition:
+    opacity 0.55s ease,
+    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+
+  transition-delay: 0ms;
+
+  /* Improve scrolling performance */
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.pathways-history-stats.is-visible .pathways-stat-card {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: var(--stat-delay, 0ms);
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .pathways-history-stats .pathways-stats-header,
+  .pathways-history-stats .pathways-stats-years,
+  .pathways-history-stats .pathways-stats-edition,
+  .pathways-history-stats .pathways-stat-card {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
+}

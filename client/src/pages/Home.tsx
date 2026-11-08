@@ -13,8 +13,13 @@ import { pathwayCards } from "@/lib/pathways";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import { locations } from "@/lib/locations";
+import PathwaysStats from "@/components/PathwaysStats";
 import { fallbackHomeContent, HomeContent, mapHomeContent } from "@/lib/homeCms";
-import { loadPublishedRouteRecords, routeToPathway } from "@/lib/routesCms";
+import {
+  loadPublishedRouteRecords,
+  loadRouteRecords,
+  routeToPathway,
+} from "@/lib/routesCms";
 import { supabase } from "@/lib/supabase";
 import { getMediaUrl } from "@/lib/mediaUrl";
 const ASSETS = {
@@ -388,7 +393,26 @@ function Pathways({ content }: { content: HomeContent }) {
     <section id="pathways" className="pathways-section section-pad">
       <div className="section-pattern circuit-pattern" aria-hidden="true"><span /><span /><span /><i>AI</i></div>
       <div className="container">
-        <Reveal><SectionHeading eyebrow={content.pathways.eyebrow} title={<>{content.pathways.titleLine1}<br /><span>{content.pathways.titleLine2}</span></>} description={content.pathways.description} light /></Reveal>
+        <div className="pathways-intro-layout">
+  <div className="pathways-intro-heading">
+    <Reveal>
+      <SectionHeading
+        eyebrow={content.pathways.eyebrow}
+        title={
+          <>
+            {content.pathways.titleLine1}
+            <br />
+            <span>{content.pathways.titleLine2}</span>
+          </>
+        }
+        description={content.pathways.description}
+        light
+      />
+    </Reveal>
+  </div>
+
+  <PathwaysStats />
+</div>
         <div className="pathway-grid">
           {content.pathways.cards.map((card, index) => (
 
@@ -396,14 +420,26 @@ function Pathways({ content }: { content: HomeContent }) {
   key={card.eyebrow}
   delay={index * 65}
   className={`pathway-card pathway-card--${card.tone} ${
-    touchedCard === index ? "mobile-touched" : ""
-  }`}
+  touchedCard === index ? "mobile-touched" : ""
+} ${
+  card.eyebrow === "07"
+    ? "pathway-card--visual-research"
+    : card.eyebrow === "08"
+    ? "pathway-card--research-review"
+    : ""
+}`}
 >
 
               <div className="pathway-image-wrap"><img
  src={getMediaUrl(card.image)}
   alt={card.title}
   className="pathway-image"
+  onError={(e) => {
+  e.currentTarget.style.visibility = "hidden";
+}}
+onLoad={(e) => {
+  e.currentTarget.style.visibility = "visible";
+}}
 />
  /<span className="pathway-index">{card.eyebrow}</span></div>
 
@@ -657,7 +693,9 @@ export default function Home() {
     let active = true;
     const loadPublishedRoutes = async () => {
       try {
-        const routes = await loadPublishedRouteRecords();
+        const routes = import.meta.env.DEV
+  ? await loadRouteRecords()
+  : await loadPublishedRouteRecords();
 
         if (!active || !routes.length) return;
 

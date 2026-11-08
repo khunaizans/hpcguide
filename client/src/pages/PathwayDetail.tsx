@@ -118,6 +118,9 @@ useEffect(() => {
     window.setTimeout(() => document.getElementById("pathways")?.scrollIntoView({ behavior: "smooth" }), 40);
   };
 
+if (params?.slug?.startsWith("custom-")) {
+  return <VisualResearchDetail />;
+}
   if (!pathway) {
     return <main className="pathway-not-found" dir="rtl"><h1>المسار غير موجود</h1><Link href={`${import.meta.env.BASE_URL}#pathways`}>العودة إلى المسارات</Link></main>;
   }
@@ -132,9 +135,6 @@ if (pathway.slug === "clinical-skills") {
 
 if (pathway.slug === "3mt") {
   return <ThreeMTDetail />;
-}
-if (pathway.title === "مسار العرض المرئي للأبحاث") {
-  return <VisualResearchDetail />;
 }
 
   return (
