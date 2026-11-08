@@ -29,12 +29,69 @@ function normalize(raw: Partial<RouteRecord>, base: RouteRecord): RouteRecord { 
 function fromPage(row: CmsRow, published: boolean): RouteRecord | undefined { const slug = String(row.slug ?? "").replace(/^route-/, ""); if (!slug) return undefined; const settings = parseSettings(row.settings); const payload = published ? settings?.published : (settings?.draft ?? settings?.published); const base = fallbackRoute(slug) ?? { slug, eyebrow: String(row.sort_order ?? ""), title: String(row.title ?? "مسار جديد"), description: "", details: "", imageUrl: "", tone: "mint", highlights: [], ctaTitle: "", ctaDescription: "", ctaLabel: "", ctaUrl: "", contentItems: [], events: [], requirements: [], visible: row.is_visible !== false, order: Number(row.sort_order ?? 0), published: false }; return normalize(payload ?? {}, { ...base, pageId: String(row.id ?? ""), visible: row.is_visible !== false, order: Number(row.sort_order ?? base.order), published }); }
 
 export async function loadRouteRecords(): Promise<RouteRecord[]> { const fallback = allFallbackRoutes(); if (!supabase) return fallback; const { data, error } = await supabase.from("pages").select("*").like("slug", "route-%").order("sort_order", { ascending: true }); if (error || !data) return fallback; const bySlug = new Map(data.map((row) => [String(row.slug).replace(/^route-/, ""), row])); const records = fallback.map((item) => fromPage(bySlug.get(item.slug) ?? {}, false) ?? item); data.forEach((row) => { const slug = String(row.slug).replace(/^route-/, ""); if (!fallback.some((item) => item.slug === slug)) { const custom = fromPage(row, false); if (custom) records.push(custom); } }); return records.sort((a, b) => a.order - b.order); }
-export async function loadPublishedRouteRecords(): Promise<RouteRecord[]> { const fallback = allFallbackRoutes(); if (!supabase) return fallback; const { data, error } = await supabase.from("pages").select("*").like("slug", "route-%").order("sort_order", { ascending: true }); if (error || !data) return fallback; const bySlug = new Map(data.map((row) => [String(row.slug).replace(/^route-/, ""), row]));
- return fallback.map((item) => fromPage(bySlug.get(item.slug) ?? {}, true) ?? item).filter((item) => {
-  console.log("ROUTE VISIBILITY:", item.slug, item.visible);
-  return item.visible;
-}).sort((a, b) => a.order - b.order); }
-export async function loadPublishedRoute(slug: string) { const base = fallbackRoute(slug); if (!base || !supabase) return base; const { data } = await supabase.from("pages").select("*").eq("slug", routeSlug(slug)).maybeSingle(); return data ? (fromPage(data, true) ?? base) : base; }
+
+export async function loadPublishedRouteRecords(): Promise<RouteRecord[]> {
+  const fallback = allFallbackRoutes();
+  if (!supabase) return fallback;
+
+  const { data, error } = await supabase
+    .from("pages")
+    .select("*")
+    .like("slug", "route-%")
+    .order("sort_order", { ascending: true });
+
+  if (error || !data) return fallback;
+
+  const bySlug = new Map(
+    data.map((row) => [
+      String(row.slug).replace(/^route-/, ""),
+      row,
+    ])
+  );
+
+  const records: RouteRecord[] = fallback.map(
+    (item) => fromPage(bySlug.get(item.slug) ?? {}, true) ?? item
+  );
+
+  data.forEach((row) => {
+    const slug = String(row.slug).replace(/^route-/, "");
+
+    if (fallback.some((item) => item.slug === slug)) return;
+
+    const settings = parseSettings(row.settings);
+    if (!settings?.published) return;
+
+    const custom = fromPage(row, true);
+    if (custom) records.push(custom);
+  });
+
+  return records
+    .filter((item) => item.visible)
+    .sort((a, b) => a.order - b.order);
+}
+
+
+export async function loadPublishedRoute(slug: string) {
+  const base = fallbackRoute(slug);
+
+  if (!supabase) return base;
+
+  const { data, error } = await supabase
+    .from("pages")
+    .select("*")
+    .eq("slug", routeSlug(slug))
+    .maybeSingle();
+
+  if (error || !data) return base;
+
+  if (!base && !parseSettings(data.settings)?.published) {
+    return undefined;
+  }
+
+  const record = fromPage(data, true) ?? base;
+
+  return record?.visible ? record : undefined;
+}
 
 export function routeToPathway(route: RouteRecord) { return { slug: route.slug, eyebrow: route.eyebrow, title: route.title, image: route.imageUrl, tone: route.tone, text: route.description, details: route.details, highlights: route.highlights, link_url: `/pathways/${route.slug}` }; }
 
