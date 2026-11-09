@@ -1,27 +1,38 @@
+
 <!doctype html>
 <html lang="ar" dir="rtl">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1"
+    />
     <meta name="theme-color" content="#fbfcfc" />
-    <meta name="description" content="دليلك داخل مؤتمر التخصصات الصحية — تجربة تفاعلية للعلم والابتكار." />
-    
-<script>
-  (function () {
-    const params = new URLSearchParams(window.location.search);
-    const route = params.get("__hpc_route");
-
-    if (
-      route &&
-      (route === "/hpcguide" || route.startsWith("/hpcguide/"))
-    ) {
-      window.history.replaceState(null, "", route);
-    }
-  })();
-</script>
+    <meta
+      name="description"
+      content="دليلك داخل مؤتمر التخصصات الصحية — تجربة تفاعلية للعلم والابتكار."
+    />
 
     <title>HPC-Guide</title>
-<link rel="icon" type="image/png" href="/hpc-icon.png?v=12" />    <script type="module" src="/src/main.tsx"></script>
-    <!-- Analytics temporarily disabled -->
+    <link rel="icon" type="image/png" href="/hpc-icon.png?v=12" />
+
+    <script>
+      (function () {
+        const params = new URLSearchParams(window.location.search);
+        const route = params.get("__hpc_route");
+
+        if (
+          route &&
+          (route === "/hpcguide" || route.startsWith("/hpcguide/"))
+        ) {
+          window.history.replaceState(null, "", route);
+        }
+      })();
+    </script>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
