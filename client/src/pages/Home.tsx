@@ -465,6 +465,7 @@ onLoad={(e) => {
 
 function Resources({ content }: { content: HomeContent }) {
   const [towerRaised, setTowerRaised] = useState(false);
+  const [tappedCard, setTappedCard] = useState<string | null>(null);
   const [, navigate] = useLocation();
 
   return (
@@ -491,8 +492,7 @@ function Resources({ content }: { content: HomeContent }) {
           {content.resources.cards.map((location, index) => {
             const isTower =
               location.slug === "administrative-tower";
-              const isGraduate =
-               location.title.includes("الدراسات العليا");
+              const isGraduate = location.slug === "postgraduate-studies";
                const isSimulation =
   location.slug === "clinical-simulation-center";
 
@@ -501,14 +501,19 @@ function Resources({ content }: { content: HomeContent }) {
                 key={location.slug}
                 delay={index * 70}
 
+
 className={`resource-card ${
   isTower ? "resource-card--tower" : ""
 } ${
   isGraduate ? "resource-card--graduate" : ""
 } ${
+  isSimulation ? "resource-card--simulation" : ""
+} ${
   isTower && towerRaised ? "is-raised" : ""
-  }${isSimulation ? "resource-card--simulation" : ""
+} ${
+  tappedCard === location.slug ? "is-touch-zoom" : ""
 }`}
+
 
               >
                <Link
@@ -530,13 +535,18 @@ onClick={(event) => {
 
   event.preventDefault();
 
-  if (isTower) {
-    setTowerRaised(true);
-  }
+ 
+if (isTower) {
+  setTowerRaised(true);
+}
 
-  window.setTimeout(() => {
-    navigate(location.link_url);
-  }, 450);
+if (isGraduate || isSimulation) {
+  setTappedCard(location.slug);
+}
+
+window.setTimeout(() => {
+  navigate(location.link_url);
+}, isGraduate || isSimulation ? 850 : 450);
 }}
 >
                   {isTower ? (

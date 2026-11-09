@@ -6502,3 +6502,26 @@ transition:
   background: #0c0a65;
   justify-content: flex-start !important;
 }
+
+/* HPC - Touch Zoom for Location Cards */
+@media (hover: none) {
+  /* Graduate Studies */
+  .resources-section
+  .resource-card--graduate.is-touch-zoom
+  .graduate-photo-image,
+  .resources-section
+  .resource-card--graduate.is-touch-zoom
+  .resource-card__icon::after {
+    transform: scale(1.08) !important;
+  }
+
+  /* Clinical Simulation */
+  .resources-section
+  .resource-card--simulation.is-touch-zoom
+  .simulation-photo-base,
+  .resources-section
+  .resource-card--simulation.is-touch-zoom
+  .simulation-building-popout {
+    transform: scale(1.04) !important;
+  }
+}
