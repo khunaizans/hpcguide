@@ -210,9 +210,34 @@ const githubPagesFallback: Plugin = {
     const indexFile = path.join(outputDir, "index.html");
     const fallbackFile = path.join(outputDir, "404.html");
 
-    if (fs.existsSync(indexFile)) {
-      fs.copyFileSync(indexFile, fallbackFile);
-    }
+    
+if (fs.existsSync(indexFile)) {
+  fs.writeFileSync(
+    fallbackFile,
+    `<!doctype html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script>
+    (function () {
+      var original =
+        window.location.pathname +
+        window.location.search +
+        window.location.hash;
+
+      window.location.replace(
+        "/hpcguide/?__hpc_route=" +
+        encodeURIComponent(original)
+      );
+    })();
+  <\/script>
+</head>
+<body></body>
+</html>`,
+    "utf8"
+  );
+}
   },
 };
 
