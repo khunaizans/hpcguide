@@ -1335,3 +1335,35 @@ background: linear-gradient(
     margin-bottom: 22px !important;
   }
 }
+
+/* Track 07 English direction only; Track 08 retains its original rules. */
+.poster-oral-page.hpc-route-07[dir="ltr"] .poster-oral-hero-content,
+.poster-oral-page.hpc-route-07[dir="ltr"] .poster-oral-registration,
+.poster-oral-page.hpc-route-07[dir="ltr"] .poster-oral-requirements-list,
+.poster-oral-page.hpc-route-07[dir="ltr"] .research-timeline { direction: ltr; }
+.poster-oral-page.hpc-route-07[dir="ltr"] .poster-oral-hero-content :is(h1, p, .poster-oral-eyebrow),
+.poster-oral-page.hpc-route-07[dir="ltr"] .poster-oral-requirement p,
+.poster-oral-page.hpc-route-07[dir="ltr"] .poster-oral-registration :is(h2, p),
+.poster-oral-page.hpc-route-07[dir="ltr"] .research-timeline__copy {
+  direction: ltr;
+  text-align: left !important;
+  overflow-wrap: anywhere;
+}
+.poster-oral-page.hpc-route-07[dir="ltr"] .hpc-pathways-back { direction: ltr; }
+.poster-oral-page.hpc-route-07[dir="ltr"] .poster-oral-registration :is(.research-cta__icon, .research-cta__button) { align-self: flex-start; }
+
+/* Track 08 English direction only; preserve its original purple theme. */
+.poster-oral-page.hpc-route-08[dir="ltr"] .poster-oral-hero-content,
+.poster-oral-page.hpc-route-08[dir="ltr"] .poster-oral-registration,
+.poster-oral-page.hpc-route-08[dir="ltr"] .poster-oral-requirements-list,
+.poster-oral-page.hpc-route-08[dir="ltr"] .research-timeline { direction: ltr; }
+.poster-oral-page.hpc-route-08[dir="ltr"] .poster-oral-hero-content :is(h1, p, .poster-oral-eyebrow),
+.poster-oral-page.hpc-route-08[dir="ltr"] .poster-oral-requirement p,
+.poster-oral-page.hpc-route-08[dir="ltr"] .poster-oral-registration :is(h2, p),
+.poster-oral-page.hpc-route-08[dir="ltr"] .research-timeline__copy {
+  direction: ltr;
+  text-align: left !important;
+  overflow-wrap: anywhere;
+}
+.poster-oral-page.hpc-route-08[dir="ltr"] .hpc-pathways-back { direction: ltr; }
+.poster-oral-page.hpc-route-08[dir="ltr"] .poster-oral-registration :is(.research-cta__icon, .research-cta__button) { align-self: flex-start; }

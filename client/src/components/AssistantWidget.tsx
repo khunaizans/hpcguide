@@ -1,4 +1,7 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { useTranslation } from "react-i18next";
+import "./AssistantWidget.css";
 import { ArrowRight, Bot, BotMessageSquare, ChevronLeft, FileText, Image as ImageIcon, X } from "lucide-react";
 import { AssistantContent, AssistantQuestion, AnswerBlock, fallbackAssistant, loadAssistant } from "@/lib/assistant";
 import {
@@ -10,9 +13,25 @@ import {
 
 
 
-function Block({ block }: { block: AnswerBlock }) { if (block.type === "image" && block.url) return <img className="assistant-answer-image" src={block.url} alt={block.alt || "صورة من المساعد"} />; if (block.type === "file" && block.url) return <a className="assistant-answer-file" href={block.url} target="_blank" rel="noreferrer"><FileText size={17} />{block.label || "فتح الملف"}</a>; if (block.type === "link" && block.url) return <a className="assistant-answer-link" href={block.url} target="_blank" rel="noreferrer">{block.label || "فتح الرابط"}<ChevronLeft size={16} /></a>; return <p>{block.text}</p>; }
-export default function AssistantWidget() { const [content, setContent] = useState<AssistantContent>(fallbackAssistant); const [open, setOpen] = useState(false);
+function Block({ block, localize }: { block: AnswerBlock; localize: (text?: string) => string }) { if (block.type === "image" && block.url) return <img className="assistant-answer-image" src={block.url} alt={localize(block.alt || "صورة من المساعد")} />; if (block.type === "file" && block.url) return <a className="assistant-answer-file" href={block.url} target="_blank" rel="noreferrer"><FileText size={17} />{localize(block.label || "فتح الملف")}</a>; if (block.type === "link" && block.url) return <a className="assistant-answer-link" href={block.url} target="_blank" rel="noreferrer">{localize(block.label || "فتح الرابط")}<ChevronLeft size={16} /></a>; return <p>{localize(block.text)}</p>; }
+export default function AssistantWidget() {
+const { i18n, ready, t } = useTranslation();
+const widgetRef = useRef<HTMLDivElement | null>(null);
+const closeTimerRef = useRef<number | null>(null);
+const isEnglish = i18n.resolvedLanguage === "en";
+const resources = i18n.getResourceBundle("en", "translation");
+const contactArabic = i18n.getResourceBundle("ar", "translation").chatbotContact.response;
+const translatedCopy = { ...resources.chatbot.copy, ...resources.chatbotUI, [contactArabic]: resources.chatbotContact.response } as Record<string, string>;
+const normalizeCopy = (text: string) => text.normalize("NFKC").replace(/[\u0640\u064b-\u065f\u0670]/g, "").trim().replace(/\s+/g, " ");
+const localize = (text = "") => isEnglish ? Object.entries(translatedCopy).find(([original]) => normalizeCopy(original) === normalizeCopy(text))?.[1] ?? text : text;
+const [content, setContent] = useState<AssistantContent>(fallbackAssistant);
+const [contentLoading, setContentLoading] = useState(true);
+const [open, setOpen] = useState(false);
 const [closing, setClosing] = useState(false); const [selected, setSelected] = useState<AssistantQuestion | null>(null);
+const contactLinkIndex = selected && normalizeCopy(selected.question) === normalizeCopy("سؤالي غير موجود")
+  ? selected.answer.findIndex(block => block.type === "link" && block.label?.trim() === "X" && block.url)
+  : -1;
+const emailHref = `mailto:Hpconf@ksau-hs.edu.sa?subject=${encodeURIComponent(t("chatbotContact.subject"))}`;
 
 const [chatPage, setChatPage] = useState<
   "main" | "pathways" | "questions"
@@ -54,12 +73,13 @@ useEffect(() => {
   };
 }, []);
 
-const closeAssistant = (resetConversation = false) => {
-  if (closing) return;
+const closeAssistant = useCallback((resetConversation = false) => {
+  if (closeTimerRef.current !== null) return;
 
   setClosing(true);
 
-  window.setTimeout(() => {
+  closeTimerRef.current = window.setTimeout(() => {
+    closeTimerRef.current = null;
     setOpen(false);
 
     // Reset only when ending the conversation
@@ -71,10 +91,11 @@ const closeAssistant = (resetConversation = false) => {
 
     setClosing(false);
   }, 240);
-};
+}, []);
 
 
 const toggleAssistant = () => {
+  if (closeTimerRef.current !== null) return;
   if (open) {
     closeAssistant();
     return;
@@ -84,25 +105,49 @@ const toggleAssistant = () => {
   setOpen(true);
 };
 
-/* Close chatbot when scrolling the page */
-
+/* Dismiss only for interactions outside the window and launcher. */
 useEffect(() => {
   if (!open || closing) return;
-
-  const handlePageScroll = () => {
-    closeAssistant();
+  const isInside = (target: EventTarget | null) =>
+    target instanceof Node && Boolean(widgetRef.current?.contains(target));
+  const onOutsideInteraction = (event: Event) => {
+    if (!isInside(event.target)) closeAssistant();
   };
-
-  window.addEventListener("scroll", handlePageScroll, {
-    passive: true
-  });
-
+  // Capture catches page/element scrolling, while message scrolling stays inside the widget.
+  document.addEventListener("pointerdown", onOutsideInteraction, { capture: true, passive: true });
+  document.addEventListener("wheel", onOutsideInteraction, { capture: true, passive: true });
+  document.addEventListener("focusin", onOutsideInteraction, true);
+  window.addEventListener("scroll", onOutsideInteraction, { capture: true, passive: true });
   return () => {
-    window.removeEventListener("scroll", handlePageScroll);
+    document.removeEventListener("pointerdown", onOutsideInteraction, true);
+    document.removeEventListener("wheel", onOutsideInteraction, true);
+    document.removeEventListener("focusin", onOutsideInteraction, true);
+    window.removeEventListener("scroll", onOutsideInteraction, true);
   };
 }, [open, closing, closeAssistant]);
 
- useEffect(() => { let active = true; void loadAssistant().then((value) => { if (active) setContent(value); }); const openAssistant = () => { setOpen(true); setSelected(null); }; window.addEventListener("hpc:open-assistant", openAssistant); return () => { active = false; window.removeEventListener("hpc:open-assistant", openAssistant); }; }, []);
+useEffect(() => {
+  let active = true;
+  void loadAssistant()
+    .then(value => { if (active) setContent(value); })
+    .catch(error => console.error("Assistant loading error:", error))
+    .finally(() => { if (active) setContentLoading(false); });
+  const resetWindow = () => {
+    if (closeTimerRef.current !== null) window.clearTimeout(closeTimerRef.current);
+    closeTimerRef.current = null;
+    setOpen(false);
+    setClosing(false);
+  };
+  window.addEventListener("pagehide", resetWindow);
+  window.addEventListener("pageshow", resetWindow);
+  return () => {
+    active = false;
+    if (closeTimerRef.current !== null) window.clearTimeout(closeTimerRef.current);
+    window.removeEventListener("pagehide", resetWindow);
+    window.removeEventListener("pageshow", resetWindow);
+  };
+}, []);
+
 const starterQuestions = [
   {
     id: "pathways",
@@ -206,16 +251,25 @@ useLayoutEffect(() => {
   activePathway?.slug,
   pathways.length,
   content.questions.length,
+  isEnglish,
 ]);
 
 
+const isContactQuestion = (question: AssistantQuestion) => normalizeCopy(question.question) === normalizeCopy("سؤالي غير موجود");
+const existingContact = content.questions.find(isContactQuestion);
+const contactX = existingContact?.answer.find(block => block.type === "link" && block.label?.trim() === "X" && block.url)
+  ?? { type: "link" as const, label: "X", url: "https://x.com/ksau_events" };
+const sharedContactQuestion: AssistantQuestion = {
+  id: "shared-track-contact",
+  question: "سؤالي غير موجود",
+  pathwaySlug: activePathway?.slug,
+  answer: [{ type: "text", text: contactArabic }, contactX],
+};
 const pathwayQuestions = activePathway
-  ? content.questions.filter(
-      (question) => question.pathwaySlug === activePathway.slug
-    )
+  ? [...content.questions.filter(question => question.pathwaySlug === activePathway.slug && !isContactQuestion(question)), sharedContactQuestion]
   : [];
 
- if (!content.enabled) return null; return <><button className="assistant-fab" onClick={toggleAssistant} aria-label="فتح المساعد"><Bot size={22} /><span>{content.icon}</span></button>{open && <div className={`assistant-popup-backdrop ${closing ? "is-closing" : ""}`} onMouseDown={(event) => event.target === event.currentTarget && setOpen(false)}>
+ if (!ready || !i18n.isInitialized || !i18n.resolvedLanguage || contentLoading || !content.enabled) return null; return createPortal(<div ref={widgetRef} className="assistant-widget" dir={isEnglish ? "ltr" : "rtl"}><button className="assistant-fab" onClick={toggleAssistant} aria-label={localize("فتح المساعد")}><Bot size={22} /><span className="assistant-launcher-badge">{isEnglish && content.icon === "؟" ? "?" : content.icon}</span></button>{open && <div className={`assistant-popup-backdrop ${closing ? "is-closing" : ""}`}>
 
 <section
   ref={popupRef}
@@ -223,13 +277,13 @@ const pathwayQuestions = activePathway
   style={{
     "--hpc-chat-height": `${chatHeight}px`
   } as React.CSSProperties}
-  dir="rtl"
+  dir={isEnglish ? "ltr" : "rtl"}
 >
 
-<header><div className="assistant-popup-brand"><span><BotMessageSquare size={23} /></span><div><b>{content.name}</b><small>دليلك لكل ما يخص المؤتمر</small></div></div><button onClick={() => closeAssistant()} aria-label="إغلاق">
+<header><div className="assistant-popup-brand"><span><BotMessageSquare size={23} /></span><div><b>{localize(content.name)}</b><small>{localize("دليلك لكل ما يخص المؤتمر")}</small></div></div><button onClick={() => closeAssistant()} aria-label={localize("إغلاق")}>
   <X size={18} />
 </button></header><div className="assistant-popup-body">
-  <div ref={bodyContentRef} className="assistant-popup-content">{selected ? <><div className="assistant-question-selected">{selected.question}</div><div className="assistant-answer">{selected.answer.map((block, index) => <Block key={`${block.type}-${index}`} block={block} />)} </div>
+  <div ref={bodyContentRef} className="assistant-popup-content">{selected ? <><div className="assistant-question-selected">{localize(selected.question)}</div><div className="assistant-answer">{selected.answer.map((block, index) => index === contactLinkIndex ? <div className="assistant-contact-buttons" key={`${block.type}-${index}`}><Block block={block} localize={localize} /><a className="assistant-answer-link" href={emailHref}>{t("chatbotContact.email")}<ChevronLeft size={16} /></a></div> : <Block key={`${block.type}-${index}`} block={block} localize={localize} />)} </div>
 <div className="assistant-action-buttons">
   
 {chatPage === "questions" && (
@@ -238,9 +292,7 @@ const pathwayQuestions = activePathway
     className="assistant-back"
     onClick={() => setSelected(null)}
   >
-    <ArrowRight size={16} />
-    العودة للأسئلة
-  </button>
+    <ArrowRight size={16} />{localize("العودة للأسئلة")}</button>
 )}
 
   <button
@@ -259,8 +311,8 @@ const pathwayQuestions = activePathway
   >
     <ArrowRight size={16} />
     {chatPage === "questions"
-  ? "العودة للمسارات"
-  : "العودة للرئيسية"}
+  ? localize("العودة للمسارات")
+  : localize("العودة للرئيسية")}
   </button>
 
   <button
@@ -268,18 +320,16 @@ const pathwayQuestions = activePathway
     className="assistant-end"
     onClick={() => closeAssistant(true)}
   >
-    <X size={16} />
-    إنهاء المحادثة
-  </button>
+    <X size={16} />{localize("إنهاء المحادثة")}</button>
 </div>
 
 </> : <>
   <h2>
     {chatPage === "main"
-      ? content.welcome
+      ? localize(content.welcome)
       : chatPage === "pathways"
-        ? "اختر المسار"
-        : `الأسئلة الشائعة – ${activePathway?.title ?? ""}`}
+        ? localize("اختر المسار")
+        : isEnglish ? `${resources.chatbot.faq} – ${localize(activePathway?.title ?? "")}` : `الأسئلة الشائعة – ${activePathway?.title ?? ""}`}
   </h2>
 
   <div
@@ -300,7 +350,7 @@ const pathwayQuestions = activePathway
             }
           }}
         >
-          {question.question}
+          {localize(question.question)}
           <ChevronLeft size={16} />
         </button>
       ))
@@ -313,7 +363,7 @@ const pathwayQuestions = activePathway
             setChatPage("questions");
           }}
         >
-          {pathway.title}
+          {localize(pathway.title)}
           <ChevronLeft size={16} />
         </button>
       ))
@@ -323,12 +373,12 @@ const pathwayQuestions = activePathway
       key={String(question.id ?? index)}
       onClick={() => setSelected(question)}
     >
-      {question.question}
+      {localize(question.question)}
       <ChevronLeft size={16} />
     </button>
   ))
 ) : (
-  <p>لم تتم إضافة أسئلة شائعة لهذا المسار بعد.</p>
+  <p>{localize("لم تتم إضافة أسئلة شائعة لهذا المسار بعد.")}</p>
 )}
   </div>
 
@@ -349,8 +399,8 @@ const pathwayQuestions = activePathway
     >
       <ArrowRight size={16} />
       {chatPage === "questions"
-  ? "العودة للمسارات"
-  : "العودة للرئيسية"}
+  ? localize("العودة للمسارات")
+  : localize("العودة للرئيسية")}
     </button>
 
     <button
@@ -362,11 +412,9 @@ const pathwayQuestions = activePathway
         closeAssistant(true);
       }}
     >
-      <X size={16} />
-      إنهاء المحادثة
-    </button>
+      <X size={16} />{localize("إنهاء المحادثة")}</button>
   </div>
 )}
 
-</>}</div></div></section></div>}</>; }
+</>}</div></div></section></div>}</div>, document.body); }
 

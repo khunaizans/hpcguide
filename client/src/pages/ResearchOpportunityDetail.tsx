@@ -1,6 +1,8 @@
+import { useTranslation } from "react-i18next";
+import PathwayName from "@/components/PathwayName";
 import { getMediaUrl } from "@/lib/mediaUrl";
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, ExternalLink, Sparkles } from "lucide-react";
+import { ArrowLeft, ArrowRight, ExternalLink, Sparkles } from "lucide-react";
 import { useLocation } from "wouter";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
@@ -160,6 +162,12 @@ const updateTimeline = () => {
 }
 
 export default function ResearchOpportunityDetail() {
+  const { t, i18n } = useTranslation();
+  const isEnglish = i18n.resolvedLanguage === "en";
+  const resources = i18n.getResourceBundle("en", "translation");
+  const copy = { ...resources.posterOral, ...resources.debateTrack.copy, ...resources.researchOpportunities.copy } as Record<string, string>;
+  const normalize = (text: string) => text.normalize("NFKC").replace(/[\u0640\u064b-\u065f\u0670]/g, "").trim().replace(/\s+/g, " ");
+  const localize = (text: string) => isEnglish ? Object.entries(copy).find(([key]) => normalize(key) === normalize(text))?.[1] ?? text : text;
   const [, navigate] = useLocation();
   const [content, setContent] = useState(researchOpportunityContent);
   const [isLoading, setIsLoading] = useState(true);
@@ -278,7 +286,7 @@ if (isLoading) {
   return (
     <main
       className="pathway-detail research-opportunity-detail"
-      dir="rtl"
+      dir={isEnglish ? "ltr" : "rtl"} lang={isEnglish ? "en" : "ar"}
     >
       <SiteHeader />
       <div style={{ minHeight: "100vh" }} aria-busy="true" />
@@ -287,7 +295,7 @@ if (isLoading) {
 }
 
   return (
-    <main className="pathway-detail research-opportunity-detail" dir="rtl">
+    <main className="pathway-detail research-opportunity-detail" dir={isEnglish ? "ltr" : "rtl"} lang={isEnglish ? "en" : "ar"}>
       <SiteHeader />
 
 <section className="research-intro">
@@ -303,10 +311,10 @@ if (isLoading) {
         <div className="research-intro__glow" aria-hidden="true" />
         <div className="research-intro__grid">
           <Reveal className="research-intro__copy">
-            <a className="detail-back" href={`${import.meta.env.BASE_URL}#pathways`} onClick={returnToPathways}><ArrowRight size={16} /> الرجوع إلى المسارات</a>
-            <p className="eyebrow"><span />04</p>
-            <h1>مسار الفرص البحثية</h1>
-            <p className="research-intro__description">{content.description}</p>
+            <a className="detail-back" href={`${import.meta.env.BASE_URL}#pathways`} onClick={returnToPathways}>{isEnglish ? <ArrowLeft size={16} /> : <ArrowRight size={16} />} {localize("الرجوع إلى المسارات")}</a>
+            <p className="eyebrow"><span />{isEnglish ? t("researchOpportunities.track") : "04"}</p>
+            <h1><PathwayName slug="research-opportunities">{localize("مسار الفرص البحثية")}</PathwayName></h1>
+            <p className="research-intro__description">{localize(content.description)}</p>
           </Reveal>
 
 <Reveal className="research-intro__signal" delay={120}>
@@ -322,8 +330,8 @@ if (isLoading) {
       <section className="research-timeline-section">
 <div className="research-section-heading">
   <Reveal>
-    <p className="detail-label">رحلة المشاركة</p>
-    <h2>{content.timelineTitle}</h2>
+    <p className="detail-label">{localize("رحلة المشاركة")}</p>
+    <h2>{localize(content.timelineTitle)}</h2>
   </Reveal>
 </div>
 
@@ -332,21 +340,21 @@ if (isLoading) {
 <div className="research-timeline-main">
 
 <div className="research-timeline-wrap">
-  <Timeline events={content.events} />
+  <Timeline events={content.events.map(event => ({ ...event, date: localize(event.date), title: localize(event.title) }))} />
 </div>
 
 
   <div className="research-requirements">
     <div className="research-requirements__heading">
-      <p className="detail-label">قبل أن تبدأ</p>
-      <h2>شروط التسجيل</h2>
+      <p className="detail-label">{isEnglish ? t("researchOpportunities.before") : "قبل أن تبدأ"}</p>
+      <h2>{localize("شروط التسجيل")}</h2>
     </div>
 
     <ol className="research-requirements__list">
       {content.requirements.map((requirement, index) => (
         <li key={requirement.id}>
           <span>{String(index + 1).padStart(2, "0")}</span>
-          <p>{requirement.text}</p>
+          <p>{localize(requirement.text)}</p>
         </li>
       ))}
     </ol>
@@ -356,9 +364,9 @@ if (isLoading) {
           <Reveal className="research-cta" delay={160}>
             <span className="research-cta__number">04 <i></i></span>
             <div className="research-cta__icon"><Sparkles size={20} /></div>
-            <h2>{content.ctaTitle}</h2>
-            <p>{content.ctaDescription}</p>
-            <a className="research-cta__button" href={content.conferenceUrl || "#"} onClick={openConference}>{content.ctaLabel}<ExternalLink size={15} /></a>
+            <h2>{localize(content.ctaTitle)}</h2>
+            <p>{localize(content.ctaDescription)}</p>
+            <a className="research-cta__button" href={content.conferenceUrl || "#"} onClick={openConference}>{localize(content.ctaLabel)}<ExternalLink size={15} /></a>
             {!content.conferenceUrl && <small className="research-cta__note"></small>}
           </Reveal>
         </div>

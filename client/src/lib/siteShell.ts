@@ -1,9 +1,45 @@
 import { supabase } from "@/lib/supabase";
 import { getMediaUrl } from "./mediaUrl";
-export type ShellLink = { label: string; href: string; kind: "section" | "page" | "external"; visible: boolean; order: number };
+export type ShellLink = {
+  label: string;
+  labelEn?: string;
+  href: string;
+  kind: "section" | "page" | "external";
+  visible: boolean;
+  order: number;
+};
 export type ShellButton = { label: string; href: string; visible: boolean; order: number };
 export type ShellHeader = { logoUrl: string; logoSize: "small" | "medium" | "large"; logoHref: string; links: ShellLink[]; buttons: ShellButton[]; background: "glass" | "white" | "transparent"; textColor: "ink" | "muted"; height: "compact" | "standard" };
-export type ShellFooter = { title: string; description: string; logoUrl: string; copyright: string; links: ShellLink[]; socials: Array<{ label: string; href: string; icon: "linkedin" | "x" | "instagram" | "youtube" | "globe"; visible: boolean; order: number }>; partners: Array<{ name: string; imageUrl: string; href: string; visible: boolean; order: number }>; background: "white" | "soft" | "navy"; textColor: "ink" | "muted" };
+
+export type ShellFooter = {
+  title: string;
+  titleEn?: string;
+  description: string;
+  descriptionEn?: string;
+  logoUrl: string;
+  copyright: string;
+  copyrightEn?: string;
+  links: ShellLink[];
+  socials: Array<{
+    label: string;
+    labelEn?: string;
+    href: string;
+    icon: "linkedin" | "x" | "instagram" | "youtube" | "globe";
+    visible: boolean;
+    order: number;
+  }>;
+  partners: Array<{
+    name: string;
+    nameEn?: string;
+    imageUrl: string;
+    href: string;
+    visible: boolean;
+    order: number;
+  }>;
+  background: "white" | "soft" | "navy";
+  textColor: "ink" | "muted";
+};
+
 export type SiteShell = { header: ShellHeader; footer: ShellFooter };
 
 const logo = "/images/hpc-logo_739bab33.png";export const defaultShell: SiteShell = {

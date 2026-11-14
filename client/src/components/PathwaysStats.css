@@ -1,5 +1,13 @@
 
 /* HPC - Previous Editions Statistics */
+.pathways-history-stats[dir="ltr"] {
+  direction: ltr;
+}
+.pathways-history-stats[dir="ltr"] .pathways-stat-card span {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
 
 .pathways-history-stats {
   width: 100%;

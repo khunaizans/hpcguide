@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+import PathwayName from "@/components/PathwayName";
 import { getMediaUrl } from "@/lib/mediaUrl";
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
@@ -12,7 +14,7 @@ import {
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import "./ThreeMTDetail.css";
-import { Sparkles, ExternalLink, ArrowRight } from "lucide-react";
+import { Sparkles, ExternalLink, ArrowLeft, ArrowRight } from "lucide-react";
 
 
 type PosterTimelineEvent = {
@@ -120,6 +122,12 @@ if (isMobile) {
 
 
 export default function ThreeMTDetail() {
+  const { t, i18n } = useTranslation();
+  const isEnglish = i18n.resolvedLanguage === "en";
+  const resources = i18n.getResourceBundle("en", "translation");
+  const copy = { ...resources.posterOral, ...resources.clinicalSkillsRegistration, ...resources.threeMT.copy } as Record<string, string>;
+  const normalize = (text: string) => text.normalize("NFKC").replace(/[\u0640\u064b-\u065f\u0670]/g, "").trim().replace(/\s+/g, " ");
+  const localize = (text: string) => isEnglish ? Object.entries(copy).find(([key]) => normalize(key) === normalize(text))?.[1] ?? text : text;
   const [route, setRoute] = useState<RouteRecord | null>(null);
 const [isReady, setIsReady] = useState(false);
 const [heroImageSrc, setHeroImageSrc] = useState("");
@@ -267,7 +275,7 @@ useEffect(() => {
 
 if (!isReady) {
   return (
-    <main className="three-mt-page" dir="rtl">
+    <main className="three-mt-page" dir={isEnglish ? "ltr" : "rtl"} lang={isEnglish ? "en" : "ar"}>
       <SiteHeader />
       <div
         aria-busy="true"
@@ -282,7 +290,7 @@ if (!isReady) {
 
 
 return (
-  <main className="three-mt-page" dir="rtl">
+  <main className="three-mt-page" dir={isEnglish ? "ltr" : "rtl"} lang={isEnglish ? "en" : "ar"}>
     <SiteHeader />
 
 <section className="three-mt-hero">
@@ -298,20 +306,18 @@ return (
   href={`${import.meta.env.BASE_URL}#pathways`}
   className="detail-back hpc-pathways-back"
 >
-  <ArrowRight size={18} />
-  الرجوع إلى المسارات
+  {isEnglish ? <ArrowLeft size={18} /> : <ArrowRight size={18} />}
+  {localize("الرجوع إلى المسارات")}
 </a>
 
-    <span className="three-mt-eyebrow">
-      المسار 06
-    </span>
+    <span className="three-mt-eyebrow">{isEnglish ? t("threeMT.track") : "المسار 06"}</span>
 
-    <h1>
+    <h1><PathwayName slug="3mt">
       {route?.title || "مسار العرض البحثي في ثلاث دقائق"}
-    </h1>
+    </PathwayName></h1>
 
     <p className="three-mt-description">
-      {route?.details || route?.description || ""}
+      {localize(route?.details || route?.description || "")}
     </p>
   </div>
 
@@ -329,20 +335,20 @@ return (
   aria-labelledby="poster-timeline-title"
 >
   <div className="three-mt-timeline-heading">
-    <span>رحلة المشاركة</span>
-    <h2 id="poster-timeline-title">الخط الزمني</h2>
+    <span>{localize("رحلة المشاركة")}</span>
+    <h2 id="poster-timeline-title">{localize("الخط الزمني")}</h2>
   </div>
 <div className="three-mt-timeline-main">
 
   {timelineEvents.length > 0 ? (
-    <PosterTimeline events={timelineEvents} />
+    <PosterTimeline events={timelineEvents.map(event => ({ ...event, date: localize(event.date), title: localize(event.title) }))} />
   ) : (
-    <p>سيتم عرض المواعيد بعد نشرها من لوحة Admin.</p>
+    <p>{localize("سيتم عرض المواعيد بعد نشرها من لوحة Admin.")}</p>
   )}
 <section className="three-mt-requirements">
   <div className="three-mt-requirements-heading">
-    <span>قبل المشاركة</span>
-    <h2>شروط التسجيل</h2>
+    <span>{localize("قبل المشاركة")}</span>
+    <h2>{localize("شروط التسجيل")}</h2>
   </div>
 
   {participationRequirements.length > 0 ? (
@@ -356,12 +362,12 @@ return (
       <span className="three-mt-requirement-number">
         {String(index + 1).padStart(2, "0")}
       </span>
-      <p>{item.text}</p>
+      <p>{localize(item.text)}</p>
     </li>
   ))}
 </ol>
   ) : (
-    <p>سيتم عرض شروط المشاركة بعد نشرها من لوحة Admin.</p>
+    <p>{localize("سيتم عرض شروط المشاركة بعد نشرها من لوحة Admin.")}</p>
   )}
 </section>
 </div>
@@ -377,9 +383,9 @@ return (
   </div>
 
 
-<h2>{route?.ctaTitle || "مهتم بالمشاركة؟"}</h2>
+<h2>{localize(route?.ctaTitle || "مهتم بالمشاركة؟")}</h2>
 
-<p>{route?.ctaDescription || "سجل الآن"}</p>
+<p>{localize(route?.ctaDescription || "سجل الآن")}</p>
 
 
 {route?.ctaUrl ? (
@@ -389,7 +395,7 @@ return (
     target="_blank"
     rel="noopener noreferrer"
   >
-    {route.ctaLabel || "رابط التسجيل"}
+    {localize(route.ctaLabel || "رابط التسجيل")}
     <ExternalLink size={15} />
   </a>
 ) : (
@@ -401,9 +407,7 @@ return (
       opacity: 0.65,
       cursor: "not-allowed",
     }}
-  >
-    رابط التسجيل
-    <ExternalLink size={15} />
+  >{localize("رابط التسجيل")}<ExternalLink size={15} />
   </button>
 )}
 

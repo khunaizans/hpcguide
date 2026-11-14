@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "wouter";
+import { Trans, useTranslation } from "react-i18next";
 import {
   ArrowDown,
-  ArrowUpLeft,
   Check,
   ChevronLeft,
   Clock3,
@@ -83,10 +83,10 @@ function Reveal({
 }
 
 
-function LogoMark({ compact = false }: { compact?: boolean }) {
+function LogoMark({ compact = false, alt = "مؤتمر التخصصات الصحية" }: { compact?: boolean; alt?: string }) {
   return (
     <div className={`brand-mark ${compact ? "brand-mark--compact" : ""}`}>
-      <img src={ASSETS.logo} alt="مؤتمر التخصصات الصحية" />
+      <img src={ASSETS.logo} alt={alt} />
       {!compact && <span>Health Professions Conference</span>}
     </div>
   );
@@ -97,9 +97,26 @@ function VisualFallback({ variant = "hero", label }: { variant?: string; label?:
 }
 
 function Hero({ content, pageTitle }: { content: HomeContent; pageTitle: string }) {
+  const { t, i18n } = useTranslation();
+  const isEnglish = i18n.resolvedLanguage === "en";
+  // Translate known CMS copy without changing the stored Arabic. Unknown copy
+  // remains in its original language until an English translation is supplied.
+  const heroKeys: Record<string, string> = {
+    "مؤتمر التخصصات الصحية": "conference",
+    "نبحث لصحة الإنسان": "slogan",
+    "دليل": "guide",
+    "دليلك داخل": "guide",
+    "المعرفة تتحول إلى أثر": "knowledge",
+    [fallbackHomeContent.hero.description]: "description",
+    [fallbackHomeContent.hero.imageAlt]: "imageAlt",
+  };
+  const translate = (value: string) => {
+    const key = heroKeys[value.trim()];
+    return isEnglish && key ? t(`hero.${key}`, { defaultValue: value }) : value;
+  };
   const titleParts = pageTitle.trim().match(/^(.*?)(HPC.*)$/i);
   return (
-    <section id="hero" className="hero-section">
+    <section id="hero" className="hero-section" dir={isEnglish ? "ltr" : "rtl"} lang={isEnglish ? "en" : "ar"}>
       <div className="hero-grid" />
       <div className="ai-pattern" aria-hidden="true">
         <span className="ai-node ai-node--one" /><span className="ai-node ai-node--two" /><span className="ai-node ai-node--three" />
@@ -108,25 +125,27 @@ function Hero({ content, pageTitle }: { content: HomeContent; pageTitle: string 
       </div>
       <div className="hero-orb hero-orb--one" />
       <div className="hero-orb hero-orb--two" />
-      <div className="hero-topline"><span>{content.hero.topRight}</span><span>{content.hero.topLeft}</span></div>
+      <div className="hero-topline"><span>{translate(content.hero.topRight)}</span><span>{translate(content.hero.topLeft)}</span></div>
       <div className="hero-content">
         <Reveal className="hero-brand">
-          <LogoMark />
+          <LogoMark alt={t("hero.conference")} />
         </Reveal>
         <Reveal delay={80} className="hero-copy">
-          <p className="hero-kicker">{content.hero.kicker}</p>
-          <h1 style={{ marginRight: "79px" }}><span className="hero-title-lead">{titleParts?.[1].trimEnd() ?? content.hero.titleLead}</span> <em className="hero-title-accent" style={{ marginRight: "187px" }}>{titleParts?.[2] ?? content.hero.titleAccent}</em></h1>
-          <p className="hero-description">{content.hero.description}</p>
+          <p className="hero-kicker" style={isEnglish ? { maxWidth: "100%", textWrap: "balance", overflowWrap: "anywhere" } : undefined}>
+            {isEnglish ? t("hero.slogan", { defaultValue: "Researching for Human Health" }) : content.hero.kicker}
+          </p>
+          <h1 style={{ marginInlineStart: "79px" }}><span className="hero-title-lead">{translate(titleParts?.[1].trimEnd() ?? content.hero.titleLead)}</span> <em className="hero-title-accent" style={{ marginInlineStart: "187px" }}>{translate(titleParts?.[2] ?? content.hero.titleAccent)}</em></h1>
+          <p className="hero-description">{translate(content.hero.description)}</p>
           <div className="hero-actions">
           </div>
         </Reveal>
         <Reveal delay={180} className="hero-visual-wrap">
-          <img className="hero-visual hero-visual--xd" src={getMediaUrl(content.hero.image || ASSETS.hero)} alt={content.hero.imageAlt || "فريق من المختصين الصحيين يعملون معاً"} />
-          <div className="hero-float hero-float--left"><span>6</span><small>مسارات للتعلم<br />والمشاركة</small></div>
-          <div className="hero-float hero-float--right"><Sparkles size={16} /><small>فكرة<br />تتحول إلى أثر</small></div>
+          <img className="hero-visual hero-visual--xd" src={getMediaUrl(content.hero.image || ASSETS.hero)} alt={translate(content.hero.imageAlt || fallbackHomeContent.hero.imageAlt)} />
+          <div className="hero-float hero-float--left"><span>6</span><small>{t("hero.learning")}<br />{t("hero.participation")}</small></div>
+          <div className="hero-float hero-float--right"><Sparkles size={16} /><small>{t("hero.idea")}<br />{t("hero.impact")}</small></div>
         </Reveal>
       </div>
-      <a className="scroll-cue" href="#about"><span>مرر للاستكشاف</span><ArrowDown size={18} /></a>
+      <a className="scroll-cue" href="#about"><span>{t("hero.scroll")}</span><ArrowDown size={18} /></a>
     </section>
   );
 }
@@ -172,6 +191,8 @@ function ScrollProgress() {
   );
 }
 function StrategicGoals() {
+  const { t, i18n } = useTranslation();
+  const isEnglish = i18n.resolvedLanguage === "en";
   const sectionRef = useRef<HTMLElement | null>(null);
 const [scrollProgress, setScrollProgress] = useState(0);
 
@@ -225,7 +246,8 @@ const goals = [
      ref={sectionRef}
       id="strategic-goals"
       className="strategic-goals-section"
-      dir="rtl"
+      dir={isEnglish ? "ltr" : "rtl"}
+      lang={isEnglish ? "en" : "ar"}
     >
       <div className="container">
         <h2
@@ -238,7 +260,7 @@ const goals = [
         : "translateY(30px)",
   }}
 >
-  الأهداف <span>الاستراتيجية</span>
+  {isEnglish ? <>{t("strategicObjectives.headingLead")} <span>{t("strategicObjectives.headingAccent")}</span></> : <>الأهداف <span>الاستراتيجية</span></>}
 </h2>
 
         <div className="strategic-goals-grid">
@@ -271,7 +293,7 @@ const goals = [
 />
               </svg>
 
-                <p>{goal}</p>
+                <p>{isEnglish ? t(`strategicObjectives.items.${index + 1}`, { defaultValue: goal }) : goal}</p>
         </div>
       );
     })}
@@ -282,27 +304,52 @@ const goals = [
 }
 
 function About({ content }: { content: HomeContent }) {
+  const { t, i18n } = useTranslation();
+  const isEnglish = i18n.resolvedLanguage === "en";
+  // CMS copy may contain Arabic vowel marks, elongation, bidi controls, or
+  // split a word between the two decorative lines. Normalize only for matching.
+  const normalizeSlogan = (value: string) => value.normalize("NFKC")
+    .replace(/[\s\u0640\u0610-\u061a\u064b-\u065f\u0670\u06d6-\u06ed\u200b-\u200f\u202a-\u202e\u2066-\u2069]/g, "")
+    .replace(/[أإآٱ]/g, "ا");
+  const isHealthSlogan = normalizeSlogan(content.about.titleLine1 + content.about.titleLine2)
+    === normalizeSlogan("نبحث لصحة الإنسان");
+  // Keep CMS values intact; English copy is a presentation-only translation.
+  const about = isEnglish ? {
+    ...content.about,
+    eyebrow: t("identity.heading", { defaultValue: content.about.eyebrow }),
+    titleLine1: isHealthSlogan ? t("identity.sloganLead") : content.about.titleLine1 === fallbackHomeContent.about.titleLine1 ? t("identity.titleLine1", { defaultValue: content.about.titleLine1 }) : content.about.titleLine1,
+    titleLine2: isHealthSlogan ? t("identity.sloganAccent") : content.about.titleLine2 === fallbackHomeContent.about.titleLine2 ? t("identity.titleLine2", { defaultValue: content.about.titleLine2 }) : content.about.titleLine2,
+    description: t("identity.description", { defaultValue: content.about.description }),
+    visionLabel: t("identity.visionLabel", { defaultValue: content.about.visionLabel }),
+    visionTitle: t("identity.visionDescription", { defaultValue: content.about.visionTitle }),
+    visionText: "",
+    missionLabel: t("identity.missionLabel", { defaultValue: content.about.missionLabel }),
+    missionTitle: t("identity.missionDescription", { defaultValue: content.about.missionTitle }),
+    missionText: "",
+  } : content.about;
   return (
-    <section id="about" className="about-section section-pad">
+    <section id="about" className="about-section section-pad" dir={isEnglish ? "ltr" : "rtl"} lang={isEnglish ? "en" : "ar"}>
       <div className="section-pattern research-pattern" aria-hidden="true"><span /><span /><span /><i>R</i></div>
       <div className="container about-layout">
-        <Reveal className="about-title">
+        <Reveal className={`about-title${isEnglish && isHealthSlogan ? " about-title--health-slogan" : ""}`}>
           <SectionHeading
-  eyebrow={content.about.eyebrow}
+  eyebrow={about.eyebrow}
   title={
-    content.about.titleLine1?.trim() || content.about.titleLine2?.trim() ? (
+    about.titleLine1?.trim() || about.titleLine2?.trim() ? (
       <>
-        {content.about.titleLine1}
+        {about.titleLine1}
         <br />
-        <span>{content.about.titleLine2}</span>
+        <span>{about.titleLine2}</span>
       </>
     ) : null
   }
   description={
-  content.about.description
-    .split(/(الحادي عشر|الحادية عشر|الحادية عشرة)/g)
+  about.description
+    .replace(/\r\n?/g, "\n")
+    .replace(/\n(?:[\t ]*\n)+/g, "\n")
+    .split(/(الحادي عشر|الحادية عشر|الحادية عشرة|11th)/g)
     .map((part, index) =>
-      ["الحادي عشر", "الحادية عشر", "الحادية عشرة"].includes(part) ? (
+      ["الحادي عشر", "الحادية عشر", "الحادية عشرة", "11th"].includes(part) ? (
         <span key={index} className="about-highlight">
           {part}
         </span>
@@ -316,13 +363,11 @@ function About({ content }: { content: HomeContent }) {
         <div className="about-stack">
           <Reveal delay={100} className="statement-card statement-card--vision">
             <div className="statement-number">01</div>
-            <div><p className="card-label">{content.about.visionLabel}</p><h3>{content.about.visionTitle}</h3><p>{content.about.visionText}</p></div>
-            <ArrowUpLeft className="card-arrow" size={23} />
+            <div><p className="card-label">{about.visionLabel}</p><h3>{about.visionTitle}</h3><p>{about.visionText}</p></div>
           </Reveal>
           <Reveal delay={180} className="statement-card statement-card--mission">
             <div className="statement-number">02</div>
-            <div><p className="card-label">{content.about.missionLabel}</p><h3>{content.about.missionTitle}</h3><p>{content.about.missionText}</p></div>
-            <ArrowUpLeft className="card-arrow" size={23} />
+            <div><p className="card-label">{about.missionLabel}</p><h3>{about.missionTitle}</h3><p>{about.missionText}</p></div>
           </Reveal>
         </div>
       </div>
@@ -331,21 +376,25 @@ function About({ content }: { content: HomeContent }) {
 }
 
 function AccompanyingExhibition() {
+  const { t, i18n } = useTranslation();
+  const isEnglish = i18n.resolvedLanguage === "en";
   return (
     <section
       id="accompanying-exhibition"
       className="accompanying-exhibition"
-      dir="rtl"
+      dir={isEnglish ? "ltr" : "rtl"}
+      lang={isEnglish ? "en" : "ar"}
     >
       <div className="container">
         <Reveal className="exhibition-content">
           <div className="exhibition-heading">
-            <h2>المعرض المصاحب</h2>
+            <h2>{isEnglish ? t("exhibition.title") : "المعرض المصاحب"}</h2>
             <h3></h3>
           </div>
 
           <div className="exhibition-intro">
             <p>
+              {isEnglish ? <Trans i18nKey="exhibition.intro" components={{ edition: <span className="exhibition-highlight" /> }} /> : <>
 
 يتضمن معرض مؤتمر التخصصات الصحية{" "}
 <span className="exhibition-highlight">الحادي عشر</span>{" "}
@@ -356,10 +405,12 @@ function AccompanyingExhibition() {
               واستعراض كيف يسهم الذكاء الاصطناعي وتقنيات
               المستقبل في إعادة تشكيل الممارسة الصحية
               والارتقاء بها.
+              </>}
             </p>
           </div>
 
           <p className="exhibition-details">
+            {isEnglish ? t("exhibition.details") : <>
             من خلال هذه اللقاءات، يحصل المشاركون على فرصة
             مميزة لتبادل الأفكار والنقاشات حول أحدث التطورات
             العلمية والتوجهات المستقبلية للذكاء الاصطناعي.
@@ -368,6 +419,7 @@ function AccompanyingExhibition() {
             مما يثري المعرفة ويساعد في بناء رؤية أعمق
             للتخصصات المختلفة وانتشارها بشكل أوسع عبر
             وسائل التواصل الاجتماعي.
+            </>}
           </p>
         </Reveal>
       </div>
@@ -376,6 +428,8 @@ function AccompanyingExhibition() {
 }
 
 function Pathways({ content }: { content: HomeContent }) {
+  const { t, i18n } = useTranslation();
+  const isEnglish = i18n.resolvedLanguage === "en";
 
   const [touchedCard, setTouchedCard] = useState<number | null>(null);
 
@@ -393,19 +447,19 @@ function Pathways({ content }: { content: HomeContent }) {
     <section id="pathways" className="pathways-section section-pad">
       <div className="section-pattern circuit-pattern" aria-hidden="true"><span /><span /><span /><i>AI</i></div>
       <div className="container">
-        <div className="pathways-intro-layout">
+        <div className="pathways-intro-layout" dir={isEnglish ? "ltr" : "rtl"} lang={isEnglish ? "en" : "ar"}>
   <div className="pathways-intro-heading">
     <Reveal>
       <SectionHeading
-        eyebrow={content.pathways.eyebrow}
+        eyebrow={isEnglish ? t("pathwaysIntro.label") : content.pathways.eyebrow}
         title={
           <>
-            {content.pathways.titleLine1}
+            {isEnglish ? t("pathwaysIntro.titleLead") : content.pathways.titleLine1}
             <br />
-            <span>{content.pathways.titleLine2}</span>
+            <span>{isEnglish ? t("pathwaysIntro.titleAccent") : content.pathways.titleLine2}</span>
           </>
         }
-        description={content.pathways.description}
+        description={isEnglish ? t("pathwaysIntro.description") : content.pathways.description}
         light
       />
     </Reveal>
@@ -413,7 +467,7 @@ function Pathways({ content }: { content: HomeContent }) {
 
   <PathwaysStats />
 </div>
-        <div className="pathway-grid">
+        <div className="pathway-grid" dir={isEnglish ? "ltr" : "rtl"}>
           {content.pathways.cards.map((card, index) => (
 
   <Reveal
@@ -444,8 +498,8 @@ onLoad={(e) => {
  /<span className="pathway-index">{card.eyebrow}</span></div>
 
 <div className="pathway-body">
-  <p>{card.title}</p>
-  <span>{card.text}</span>
+  <p dir={isEnglish ? "ltr" : undefined} style={isEnglish ? { overflowWrap: "anywhere" } : undefined}>{isEnglish ? t(`pathwayNames.${card.eyebrow.trim() === "07" ? "visual-research" : card.eyebrow.trim() === "08" ? "research-review" : card.slug}`, { defaultValue: card.title }) : card.title}</p>
+  <span dir={isEnglish ? "ltr" : undefined} style={isEnglish ? { textAlign: "left" } : undefined}>{isEnglish ? t(`pathwayDescriptions.${card.eyebrow.trim() === "07" ? "visual-research" : card.eyebrow.trim() === "08" ? "research-review" : card.slug}`, { defaultValue: card.text }) : card.text}</span>
 </div>
 
 <Link
@@ -723,7 +777,7 @@ export default function Home() {
   }, []);
 if (cmsLoading) {
   return (
-    <main dir="rtl">
+    <main dir="rtl" aria-busy="true">
       <SiteHeader />
       <div style={{ minHeight: "100vh" }} />
       <SiteFooter />
