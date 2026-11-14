@@ -704,6 +704,8 @@ window.setTimeout(() => {
 
 
 export default function Home() {
+  const { i18n } = useTranslation();
+const isEnglish = i18n.resolvedLanguage === "en";
   const [content, setContent] = useState<HomeContent>(fallbackHomeContent);
   const [cmsLoading, setCmsLoading] = useState(Boolean(supabase));
   const [pageTitle, setPageTitle] = useState("دليلك داخل HPC");
@@ -777,12 +779,12 @@ export default function Home() {
   }, []);
 if (cmsLoading) {
   return (
-    <main dir="rtl" aria-busy="true">
+    <main dir={isEnglish ? "ltr" : "rtl"} aria-busy="true">
       <SiteHeader />
       <div style={{ minHeight: "100vh" }} />
       <SiteFooter />
     </main>
   );
 }
-  return <main dir="rtl"><SiteHeader />{content.visibility.hero && <Hero content={content} pageTitle={pageTitle} />}{content.visibility.about && <About content={content} />}{content.visibility.about && <StrategicGoals />}<AccompanyingExhibition />{content.visibility.pathways && <Pathways content={content} />}{content.visibility.resources && <Resources content={content} />}<SiteFooter /></main>;
+  return <main dir={isEnglish ? "ltr" : "rtl"}><SiteHeader />{content.visibility.hero && <Hero content={content} pageTitle={pageTitle} />}{content.visibility.about && <About content={content} />}{content.visibility.about && <StrategicGoals />}<AccompanyingExhibition />{content.visibility.pathways && <Pathways content={content} />}{content.visibility.resources && <Resources content={content} />}<SiteFooter /></main>;
 }
