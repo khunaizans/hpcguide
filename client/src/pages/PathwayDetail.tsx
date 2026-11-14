@@ -1,3 +1,4 @@
+import PathwayName from "@/components/PathwayName";
 import { useEffect, useState, type MouseEvent } from "react";
 import { ArrowRight, Check } from "lucide-react";
 import { Link, useLocation, useRoute } from "wouter";
@@ -145,7 +146,7 @@ if (pathway.slug === "3mt") {
         <div className="detail-hero-copy">
           <a className="detail-back" href={`${import.meta.env.BASE_URL}#pathways`} onClick={returnToPathways}><ArrowRight size={16} /> الرجوع إلى المسارات</a>
           <p className="eyebrow"><span /> المسار {pathway.eyebrow}</p>
-          <h1>{pathway.title}</h1>
+          <h1><PathwayName slug={pathway.slug} number={pathway.eyebrow}>{pathway.title}</PathwayName></h1>
           <p>{pathway.details}</p>
         </div>
         <div className="detail-image-wrap"><img src={pathway.image} alt={pathway.title} /></div>

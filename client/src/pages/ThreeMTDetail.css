@@ -1320,3 +1320,19 @@
     margin-bottom: 20px !important;
   }
 }
+
+/* English-only text direction; retain the 3MT design and animation rules. */
+.three-mt-page[dir="ltr"] .three-mt-hero-content,
+.three-mt-page[dir="ltr"] .three-mt-registration,
+.three-mt-page[dir="ltr"] .three-mt-requirements-list,
+.three-mt-page[dir="ltr"] .research-timeline { direction: ltr; }
+.three-mt-page[dir="ltr"] .three-mt-hero-content :is(h1, p, .three-mt-eyebrow),
+.three-mt-page[dir="ltr"] .three-mt-requirement p,
+.three-mt-page[dir="ltr"] .three-mt-registration :is(h2, p),
+.three-mt-page[dir="ltr"] .research-timeline__copy {
+  direction: ltr;
+  text-align: left !important;
+  overflow-wrap: anywhere;
+}
+.three-mt-page[dir="ltr"] .hpc-pathways-back { direction: ltr; }
+.three-mt-page[dir="ltr"] .three-mt-registration :is(.research-cta__icon, .research-cta__button) { align-self: flex-start; }

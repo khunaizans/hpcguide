@@ -1,0 +1,44 @@
+/* Directional corrections apply only to the English Scientific Program page. */
+.scientific-program-page[dir="ltr"] .scientific-program-hero-content .scientific-program-pathway-number {
+  text-align: start !important;
+}
+
+@media (min-width: 701px) {
+  .scientific-program-page[dir="ltr"] .scientific-program-bottom-cards {
+    direction: ltr;
+  }
+}
+
+.scientific-program-page[dir="ltr"] .scientific-program-hero-content,
+.scientific-program-page[dir="ltr"] .scientific-program-lecture-card,
+.scientific-program-page[dir="ltr"] .scientific-program-workshop-card,
+.scientific-program-page[dir="ltr"] .scientific-program-registration-card {
+  direction: ltr;
+  text-align: start;
+}
+
+.scientific-program-page[dir="ltr"] .scientific-program-pathway-number,
+.scientific-program-page[dir="ltr"] .detail-back {
+  direction: ltr;
+  justify-content: flex-start;
+  text-align: start;
+}
+
+.scientific-program-page[dir="ltr"] .scientific-program-registration-card .scientific-registration-top {
+  direction: ltr;
+  text-align: start !important;
+}
+
+.scientific-program-page[dir="ltr"] .scientific-registration-icon,
+.scientific-program-page[dir="ltr"] .scientific-registration-button {
+  align-self: flex-start;
+  direction: ltr;
+}
+
+.scientific-program-page[dir="ltr"] .scientific-program-registration-card :is(h2, p),
+.scientific-program-page[dir="ltr"] .scientific-program-lecture-card :is(h2, p),
+.scientific-program-page[dir="ltr"] .scientific-program-workshop-card :is(h2, p) {
+  direction: ltr;
+  text-align: start !important;
+  overflow-wrap: anywhere;
+}

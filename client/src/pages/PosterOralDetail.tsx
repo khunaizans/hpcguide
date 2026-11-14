@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+import PathwayName from "@/components/PathwayName";
 import { getMediaUrl } from "@/lib/mediaUrl";
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
@@ -13,7 +15,7 @@ import { getPathway } from "@/lib/pathways";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import "./PosterOralDetail.css";
-import { Sparkles, ExternalLink, ArrowRight } from "lucide-react";
+import { Sparkles, ExternalLink, ArrowLeft, ArrowRight } from "lucide-react";
 
 
 type PosterTimelineEvent = {
@@ -115,6 +117,20 @@ const updateTimeline = () => {
 
 
 export default function PosterOralDetail() {
+  const { t, i18n } = useTranslation();
+  const isEnglish = i18n.resolvedLanguage === "en";
+  // Read literal CMS-text keys without interpreting colons as i18next namespaces.
+  const copy = i18n.getResourceBundle("en", "translation").posterOral as Record<string, string>;
+  const normalize = (value: string) => value.normalize("NFKC").replace(/[\u0640\u064b-\u065f\u0670]/g, "").trim().replace(/\s+/g, " ");
+  const localize = (value: string) => {
+    if (!isEnglish) return value;
+    const exact = Object.entries(copy).find(([key]) => normalize(key) === normalize(value))?.[1];
+    if (exact) return exact;
+    // These CMS fragments may also appear within a longer text field.
+    return ["مسار الملصقات البحثية ومسار العروض الشفهية.", "شهادة للمقدم وشهادة للبحث."]
+      .reduce((text, key) => normalize(text).includes(normalize(key)) ? normalize(text).split(normalize(key)).join(copy[key]) : text, value);
+  };
+  const localizeDate = (value: string) => isEnglish ? value.replace(/ديسمبر/g, "December").replace(/مارس/g, "March").replace(/أبريل/g, "April") : value;
   const [route, setRoute] = useState<RouteRecord | null>(null);
 
   useEffect(() => {
@@ -216,7 +232,7 @@ const posterImageSrc = getMediaUrl(posterImage);
 
 
   return (
-    <main className="poster-oral-page" dir="rtl">
+    <main className="poster-oral-page" dir={isEnglish ? "ltr" : "rtl"} lang={isEnglish ? "en" : "ar"}>
       <SiteHeader />
 
 
@@ -235,24 +251,22 @@ const posterImageSrc = getMediaUrl(posterImage);
   href={`${import.meta.env.BASE_URL}#pathways`}
   className="detail-back hpc-pathways-back"
 >
-  <ArrowRight size={18} />
-  الرجوع إلى المسارات
+  {isEnglish ? <ArrowLeft size={18} /> : <ArrowRight size={18} />}
+  {localize("الرجوع إلى المسارات")}
 </a>
 
 <span
   className="poster-oral-eyebrow"
   style={{ color: "#FFFFFF" }}
->
-  المسار 02
-</span>
+>{localize("المسار 02")}</span>
 
 
-    <h1>
+    <h1><PathwayName slug="posters-research">
       {route?.title || "مسار الملصقات والعروض الشفهية"}
-    </h1>
+    </PathwayName></h1>
 
     <p className="poster-oral-description">
-      {route?.details || route?.description || ""}
+      {localize(route?.details || route?.description || "")}
     </p>
   </div>
 
@@ -270,20 +284,20 @@ const posterImageSrc = getMediaUrl(posterImage);
   aria-labelledby="poster-timeline-title"
 >
   <div className="poster-oral-timeline-heading">
-    <span>رحلة المشاركة</span>
-    <h2 id="poster-timeline-title">الخط الزمني</h2>
+    <span>{localize("رحلة المشاركة")}</span>
+    <h2 id="poster-timeline-title">{localize("الخط الزمني")}</h2>
   </div>
 <div className="poster-oral-timeline-main">
 
   {timelineEvents.length > 0 ? (
-    <PosterTimeline events={timelineEvents} />
+    <PosterTimeline events={timelineEvents.map(event => ({ ...event, date: localizeDate(event.date), title: localize(event.title) }))} />
   ) : (
-    <p>سيتم عرض المواعيد بعد نشرها من لوحة Admin.</p>
+    <p>{localize("سيتم عرض المواعيد بعد نشرها من لوحة Admin.")}</p>
   )}
 <section className="poster-oral-requirements">
   <div className="poster-oral-requirements-heading">
-    <span>قبل المشاركة</span>
-    <h2>شروط التسجيل</h2>
+    <span>{localize("قبل المشاركة")}</span>
+    <h2>{localize("شروط التسجيل")}</h2>
   </div>
 
   {participationRequirements.length > 0 ? (
@@ -297,12 +311,12 @@ const posterImageSrc = getMediaUrl(posterImage);
       <span className="poster-oral-requirement-number">
         {String(index + 1).padStart(2, "0")}
       </span>
-      <p>{item.text}</p>
+      <p>{localize(item.text)}</p>
     </li>
   ))}
 </ol>
   ) : (
-    <p>سيتم عرض شروط المشاركة بعد نشرها من لوحة Admin.</p>
+    <p>{localize("سيتم عرض شروط المشاركة بعد نشرها من لوحة Admin.")}</p>
   )}
 </section>
 </div>
@@ -316,20 +330,16 @@ const posterImageSrc = getMediaUrl(posterImage);
     <Sparkles size={20} />
   </div>
 
-  <h2>مهتم بالمشاركة؟</h2>
+  <h2>{localize("مهتم بالمشاركة؟")}</h2>
 
-  <p>
-   سجل الآن
-  </p>
+  <p>{localize("سجل الآن")}</p>
 
   <a
     className="research-cta__button"
     href="https://hpcgate.ksau-hs.edu.sa/Home/Index"
     target="_blank"
     rel="noopener noreferrer"
-  >
-   رابط التسجيل
-    <ExternalLink size={15} />
+  >{localize("رابط التسجيل")}<ExternalLink size={15} />
   </a>
 
   <small className="research-cta__note">

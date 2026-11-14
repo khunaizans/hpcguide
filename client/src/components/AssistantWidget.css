@@ -1,0 +1,47 @@
+/* Localize reading direction only; existing chatbot dimensions and effects remain. */
+.assistant-widget .assistant-contact-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  max-width: 100%;
+}
+.assistant-widget[dir="ltr"] .assistant-popup,
+.assistant-widget[dir="ltr"] .assistant-popup header,
+.assistant-widget[dir="ltr"] .assistant-question-list,
+.assistant-widget[dir="ltr"] .assistant-action-buttons {
+  direction: ltr;
+}
+.assistant-widget[dir="ltr"] .assistant-popup :is(h2, b, small, .assistant-question-selected, .assistant-answer, .assistant-question-list button) {
+  text-align: left !important;
+}
+.assistant-widget[dir="ltr"] .assistant-back > .lucide-arrow-right,
+.assistant-widget[dir="ltr"] .assistant-question-list button > .lucide-chevron-left,
+.assistant-widget[dir="ltr"] .assistant-answer-link > .lucide-chevron-left {
+  transform: scaleX(-1);
+}
+
+/* Match the English side without changing either icon's artwork or sizing. */
+.assistant-widget[dir="ltr"] .assistant-fab > svg,
+.assistant-widget[dir="ltr"] .assistant-popup .assistant-popup-brand > span svg {
+  transform: none !important;
+}
+.assistant-widget[dir="ltr"] .assistant-fab > .assistant-launcher-badge {
+  inset: -5px -5px auto auto !important;
+}
+
+/* Override the original RTL rules on the track-list and answer descendants. */
+.assistant-widget[dir="ltr"] .assistant-popup :is(.assistant-popup-brand, .assistant-popup-brand > div, .assistant-popup-body, .assistant-popup-content, .assistant-question-list, .assistant-answer, .assistant-answer > p, .assistant-question-selected, .assistant-answer a, .assistant-action-buttons button) {
+  direction: ltr;
+  text-align: left !important;
+}
+.assistant-widget[dir="ltr"] .assistant-popup .assistant-question-list button {
+  direction: ltr;
+  flex-direction: row !important;
+  justify-content: flex-start !important;
+  text-align: left !important;
+}
+.assistant-widget[dir="ltr"] .assistant-popup .assistant-question-list button > .lucide-chevron-left {
+  order: 1;
+  margin-inline-start: auto;
+}

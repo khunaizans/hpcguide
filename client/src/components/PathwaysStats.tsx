@@ -1,5 +1,6 @@
 
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import "./PathwaysStats.css";
 
 export type ConferenceEdition = {
@@ -147,6 +148,8 @@ function AnimatedStatNumber({
 export default function PathwaysStats({
   editions = defaultEditions,
 }: Props) {
+  const { t, i18n } = useTranslation();
+  const isEnglish = i18n.resolvedLanguage === "en";
   const [selectedYear, setSelectedYear] = useState("2026");
 const statsRef = useRef<HTMLDivElement | null>(null);
 const [statsVisible, setStatsVisible] = useState(false);
@@ -189,10 +192,11 @@ useEffect(() => {
   className={`pathways-history-stats ${
     statsVisible ? "is-visible" : ""
   }`}
-  dir="rtl"
+  dir={isEnglish ? "ltr" : "rtl"}
+  lang={isEnglish ? "en" : "ar"}
 >
       <div className="pathways-stats-header">
-        <h3>أبرز الأرقام</h3>
+        <h3>{isEnglish ? t("keyFigures.title") : "أبرز الأرقام"}</h3>
       </div>
 
       <div className="pathways-stats-years">
@@ -214,7 +218,7 @@ useEffect(() => {
       </div>
 
       <p className="pathways-stats-edition">
-        النسخة {selected.name}
+        {isEnglish ? t(`keyFigures.editions.${selected.name}`, { defaultValue: selected.name }) : <>النسخة {selected.name}</>}
       </p>
 
       <div className="pathways-stats-grid" key={selected.year}>
@@ -232,7 +236,7 @@ useEffect(() => {
   value={stat.value}
   visible={statsVisible}
 />
-            <span>{stat.label}</span>
+            <span>{isEnglish ? t(`keyFigures.labels.${stat.label}`, { defaultValue: stat.label }) : stat.label}</span>
           </div>
         ))}
       </div>

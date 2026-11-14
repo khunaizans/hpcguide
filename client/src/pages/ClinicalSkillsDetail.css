@@ -1364,3 +1364,21 @@
     margin: 0 !important;
   }
 }
+
+/* English-only direction rules; preserve the Clinical Skills visual design. */
+.clinical-skills-page[dir="ltr"] .clinical-skills-hero-content,
+.clinical-skills-page[dir="ltr"] .clinical-skills-registration,
+.clinical-skills-page[dir="ltr"] .clinical-skills-requirements-list,
+.clinical-skills-page[dir="ltr"] .research-timeline {
+  direction: ltr;
+}
+.clinical-skills-page[dir="ltr"] .clinical-skills-hero-content :is(h1, p, .clinical-skills-eyebrow),
+.clinical-skills-page[dir="ltr"] .clinical-skills-requirement p,
+.clinical-skills-page[dir="ltr"] .clinical-skills-registration :is(h2, p),
+.clinical-skills-page[dir="ltr"] .research-timeline__copy {
+  direction: ltr;
+  text-align: left !important;
+  overflow-wrap: anywhere;
+}
+.clinical-skills-page[dir="ltr"] .hpc-pathways-back { direction: ltr; }
+.clinical-skills-page[dir="ltr"] .clinical-skills-registration :is(.research-cta__icon, .research-cta__button) { align-self: flex-start; }

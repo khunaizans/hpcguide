@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+import PathwayName from "@/components/PathwayName";
 import { getMediaUrl } from "@/lib/mediaUrl";
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
@@ -14,7 +16,7 @@ import { useRoute } from "wouter";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import "./VisualResearchDetail.css";
-import { Sparkles, ExternalLink, ArrowRight } from "lucide-react";
+import { Sparkles, ExternalLink, ArrowLeft, ArrowRight } from "lucide-react";
 
 
 type PosterTimelineEvent = {
@@ -116,6 +118,7 @@ const updateTimeline = () => {
 
 
 export default function VisualResearchDetail() {
+  const { t, i18n } = useTranslation();
   const [, params] = useRoute<{ slug: string }>("/pathways/:slug");
   const slug = params?.slug;
 
@@ -208,153 +211,164 @@ const posterImage =
 
 const posterImageSrc = getMediaUrl(posterImage);
 
+const routeTheme =
+  slug === "visual-research" || route?.eyebrow?.trim() === "07"
+    ? "hpc-route-07"
+    : slug === "research-review" || route?.eyebrow?.trim() === "08"
+    ? "hpc-route-08"
+    : "";
+
+
+const translationSection = routeTheme === "hpc-route-08" ? "researchReview" : "visualResearch";
+const isEnglish = i18n.resolvedLanguage === "en" && (routeTheme === "hpc-route-07" || routeTheme === "hpc-route-08");
+const resources = i18n.getResourceBundle("en", "translation");
+const copy = { ...resources.posterOral, ...resources[translationSection].copy } as Record<string, string>;
+const normalize = (text: string) => text.normalize("NFKC").replace(/[\u0640\u064b-\u065f\u0670]/g, "").trim().replace(/\s+/g, " ");
+const localize = (text: string) => isEnglish ? Object.entries(copy).find(([key]) => normalize(key) === normalize(text))?.[1] ?? text : text;
+
 if (isLoading) {
   return (
-    <main className="poster-oral-page" dir="rtl">
+    <main
+      className={`poster-oral-page ${routeTheme}`}
+      dir={isEnglish ? "ltr" : "rtl"}
+      style={{
+        minHeight: "100vh",
+        backgroundColor: "#0C0A65",
+      }}
+    >
       <SiteHeader />
 
-      <section className="poster-oral-hero" aria-busy="true">
-        <div className="poster-oral-hero-content">
-          <p className="poster-oral-description">
-            جارٍ تحميل بيانات المسار...
-          </p>
-        </div>
-      </section>
-
-      <SiteFooter />
+      <section
+        aria-busy="true"
+        aria-label={isEnglish ? t(`${translationSection}.loading`) : "جارٍ تحميل بيانات المسار"}
+        style={{
+          minHeight: "100vh",
+          backgroundColor: "#0C0A65",
+        }}
+      />
     </main>
   );
 }
 
   return (
-    <main className="poster-oral-page" dir="rtl">
+    <main
+      className={`poster-oral-page ${routeTheme}`}
+      dir={isEnglish ? "ltr" : "rtl"}
+    >
       <SiteHeader />
 
+      <section className="poster-oral-hero">
+        <div
+          className="poster-oral-hero-image"
+          aria-hidden="true"
+        >
+          {posterImageSrc && (
+            <img src={posterImageSrc} alt="" />
+          )}
+        </div>
 
+        <div className="poster-oral-hero-content">
+          <a
+            href={`${import.meta.env.BASE_URL}#pathways`}
+            className="detail-back hpc-pathways-back"
+          >
+            {isEnglish ? <ArrowLeft size={18} /> : <ArrowRight size={18} />}
+            {localize("الرجوع إلى المسارات")}
+          </a>
 
+          <span
+            className="poster-oral-eyebrow"
+            style={{ color: "#FFFFFF" }}
+          >
+            {isEnglish ? t(`${translationSection}.track`) : <>المسار {route?.eyebrow || "—"}</>}
+          </span>
 
-<section className="poster-oral-hero">
-  <div className="poster-oral-hero-image" aria-hidden="true">
-    {posterImageSrc && (
-      <img src={posterImageSrc} alt="" />
-    )}
-  </div>
+          <h1><PathwayName slug={slug} number={route?.eyebrow}>{route?.title || ""}</PathwayName></h1>
 
-  <div className="poster-oral-hero-content">
+          <p className="poster-oral-description">
+            {localize(route?.details || route?.description || "")}
+          </p>
+        </div>
 
-<a
-  href={`${import.meta.env.BASE_URL}#pathways`}
-  className="detail-back hpc-pathways-back"
->
-  <ArrowRight size={18} />
-  الرجوع إلى المسارات
-</a>
+        <div className="poster-oral-visual" aria-hidden="true">
+          <div className="poster-oral-orbit" />
+          <div className="poster-oral-visual-core">
+            RESEARCH
+          </div>
+        </div>
+      </section>
 
-<span
-  className="poster-oral-eyebrow"
-  style={{ color: "#FFFFFF" }}
->
-  المسار {route?.eyebrow || "—"}
-</span>
+      <section
+        className="poster-oral-timeline"
+        aria-labelledby="poster-timeline-title"
+      >
+        <div className="poster-oral-timeline-heading">
+          <span>{localize("رحلة المشاركة")}</span>
+          <h2 id="poster-timeline-title">{localize("الخط الزمني")}</h2>
+        </div>
 
+        <div className="poster-oral-timeline-main">
+          {timelineEvents.length > 0 ? (
+            <PosterTimeline events={timelineEvents.map(event => ({ ...event, date: localize(event.date), title: localize(event.title) }))} />
+          ) : (
+            <p>{localize("سيتم عرض المواعيد بعد نشرها من لوحة Admin.")}</p>
+          )}
 
-    <h1>
-      {route?.title || "جاري تحميل بيانات المسار..."}
-    </h1>
+          <section className="poster-oral-requirements">
+            <div className="poster-oral-requirements-heading">
+              <span>{localize("قبل المشاركة")}</span>
+              <h2>{localize("شروط التسجيل")}</h2>
+            </div>
 
-    <p className="poster-oral-description">
-      {route?.details || route?.description || ""}
-    </p>
-  </div>
+            {participationRequirements.length > 0 ? (
+              <ol className="poster-oral-requirements-list">
+                {participationRequirements.map((item, index) => (
+                  <li
+                    key={item.id}
+                    className="poster-oral-requirement"
+                  >
+                    <span className="poster-oral-requirement-number">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <p>{localize(item.text)}</p>
+                  </li>
+                ))}
+              </ol>
+            ) : (
+              <p>{localize("سيتم عرض شروط المشاركة بعد نشرها من لوحة Admin.")}</p>
+            )}
+          </section>
+        </div>
 
-  <div className="poster-oral-visual" aria-hidden="true">
-    <div className="poster-oral-orbit" />
-    <div className="poster-oral-visual-core">
-      RESEARCH
-    </div>
-  </div>
-</section>
+        <aside className="research-cta poster-oral-registration">
+          <span className="research-cta__number">
+            {route?.eyebrow || "—"} <i />
+          </span>
 
+          <div className="research-cta__icon">
+            <Sparkles size={20} />
+          </div>
 
-<section
-  className="poster-oral-timeline"
-  aria-labelledby="poster-timeline-title"
->
-  <div className="poster-oral-timeline-heading">
-    <span>رحلة المشاركة</span>
-    <h2 id="poster-timeline-title">الخط الزمني</h2>
-  </div>
-<div className="poster-oral-timeline-main">
+          <h2>{localize("مهتم بالمشاركة؟")}</h2>
+          <p>{localize("سجل الآن")}</p>
 
-  {timelineEvents.length > 0 ? (
-    <PosterTimeline events={timelineEvents} />
-  ) : (
-    <p>سيتم عرض المواعيد بعد نشرها من لوحة Admin.</p>
-  )}
-<section className="poster-oral-requirements">
-  <div className="poster-oral-requirements-heading">
-    <span>قبل المشاركة</span>
-    <h2>شروط التسجيل</h2>
-  </div>
+          {route?.ctaUrl?.trim() ? (
+            <a
+              className="research-cta__button"
+              href={route.ctaUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {localize(route.ctaLabel || "رابط التسجيل")}
+              <ExternalLink size={15} />
+            </a>
+          ) : (
+            <span className="research-cta__note">{isEnglish ? t(`${translationSection}.unavailable`) : "رابط التسجيل غير متاح حاليًا"}</span>
+          )}
 
-  {participationRequirements.length > 0 ? (
-
-<ol className="poster-oral-requirements-list">
-  {participationRequirements.map((item, index) => (
-    <li
-      key={item.id}
-      className="poster-oral-requirement"
-    >
-      <span className="poster-oral-requirement-number">
-        {String(index + 1).padStart(2, "0")}
-      </span>
-      <p>{item.text}</p>
-    </li>
-  ))}
-</ol>
-  ) : (
-    <p>سيتم عرض شروط المشاركة بعد نشرها من لوحة Admin.</p>
-  )}
-</section>
-</div>
-<aside className="research-cta poster-oral-registration">
-
-  <span className="research-cta__number">
-    {route?.eyebrow || "—"} <i></i>
-  </span>
-
-  <div className="research-cta__icon">
-    <Sparkles size={20} />
-  </div>
-
-  <h2>مهتم بالمشاركة؟</h2>
-
-  <p>
-   سجل الآن
-  </p>
-
-  {route?.ctaUrl?.trim() ? (
-  <a
-    className="research-cta__button"
-    href={route.ctaUrl}
-    target="_blank"
-    rel="noopener noreferrer"
-  >
-    {route.ctaLabel || "رابط التسجيل"}
-    <ExternalLink size={15} />
-  </a>
-) : (
-  <span className="research-cta__note">
-    رابط التسجيل غير متاح حاليًا
-  </span>
-)}
-
-  <small className="research-cta__note">
-  </small>
-</aside>
-
-</section>
-
+          <small className="research-cta__note" />
+        </aside>
+      </section>
 
       <SiteFooter />
     </main>

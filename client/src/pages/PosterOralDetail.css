@@ -1335,3 +1335,16 @@ background: linear-gradient(
     margin-bottom: 22px !important;
   }
 }
+
+/* English text direction only; retain the original layout and timeline geometry. */
+.poster-oral-page[dir="ltr"] .poster-oral-hero-content :is(h1, .poster-oral-description, .poster-oral-eyebrow),
+.poster-oral-page[dir="ltr"] .poster-oral-requirement p,
+.poster-oral-page[dir="ltr"] .poster-oral-registration :is(h2, p),
+.poster-oral-page[dir="ltr"] .research-timeline__copy {
+  direction: ltr;
+  text-align: left !important;
+  overflow-wrap: anywhere;
+}
+.poster-oral-page[dir="ltr"] .hpc-pathways-back {
+  direction: ltr;
+}

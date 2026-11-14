@@ -1440,3 +1440,24 @@ background: linear-gradient(
     margin: 0 !important;
   }
 }
+
+/* English-only direction adjustments; preserve track-specific geometry and effects. */
+.scientific-debates-page[dir="ltr"] .scientific-debates-hero-content,
+.scientific-debates-page[dir="ltr"] .scientific-debates-registration,
+.scientific-debates-page[dir="ltr"] .scientific-debates-requirements-list,
+.scientific-debates-page[dir="ltr"] .research-timeline {
+  direction: ltr;
+}
+.scientific-debates-page[dir="ltr"] .scientific-debates-hero-content :is(h1, p, .scientific-debates-eyebrow),
+.scientific-debates-page[dir="ltr"] .scientific-debates-requirement p,
+.scientific-debates-page[dir="ltr"] .scientific-debates-registration :is(h2, p),
+.scientific-debates-page[dir="ltr"] .research-timeline__copy {
+  direction: ltr;
+  text-align: left !important;
+  overflow-wrap: anywhere;
+}
+.scientific-debates-page[dir="ltr"] .hpc-pathways-back { direction: ltr; }
+.scientific-debates-page[dir="ltr"] .scientific-debates-registration :is(.research-cta__icon, .research-cta__button) { align-self: flex-start; }
+@media (min-width: 761px) {
+  .scientific-debates-page[dir="ltr"] .scientific-debates-timeline { direction: ltr; }
+}

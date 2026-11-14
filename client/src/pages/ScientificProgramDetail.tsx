@@ -1,7 +1,10 @@
+import { useTranslation } from "react-i18next";
+import "./ScientificProgramDetail.css";
+import PathwayName from "@/components/PathwayName";
 import { getMediaUrl } from "@/lib/mediaUrl";
 
 import { useEffect, useState } from "react";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowLeft, ArrowRight, Sparkles } from "lucide-react";
 import { Link } from "wouter";
 
 import SiteHeader from "@/components/SiteHeader";
@@ -17,7 +20,12 @@ import { getPathway } from "@/lib/pathways";
 
 
 export default function ScientificProgramDetail() {
-  console.log("SCIENTIFIC PAGE LOADED");
+  const { t, i18n } = useTranslation();
+  const isEnglish = i18n.resolvedLanguage === "en";
+  const copy = t("scientificProgram.copy", { lng: "en", returnObjects: true }) as Record<string, string>;
+  const normalizeCopy = (value: string) => value.normalize("NFKC").replace(/[\u0640\u064b-\u065f\u0670]/g, "").trim().replace(/\s+/g, " ").replace(/[.،]+$/, "");
+  const localize = (value: string) => isEnglish ? Object.entries(copy).find(([arabic]) => normalizeCopy(arabic) === normalizeCopy(value))?.[1] ?? value : value;
+  const englishText = isEnglish ? { direction: "ltr" as const, textAlign: "left" as const, overflowWrap: "anywhere" as const } : undefined;
   const [route, setRoute] = useState<RouteRecord | null>(null);
 
   useEffect(() => {
@@ -85,11 +93,11 @@ entries.forEach((entry) => {
 
 const lectures = route?.contentItems
   ?.filter((item) => item.visible)
-  .find((item) => item.title.includes("المحاضرات"));
+  .find((item) => (isEnglish ? normalizeCopy(item.title) : item.title).includes("المحاضرات"));
 
   const workshops = route?.contentItems
   ?.filter((item) => item.visible)
-  .find((item) => item.title.includes("ورش العمل"));
+  .find((item) => (isEnglish ? normalizeCopy(item.title) : item.title).includes("ورش العمل"));
 
 const heroImage =
   route
@@ -111,7 +119,7 @@ const heroImageSrc = (() => {
 })();
 
   return (
-    <main className="scientific-program-page" dir="rtl">
+    <main className="scientific-program-page" dir={isEnglish ? "ltr" : "rtl"} lang={isEnglish ? "en" : "ar"}>
       <SiteHeader />
 
       <section className="scientific-program-hero">
@@ -124,20 +132,16 @@ const heroImageSrc = (() => {
 
         <div className="scientific-program-hero-content">
           <Link href={`${import.meta.env.BASE_URL}#pathways`} className="detail-back">
-            <ArrowRight size={16} />
-            الرجوع إلى المسارات
-          </Link>
+            {isEnglish ? <ArrowLeft size={16} /> : <ArrowRight size={16} />}{localize("الرجوع إلى المسارات")}</Link>
 
 
-<p className="eyebrow scientific-program-pathway-number">
-  المسار 01
-</p>
+<p style={englishText} className="eyebrow scientific-program-pathway-number">{localize("المسار 01")}</p>
 
 
-          <h1>{route?.title || "مسار البرنامج العلمي"}</h1>
+          <h1 style={englishText}><PathwayName slug="scientific-program">{route?.title || "مسار البرنامج العلمي"}</PathwayName></h1>
 
-          <p className="scientific-program-description">
-            {route?.details || route?.description || ""}
+          <p style={englishText} className="scientific-program-description">
+            {localize(route?.details || route?.description || "")}
           </p>
                </div>
 
@@ -148,17 +152,17 @@ const heroImageSrc = (() => {
 
     {/* المحاضرات والجلسات النقاشية */}
     <div className="scientific-program-lecture-card">
-      <h2>
-        {lectures?.title || "المحاضرات والجلسات النقاشية"}
+      <h2 style={englishText}>
+        {localize(lectures?.title || "المحاضرات والجلسات النقاشية")}
       </h2>
 
-      <p className="scientific-program-card-subtitle">
-        {lectures?.subtitle || "تبادل المعرفة والخبرات الصحية"}
+      <p style={englishText} className="scientific-program-card-subtitle">
+        {localize(lectures?.subtitle || "تبادل المعرفة والخبرات الصحية")}
       </p>
 
-      <p className="scientific-program-card-description">
-        {lectures?.description ||
-          "يتيح البرنامج العلمي للطلاب والممارسين الصحيين فرصة التفاعل المباشر مع نخبة من الخبراء والمتخصصين في المجال الصحي، والاطلاع على أحدث الأبحاث والتطورات والممارسات في مختلف التخصصات الصحية."}
+      <p style={englishText} className="scientific-program-card-description">
+        {localize(lectures?.description ||
+          "يتيح البرنامج العلمي للطلاب والممارسين الصحيين فرصة التفاعل المباشر مع نخبة من الخبراء والمتخصصين في المجال الصحي، والاطلاع على أحدث الأبحاث والتطورات والممارسات في مختلف التخصصات الصحية.")}
       </p>
     </div>
 
@@ -166,15 +170,15 @@ const heroImageSrc = (() => {
 
       {/* ورش العمل - اليمين */}
       <div className="scientific-program-workshop-card">
-        <h2>{workshops?.title || "ورش العمل"}</h2>
+        <h2 style={englishText}>{localize(workshops?.title || "ورش العمل")}</h2>
 
-        <p className="scientific-program-card-subtitle">
-          {workshops?.subtitle || "تطبيق المعرفة وتطوير المهارات"}
+        <p style={englishText} className="scientific-program-card-subtitle">
+          {localize(workshops?.subtitle || "تطبيق المعرفة وتطوير المهارات")}
         </p>
 
-        <p className="scientific-program-card-description">
-          {workshops?.description ||
-            "تقدم ورش العمل تجربة تعليمية وتفاعلية تتيح للمشاركين تطوير مهاراتهم وتطبيق المعرفة في مختلف المجالات الصحية."}
+        <p style={englishText} className="scientific-program-card-description">
+          {localize(workshops?.description ||
+            "تقدم ورش العمل تجربة تعليمية وتفاعلية تتيح للمشاركين تطوير مهاراتهم وتطبيق المعرفة في مختلف المجالات الصحية.")}
         </p>
       </div>
 
@@ -191,18 +195,16 @@ const heroImageSrc = (() => {
     <Sparkles size={26} />
   </div>
 
-  <h2>مهتم بالمشاركة؟</h2>
+  <h2 style={englishText}>{localize("مهتم بالمشاركة؟")}</h2>
 
-  <p>اطّلع على تفاصيل البرنامج العلمي وفرص المشاركة.</p>
+  <p style={englishText}>{localize("اطّلع على تفاصيل البرنامج العلمي وفرص المشاركة.")}</p>
 
   <a
   href="https://hpcgate.ksau-hs.edu.sa/Home/Index"
   target="_blank"
   rel="noopener noreferrer"
   className="scientific-registration-button"
->
-  التسجيل الآن ↗
-</a>
+>{localize("التسجيل الآن ↗")}</a>
 
   <small></small>
 </div>

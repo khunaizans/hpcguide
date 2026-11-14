@@ -3,11 +3,17 @@ import { Link, useLocation } from "wouter";
 import { Menu, X } from "lucide-react";
 import { defaultShell, loadPublishedShell, ShellLink } from "@/lib/siteShell";
 import { supabase } from "@/lib/supabase";
+import { useTranslation } from "react-i18next";
 export default function SiteHeader() {
   const [location, navigate] = useLocation(); const isHome = location === "/"; const [menuOpen, setMenuOpen] = useState(false); const [activeSection, setActiveSection] = useState("hero"); const [shell, setShell] = useState(defaultShell);
   const [shellReady, setShellReady] = useState(!supabase);
    const navRef = useRef<HTMLElement | null>(null); const itemRefs = useRef<Record<string, HTMLElement | null>>({}); const [indicator, setIndicator] = useState({ left: 0, width: 0, top: 0 });
+const { i18n, t } = useTranslation();
+const currentLanguage = i18n.resolvedLanguage === "en" ? "en" : "ar";
 
+const toggleLanguage = (language: "en" | "ar") => {
+  void i18n.changeLanguage(language);
+};
 
 useEffect(() => {
   let cancelled = false;
@@ -35,7 +41,32 @@ useEffect(() => {
   };
 }, []);
 
-  const links = shell.header.links.filter((item) => item.visible).sort((a, b) => a.order - b.order);
+  
+const navigationTranslations: Record<string, string> = {
+  "#hero": t("navigation.home"),
+  "#about": t("navigation.about"),
+  "#pathways": t("navigation.pathways"),
+  "#resources": t("navigation.venue"),
+  "#assistant": t("navigation.assistant"),
+};
+
+const links = shell.header.links
+  .filter((item) => item.visible)
+  .sort((a, b) => a.order - b.order)
+  .map((item) => {
+    const sectionHref = item.href.startsWith("/#")
+      ? item.href.slice(1)
+      : item.href;
+
+    return {
+      ...item,
+      label:
+        currentLanguage === "en"
+          ? navigationTranslations[sectionHref] ?? item.label
+          : item.label,
+    };
+  });
+
 
 
 useEffect(() => {
@@ -126,7 +157,7 @@ useEffect(() => {
   };
 }, [isHome, shell.header.links]);
 
-  useLayoutEffect(() => { const updateIndicator = () => { const nav = navRef.current; const item = itemRefs.current[activeSection]; if (!nav || !item) return; const navRect = nav.getBoundingClientRect(); const itemRect = item.getBoundingClientRect(); const width = window.innerWidth <= 900 ? 24 : 54; setIndicator({ left: itemRect.left - navRect.left + (itemRect.width - width) / 2, width, top: itemRect.bottom - navRect.top - 1 }); }; updateIndicator(); window.addEventListener("resize", updateIndicator); return () => window.removeEventListener("resize", updateIndicator); }, [activeSection, menuOpen, isHome, links.length]);
+  useLayoutEffect(() => { const updateIndicator = () => { const nav = navRef.current; const item = itemRefs.current[activeSection]; if (!nav || !item) return; const navRect = nav.getBoundingClientRect(); const itemRect = item.getBoundingClientRect(); const width = window.innerWidth <= 900 ? 24 : 54; setIndicator({ left: itemRect.left - navRect.left + (itemRect.width - width) / 2, width, top: itemRect.bottom - navRect.top - 1 }); }; updateIndicator(); window.addEventListener("resize", updateIndicator); return () => window.removeEventListener("resize", updateIndicator); }, [activeSection, menuOpen, isHome, links.length, currentLanguage]);
 
 const goToSection = (link: ShellLink) => {
   const id = link.href.replace(/^#/, "");
@@ -184,5 +215,24 @@ onClick={(event) => {
     aria-hidden="true"
   />
 )}
-</nav>{shell.header.buttons.filter((button) => button.visible).sort((a, b) => a.order - b.order).map((button) => <a className="header-chat" key={button.order} href={button.href}>{button.label}</a>)}</div></header>;
+</nav>{shell.header.buttons.filter((button) => button.visible).sort((a, b) => a.order - b.order).map((button) => <a className="header-chat" key={button.order} href={button.href}>{button.label}</a>)}
+<div
+  className="site-language-switch"
+  role="group"
+  aria-label="Language / اللغة"
+  dir="ltr"
+  data-language={currentLanguage}
+  onKeyDown={(event) => {
+    if (!["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+    event.preventDefault();
+    const language = event.key === "ArrowLeft" || event.key === "Home" ? "en" : "ar";
+    toggleLanguage(language);
+    event.currentTarget.querySelector<HTMLButtonElement>(`button[lang="${language}"]`)?.focus();
+  }}
+>
+  <button type="button" lang="en" aria-label="Switch to English" aria-pressed={currentLanguage === "en"} onClick={() => toggleLanguage("en")}>EN</button>
+  <button type="button" lang="ar" aria-label="التبديل إلى العربية" aria-pressed={currentLanguage === "ar"} onClick={() => toggleLanguage("ar")}>AR</button>
+</div>
+</div></header>;
+
 }

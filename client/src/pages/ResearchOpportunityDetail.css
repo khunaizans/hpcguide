@@ -1293,3 +1293,25 @@
     margin: 0 !important;
   }
 }
+
+/* English-only text direction; retain the track's existing geometry and effects. */
+.research-opportunity-detail[dir="ltr"] .research-intro__copy,
+.research-opportunity-detail[dir="ltr"] .research-requirements__list,
+.research-opportunity-detail[dir="ltr"] .research-timeline,
+.research-opportunity-detail[dir="ltr"] .research-cta {
+  direction: ltr;
+}
+.research-opportunity-detail[dir="ltr"] .research-intro__copy :is(h1, p),
+.research-opportunity-detail[dir="ltr"] .research-requirements__list li p,
+.research-opportunity-detail[dir="ltr"] .research-cta :is(h2, p),
+.research-opportunity-detail[dir="ltr"] .research-timeline__copy {
+  direction: ltr;
+  text-align: left !important;
+  overflow-wrap: anywhere;
+}
+.research-opportunity-detail[dir="ltr"] .research-intro__copy :is(.eyebrow, .detail-back) {
+  direction: ltr;
+  justify-content: flex-start !important;
+  text-align: left !important;
+}
+.research-opportunity-detail[dir="ltr"] .research-cta :is(.research-cta__icon, .research-cta__button) { align-self: flex-start; }

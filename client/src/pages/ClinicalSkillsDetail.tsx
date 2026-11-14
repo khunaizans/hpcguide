@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+import PathwayName from "@/components/PathwayName";
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 
@@ -12,7 +14,7 @@ import { getPathway } from "@/lib/pathways";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import "./ClinicalSkillsDetail.css";
-import { Sparkles, ExternalLink, ArrowRight } from "lucide-react";
+import { Sparkles, ExternalLink, ArrowLeft, ArrowRight } from "lucide-react";
 import { getMediaUrl } from "@/lib/mediaUrl";
 
 type PosterTimelineEvent = {
@@ -120,6 +122,12 @@ if (isMobile) {
 
 
 export default function ClinicalSkillsDetail() {
+  const { t, i18n } = useTranslation();
+  const isEnglish = i18n.resolvedLanguage === "en";
+  const resources = i18n.getResourceBundle("en", "translation");
+  const copy = { ...resources.posterOral, ...resources.clinicalSkills.copy, ...resources.clinicalSkillsRegistration } as Record<string, string>;
+  const normalize = (text: string) => text.normalize("NFKC").replace(/[\u0640\u064b-\u065f\u0670]/g, "").trim().replace(/\s+/g, " ");
+  const localize = (text: string) => isEnglish ? Object.entries(copy).find(([key]) => normalize(key) === normalize(text))?.[1] ?? text : text;
   const [route, setRoute] = useState<RouteRecord | null>(null);
 
 const [isLoading, setIsLoading] = useState(true);
@@ -229,7 +237,7 @@ const clinicalImageSrc = getMediaUrl(clinicalImage);
 
 if (isLoading) {
   return (
-    <main className="clinical-skills-page" dir="rtl">
+    <main className="clinical-skills-page" dir={isEnglish ? "ltr" : "rtl"} lang={isEnglish ? "en" : "ar"}>
       <SiteHeader />
       <div
         style={{ minHeight: "100vh" }}
@@ -241,7 +249,7 @@ if (isLoading) {
 
 
   return (
-    <main className="clinical-skills-page" dir="rtl">
+    <main className="clinical-skills-page" dir={isEnglish ? "ltr" : "rtl"} lang={isEnglish ? "en" : "ar"}>
       <SiteHeader />
 
 
@@ -262,20 +270,18 @@ if (isLoading) {
   href={`${import.meta.env.BASE_URL}#pathways`}
   className="detail-back hpc-pathways-back"
 >
-  <ArrowRight size={18} />
-  الرجوع إلى المسارات
+  {isEnglish ? <ArrowLeft size={18} /> : <ArrowRight size={18} />}
+  {localize("الرجوع إلى المسارات")}
 </a>
 
-    <span className="clinical-skills-eyebrow">
-      المسار 05
-    </span>
+    <span className="clinical-skills-eyebrow">{isEnglish ? t("clinicalSkills.track") : "المسار 05"}</span>
 
-    <h1>
+    <h1><PathwayName slug="clinical-skills">
       {route?.title || "مسار المهارات الإكلينيكية"}
-    </h1>
+    </PathwayName></h1>
 
     <p className="clinical-skills-description">
-      {route?.details || route?.description || ""}
+      {localize(route?.details || route?.description || "")}
     </p>
   </div>
 
@@ -293,20 +299,20 @@ if (isLoading) {
   aria-labelledby="poster-timeline-title"
 >
   <div className="clinical-skills-timeline-heading">
-    <span>رحلة المشاركة</span>
-    <h2 id="poster-timeline-title">الخط الزمني</h2>
+    <span>{localize("رحلة المشاركة")}</span>
+    <h2 id="poster-timeline-title">{localize("الخط الزمني")}</h2>
   </div>
 <div className="clinical-skills-timeline-main">
 
   {timelineEvents.length > 0 ? (
-    <PosterTimeline events={timelineEvents} />
+    <PosterTimeline events={timelineEvents.map(event => ({ ...event, date: localize(event.date), title: localize(event.title) }))} />
   ) : (
-    <p>سيتم عرض المواعيد بعد نشرها من لوحة Admin.</p>
+    <p>{localize("سيتم عرض المواعيد بعد نشرها من لوحة Admin.")}</p>
   )}
 <section className="clinical-skills-requirements">
   <div className="clinical-skills-requirements-heading">
-    <span>قبل المشاركة</span>
-    <h2>شروط التسجيل</h2>
+    <span>{localize("قبل المشاركة")}</span>
+    <h2>{localize("شروط التسجيل")}</h2>
   </div>
 
   {participationRequirements.length > 0 ? (
@@ -320,12 +326,12 @@ if (isLoading) {
       <span className="clinical-skills-requirement-number">
         {String(index + 1).padStart(2, "0")}
       </span>
-      <p>{item.text}</p>
+      <p>{localize(item.text)}</p>
     </li>
   ))}
 </ol>
   ) : (
-    <p>سيتم عرض شروط المشاركة بعد نشرها من لوحة Admin.</p>
+    <p>{localize("سيتم عرض شروط المشاركة بعد نشرها من لوحة Admin.")}</p>
   )}
 </section>
 </div>
@@ -340,9 +346,9 @@ if (isLoading) {
   </div>
 
 
-<h2>{route?.ctaTitle || "مهتم بالمشاركة؟"}</h2>
+<h2>{localize(route?.ctaTitle || "مهتم بالمشاركة؟")}</h2>
 
-<p>{route?.ctaDescription || "سجل الآن"}</p>
+<p>{localize(route?.ctaDescription || "سجل الآن")}</p>
 
 
 
@@ -353,7 +359,7 @@ if (isLoading) {
     target="_blank"
     rel="noopener noreferrer"
   >
-    {route.ctaLabel || "رابط التسجيل"}
+    {localize(route.ctaLabel || "رابط التسجيل")}
     <ExternalLink size={15} />
   </a>
 
@@ -363,14 +369,12 @@ if (isLoading) {
       type="button"
       className="research-cta__button"
       disabled
-      aria-label="رابط التسجيل غير متاح حاليًا"
+      aria-label={localize("رابط التسجيل غير متاح حاليًا")}
       style={{
         opacity: 0.65,
         cursor: "not-allowed",
       }}
-    >
-      رابط التسجيل
-      <ExternalLink size={15} />
+    >{localize("رابط التسجيل")}<ExternalLink size={15} />
     </button>
 
     <small
@@ -382,9 +386,7 @@ if (isLoading) {
         fontSize: "12px",
         color: "#68749a",
       }}
-    >
-      سيتم تفعيل رابط التسجيل في 27 ديسمبر 2026
-    </small>
+    >{localize("سيتم تفعيل رابط التسجيل في 27 ديسمبر 2026")}</small>
   </>
 )}
 
