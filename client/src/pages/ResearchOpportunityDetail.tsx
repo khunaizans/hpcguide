@@ -3,7 +3,7 @@ import PathwayName from "@/components/PathwayName";
 import { getMediaUrl } from "@/lib/mediaUrl";
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, ExternalLink, Sparkles } from "lucide-react";
-import { useLocation } from "wouter";
+import { Link } from "wouter";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 
@@ -168,7 +168,6 @@ export default function ResearchOpportunityDetail() {
   const copy = { ...resources.posterOral, ...resources.debateTrack.copy, ...resources.researchOpportunities.copy } as Record<string, string>;
   const normalize = (text: string) => text.normalize("NFKC").replace(/[\u0640\u064b-\u065f\u0670]/g, "").trim().replace(/\s+/g, " ");
   const localize = (text: string) => isEnglish ? Object.entries(copy).find(([key]) => normalize(key) === normalize(text))?.[1] ?? text : text;
-  const [, navigate] = useLocation();
   const [content, setContent] = useState(researchOpportunityContent);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -227,18 +226,6 @@ setResearchImage(
   };
 }, []);
 
-const returnToPathways = (
-  event: React.MouseEvent<HTMLAnchorElement>
-) => {
-  event.preventDefault();
-  navigate("/");
-
-  window.setTimeout(() => {
-    document
-      .getElementById("pathways")
-      ?.scrollIntoView({ behavior: "smooth" });
-  }, 40);
-};
 
 
 useEffect(() => {
@@ -311,7 +298,7 @@ if (isLoading) {
         <div className="research-intro__glow" aria-hidden="true" />
         <div className="research-intro__grid">
           <Reveal className="research-intro__copy">
-            <a className="detail-back" href={`${import.meta.env.BASE_URL}#pathways`} onClick={returnToPathways}>{isEnglish ? <ArrowLeft size={16} /> : <ArrowRight size={16} />} {localize("الرجوع إلى المسارات")}</a>
+            <Link className="detail-back" href="/#pathways">{isEnglish ? <ArrowLeft size={16} /> : <ArrowRight size={16} />} {localize("الرجوع إلى المسارات")}</Link>
             <p className="eyebrow"><span />{isEnglish ? t("researchOpportunities.track") : "04"}</p>
             <h1><PathwayName slug="research-opportunities">{localize("مسار الفرص البحثية")}</PathwayName></h1>
             <p className="research-intro__description">{localize(content.description)}</p>

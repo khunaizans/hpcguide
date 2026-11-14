@@ -430,7 +430,7 @@ function AccompanyingExhibition() {
 function Pathways({ content }: { content: HomeContent }) {
   const { t, i18n } = useTranslation();
   const isEnglish = i18n.resolvedLanguage === "en";
-
+const [, navigate] = useLocation();
   const [touchedCard, setTouchedCard] = useState<number | null>(null);
 
   const navigationTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -502,10 +502,32 @@ onLoad={(e) => {
   <span dir={isEnglish ? "ltr" : undefined} style={isEnglish ? { textAlign: "left" } : undefined}>{isEnglish ? t(`pathwayDescriptions.${card.eyebrow.trim() === "07" ? "visual-research" : card.eyebrow.trim() === "08" ? "research-review" : card.slug}`, { defaultValue: card.text }) : card.text}</span>
 </div>
 
+
 <Link
   href={card.link_url}
   className="pathway-card__click-layer"
   aria-label={`استكشف ${card.title}`}
+  onClickCapture={(event) => {
+    const isTouchDevice = window.matchMedia(
+      "(hover: none) and (pointer: coarse)"
+    ).matches;
+
+    if (!isTouchDevice || event.detail === 0) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (navigationTimer.current !== null) {
+      clearTimeout(navigationTimer.current);
+    }
+
+    setTouchedCard(index);
+
+    navigationTimer.current = setTimeout(() => {
+      navigationTimer.current = null;
+      navigate(card.link_url);
+    }, 550);
+  }}
 />
 
             </Reveal>

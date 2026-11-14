@@ -1,7 +1,7 @@
 import PathwayName from "@/components/PathwayName";
-import { useEffect, useState, type MouseEvent } from "react";
+import { useEffect, useState } from "react";
 import { ArrowRight, Check } from "lucide-react";
-import { Link, useLocation, useRoute } from "wouter";
+import { Link, useRoute } from "wouter";
 import { getPathway, type Pathway } from "@/lib/pathways";
 import { loadPublishedRoute, routeToPathway } from "@/lib/routesCms";
 import SiteHeader from "@/components/SiteHeader";
@@ -21,7 +21,6 @@ function DetailVisual({ tone, title }: { tone: string; title: string }) {
 
 export default function PathwayDetail() {
   const [, params] = useRoute<{ slug: string }>("/pathways/:slug");
-  const [, navigate] = useLocation();
   const basePathway = params ? getPathway(params.slug) : undefined;
   const [pathway, setPathway] = useState<Pathway | undefined>(basePathway);
   useEffect(() => { if (!params?.slug || params.slug === "research-opportunities") return; void loadPublishedRoute(params.slug).then((route) => { if (route) setPathway(routeToPathway(route)); }); }, [params?.slug]);
@@ -113,17 +112,12 @@ useEffect(() => {
   };
 }, [pathway?.slug]);
 
-  const returnToPathways = (event: MouseEvent<HTMLAnchorElement>) => {
-    event.preventDefault();
-    navigate("/");
-    window.setTimeout(() => document.getElementById("pathways")?.scrollIntoView({ behavior: "smooth" }), 40);
-  };
 
 if (params?.slug?.startsWith("custom-")) {
   return <VisualResearchDetail />;
 }
   if (!pathway) {
-    return <main className="pathway-not-found" dir="rtl"><h1>المسار غير موجود</h1><Link href={`${import.meta.env.BASE_URL}#pathways`}>العودة إلى المسارات</Link></main>;
+    return <main className="pathway-not-found" dir="rtl"><h1>المسار غير موجود</h1><Link href="/#pathways">العودة إلى المسارات</Link></main>;
   }
 
   if (pathway.slug === "research-opportunities") return <ResearchOpportunityDetail />;
@@ -144,7 +138,7 @@ if (pathway.slug === "3mt") {
       <div className="detail-pattern detail-pattern--top" aria-hidden="true"><span /><span /><span /><i>AI</i></div>
       <section className={`detail-hero detail-hero--${pathway.tone}`}>
         <div className="detail-hero-copy">
-          <a className="detail-back" href={`${import.meta.env.BASE_URL}#pathways`} onClick={returnToPathways}><ArrowRight size={16} /> الرجوع إلى المسارات</a>
+          <Link className="detail-back" href="/#pathways"><ArrowRight size={16} /> الرجوع إلى المسارات</Link>
           <p className="eyebrow"><span /> المسار {pathway.eyebrow}</p>
           <h1><PathwayName slug={pathway.slug} number={pathway.eyebrow}>{pathway.title}</PathwayName></h1>
           <p>{pathway.details}</p>
