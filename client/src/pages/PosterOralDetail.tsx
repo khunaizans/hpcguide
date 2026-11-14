@@ -1,3 +1,4 @@
+import { Link } from "wouter";
 import { useTranslation } from "react-i18next";
 import PathwayName from "@/components/PathwayName";
 import { getMediaUrl } from "@/lib/mediaUrl";
@@ -247,13 +248,13 @@ const posterImageSrc = getMediaUrl(posterImage);
 
   <div className="poster-oral-hero-content">
 
-<a
-  href={`${import.meta.env.BASE_URL}#pathways`}
+<Link
+  href="/#pathways"
   className="detail-back hpc-pathways-back"
 >
   {isEnglish ? <ArrowLeft size={18} /> : <ArrowRight size={18} />}
   {localize("الرجوع إلى المسارات")}
-</a>
+</Link>
 
 <span
   className="poster-oral-eyebrow"

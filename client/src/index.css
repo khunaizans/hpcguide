@@ -6808,17 +6808,16 @@ html[lang="en"] {
   --hpc-follow-label: "Follow Us";
 }
 
-/* ===================================
-   HPC - Pathways 07 & 08
-   Colors and Hover Animation
-   =================================== */
 
-/* 07 - Visual Research - Green */
+/* HPC - Pathways 07 & 08 */
+/* Same hover animation as other pathways */
+
+/* Route 07 - Visual Research */
 .pathways-section .pathway-card--visual-research {
   --hover-color: 168, 216, 138;
 }
 
-/* 08 - Research Review - Purple */
+/* Route 08 - Research Review */
 .pathways-section .pathway-card--research-review {
   --hover-color: 96, 97, 182;
 }
@@ -6857,7 +6856,7 @@ html[lang="en"] {
   inset: 0;
   pointer-events: none;
   z-index: 1;
-  opacity: 0.30;
+  opacity: 0;
   transition: opacity 0.45s ease;
 }
 
@@ -6873,7 +6872,38 @@ html[lang="en"] {
   background: #6061B6;
 }
 
-/* Stronger color on hover */
+
+/* HPC - Localized Pathway Glow */
+
+/* Route 07 - Green */
+.pathways-section
+.pathway-card--visual-research
+.pathway-image-wrap::after {
+  background: radial-gradient(
+    circle 110px at 50% 50%,
+    rgba(168, 216, 138, 0.65) 0%,
+    rgba(168, 216, 138, 0.25) 45%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+/* Route 08 - Purple */
+.pathways-section
+.pathway-card--research-review
+.pathway-image-wrap::after {
+  background: radial-gradient(
+    circle 110px at 50% 50%,
+    rgba(96, 97, 182, 0.65) 0%,
+    rgba(96, 97, 182, 0.25) 45%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+/* Activate localized glow */
 @media (hover: hover) {
   .pathways-section
   .pathway-card--visual-research:hover
@@ -6881,7 +6911,7 @@ html[lang="en"] {
   .pathways-section
   .pathway-card--research-review:hover
   .pathway-image-wrap::after {
-    opacity: 0.50;
+    opacity: 1;
   }
 }
 
@@ -6893,9 +6923,10 @@ html[lang="en"] {
   .pathways-section
   .pathway-card--research-review:active
   .pathway-image-wrap::after {
-    opacity: 0.50;
+    opacity: 1;
   }
 }
+
 
 /* Accessibility */
 @media (prefers-reduced-motion: reduce) {

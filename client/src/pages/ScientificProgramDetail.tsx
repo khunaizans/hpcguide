@@ -131,7 +131,7 @@ const heroImageSrc = (() => {
 </div>
 
         <div className="scientific-program-hero-content">
-          <Link href={`${import.meta.env.BASE_URL}#pathways`} className="detail-back">
+          <Link href="/#pathways" className="detail-back">
             {isEnglish ? <ArrowLeft size={16} /> : <ArrowRight size={16} />}{localize("الرجوع إلى المسارات")}</Link>
 
 

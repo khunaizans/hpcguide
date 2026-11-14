@@ -93,7 +93,33 @@ export async function loadPublishedRoute(slug: string) {
   return record?.visible ? record : undefined;
 }
 
-export function routeToPathway(route: RouteRecord) { return { slug: route.slug, eyebrow: route.eyebrow, title: route.title, image: route.imageUrl, tone: route.tone, text: route.description, details: route.details, highlights: route.highlights, link_url: `/pathways/${route.slug}` }; }
+
+export function routeToPathway(route: RouteRecord) {
+  const number = route.eyebrow?.trim();
+
+  const image =
+    route.slug === "visual-research" ||
+    number === "07" ||
+    number === "7"
+      ? `${import.meta.env.BASE_URL}images/visual-research.jpeg`
+      : route.slug === "research-review" ||
+        number === "08" ||
+        number === "8"
+      ? `${import.meta.env.BASE_URL}images/research-review.jpeg`
+      : route.imageUrl;
+
+  return {
+    slug: route.slug,
+    eyebrow: route.eyebrow,
+    title: route.title,
+    image: image,
+    tone: route.tone,
+    text: route.description,
+    details: route.details,
+    highlights: route.highlights,
+    link_url: `/pathways/${route.slug}`,
+  };
+}
 
 async function saveSectionAndItems(route: RouteRecord, pageId: string) { if (!supabase) return; let section = await supabase.from("sections").select("id").eq("page_id", pageId).eq("name", "route-content").maybeSingle(); if (!section.data?.id) { const created = await supabase.from("sections").insert({ page_id: pageId, name: "route-content", section_type: route.slug === "research-opportunities" ? "timeline" : "route-content", title: route.title, is_visible: route.visible, sort_order: 1 }).select("id").single(); if (created.error) throw new Error(created.error.message); section = { data: created.data, error: null } as typeof section; } const sectionId = String(section.data?.id ?? ""); if (!sectionId) throw new Error("تعذر تجهيز قسم المسار"); const existing = await supabase.from("items").select("id").eq("section_id", sectionId); if (existing.error) throw new Error(existing.error.message); if ((existing.data ?? []).length) { const deleted = await supabase.from("items").delete().eq("section_id", sectionId); if (deleted.error) throw new Error(deleted.error.message); } const items = route.contentItems.map((item) => ({ section_id: sectionId, name: item.id, title: item.title, subtitle: item.subtitle, description: item.description, image_url: item.imageUrl || null, link_label: item.buttonLabel, link_url: item.buttonUrl, is_visible: item.visible, sort_order: item.order, data: { route_slug: route.slug, kind: "content" } })); const events = route.events.map((event) => ({ section_id: sectionId, name: event.id, title: event.title, subtitle: event.date, description: event.description, is_visible: event.visible, sort_order: event.order, data: { route_slug: route.slug, kind: "timeline", date: event.date } })); const requirements = route.requirements.map((requirement) => ({ section_id: sectionId, name: requirement.id, title: requirement.text, description: requirement.text, is_visible: requirement.visible, sort_order: requirement.order, data: { route_slug: route.slug, kind: "requirement" } })); const rows = [...items, ...events, ...requirements]; if (rows.length) { const inserted = await supabase.from("items").insert(rows); if (inserted.error) throw new Error(inserted.error.message); } }
 
