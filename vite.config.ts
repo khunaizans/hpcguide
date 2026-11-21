@@ -227,9 +227,9 @@ if (fs.existsSync(indexFile)) {
         window.location.hash;
 
       window.location.replace(
-        "/hpcguide/?__hpc_route=" +
-        encodeURIComponent(original)
-      );
+  "/?__hpc_route=" +
+  encodeURIComponent(original)
+);
     })();
   <\/script>
 </head>
@@ -253,7 +253,7 @@ const plugins = [
 
 export default defineConfig({
   plugins,
-    base: "/hpcguide/",
+    base: "/",
   resolve: {
     alias: {
       "@": path.resolve(import.meta.dirname, "client", "src"),
