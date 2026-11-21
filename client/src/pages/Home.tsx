@@ -1,13 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Link, useLocation } from "wouter";
 import { Trans, useTranslation } from "react-i18next";
 import {
-  ArrowDown,
   Check,
   ChevronLeft,
   Clock3,
   Menu,
-  Sparkles,
 } from "lucide-react";
 import { pathwayCards } from "@/lib/pathways";
 import SiteHeader from "@/components/SiteHeader";
@@ -22,18 +20,6 @@ import {
 } from "@/lib/routesCms";
 import { supabase } from "@/lib/supabase";
 import { getMediaUrl } from "@/lib/mediaUrl";
-const ASSETS = {
-  hero: "/images/hpc-hero_4791d5fd.png",
-  logo: "/images/hpc-logo_739bab33.png",
-  send: "/images/send_39c5f246.png",
-  event1: "/images/event-1_a532ed68.png",
-  event2: "/images/event-2_e3b688f1.png",
-  event3: "/images/event-3_b7dba0a3.png",
-  event4: "/images/event-4_6dab0775.png",
-  event5: "/images/event-5_3b846531.png",
-  event6: "/images/event-6_69c277ce.png",
-};
-
 function useReveal() {
   const ref = useRef<HTMLDivElement | null>(null);
   const [visible, setVisible] = useState(false);
@@ -83,69 +69,107 @@ function Reveal({
 }
 
 
-function LogoMark({ compact = false, alt = "مؤتمر التخصصات الصحية" }: { compact?: boolean; alt?: string }) {
-  return (
-    <div className={`brand-mark ${compact ? "brand-mark--compact" : ""}`}>
-      <img src={ASSETS.logo} alt={alt} />
-      {!compact && <span>Health Professions Conference</span>}
-    </div>
-  );
-}
-
-function VisualFallback({ variant = "hero", label }: { variant?: string; label?: string }) {
-  return <div className={`visual-fallback visual-fallback--${variant}`} role="img" aria-label={label || "هوية مؤتمر التخصصات الصحية"}><span className="visual-fallback__core">{variant === "hero" ? "HPC" : "AI"}</span><span className="visual-fallback__orbit visual-fallback__orbit--one" /><span className="visual-fallback__orbit visual-fallback__orbit--two" /><span className="visual-fallback__spark visual-fallback__spark--one" /><span className="visual-fallback__spark visual-fallback__spark--two" /><small>{label || "Health Professions Conference"}</small></div>;
-}
-
-function Hero({ content, pageTitle }: { content: HomeContent; pageTitle: string }) {
+function Hero() {
   const { t, i18n } = useTranslation();
   const isEnglish = i18n.resolvedLanguage === "en";
-  // Translate known CMS copy without changing the stored Arabic. Unknown copy
-  // remains in its original language until an English translation is supplied.
-  const heroKeys: Record<string, string> = {
-    "مؤتمر التخصصات الصحية": "conference",
-    "نبحث لصحة الإنسان": "slogan",
-    "دليل": "guide",
-    "دليلك داخل": "guide",
-    "المعرفة تتحول إلى أثر": "knowledge",
-    [fallbackHomeContent.hero.description]: "description",
-    [fallbackHomeContent.hero.imageAlt]: "imageAlt",
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const frameCallback = useRef<number | null>(null);
+  const animationFrame = useRef<number | null>(null);
+  const [reducedMotion, setReducedMotion] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  const [videoPlaying, setVideoPlaying] = useState(false);
+  const [videoFailed, setVideoFailed] = useState(false);
+  const videoSrc = import.meta.env.BASE_URL + "videos/hpc-hero.mp4";
+  const posterSrc = import.meta.env.BASE_URL + "videos/hpc-hero-poster.webp";
+
+  const cancelFrame = () => {
+    if (frameCallback.current !== null) videoRef.current?.cancelVideoFrameCallback(frameCallback.current);
+    if (animationFrame.current !== null) cancelAnimationFrame(animationFrame.current);
+    frameCallback.current = null;
+    animationFrame.current = null;
   };
-  const translate = (value: string) => {
-    const key = heroKeys[value.trim()];
-    return isEnglish && key ? t(`hero.${key}`, { defaultValue: value }) : value;
+
+  const revealVideoFrame = () => {
+    const video = videoRef.current;
+    if (!video || videoPlaying || reducedMotion || videoFailed || frameCallback.current !== null || animationFrame.current !== null) return;
+    if (typeof video.requestVideoFrameCallback === "function") {
+      frameCallback.current = video.requestVideoFrameCallback(() => {
+        frameCallback.current = null;
+        setVideoPlaying(true);
+      });
+    } else if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
+      // Older browsers: wait for decoded data and a paint opportunity.
+      animationFrame.current = requestAnimationFrame(() => {
+        animationFrame.current = requestAnimationFrame(() => {
+          animationFrame.current = null;
+          if (!video.error && video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) setVideoPlaying(true);
+        });
+      });
+    }
   };
-  const titleParts = pageTitle.trim().match(/^(.*?)(HPC.*)$/i);
+
+  useEffect(() => {
+    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const updateMotion = () => {
+      cancelFrame();
+      setReducedMotion(preference.matches);
+      setVideoPlaying(false);
+    };
+    preference.addEventListener("change", updateMotion);
+    return () => {
+      preference.removeEventListener("change", updateMotion);
+      cancelFrame();
+    };
+  }, []);
+
+  // Follow the existing fixed header, including its responsive and CMS sizes.
+  useLayoutEffect(() => {
+    const header = sectionRef.current?.parentElement?.querySelector(".site-header");
+    if (!header) return;
+    const updateHeight = () => sectionRef.current?.style.setProperty(
+      "--hero-header-height", header.getBoundingClientRect().height + "px"
+    );
+    updateHeight();
+    const observer = new ResizeObserver(updateHeight);
+    observer.observe(header);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <section id="hero" className="hero-section" dir={isEnglish ? "ltr" : "rtl"} lang={isEnglish ? "en" : "ar"}>
-      <div className="hero-grid" />
-      <div className="ai-pattern" aria-hidden="true">
-        <span className="ai-node ai-node--one" /><span className="ai-node ai-node--two" /><span className="ai-node ai-node--three" />
-        <span className="ai-node ai-node--four" /><span className="ai-node ai-node--five" /><span className="ai-node ai-node--six" />
-        <span className="ai-core">AI</span>
-      </div>
-      <div className="hero-orb hero-orb--one" />
-      <div className="hero-orb hero-orb--two" />
-      <div className="hero-topline"><span>{translate(content.hero.topRight)}</span><span>{translate(content.hero.topLeft)}</span></div>
-      <div className="hero-content">
-        <Reveal className="hero-brand">
-          <LogoMark alt={t("hero.conference")} />
-        </Reveal>
-        <Reveal delay={80} className="hero-copy">
-          <p className="hero-kicker" style={isEnglish ? { maxWidth: "100%", textWrap: "balance", overflowWrap: "anywhere" } : undefined}>
-            {isEnglish ? t("hero.slogan", { defaultValue: "Researching for Human Health" }) : content.hero.kicker}
-          </p>
-          <h1 style={{ marginInlineStart: "79px" }}><span className="hero-title-lead">{translate(titleParts?.[1].trimEnd() ?? content.hero.titleLead)}</span> <em className="hero-title-accent" style={{ marginInlineStart: "187px" }}>{translate(titleParts?.[2] ?? content.hero.titleAccent)}</em></h1>
-          <p className="hero-description">{translate(content.hero.description)}</p>
-          <div className="hero-actions">
+    <section ref={sectionRef} id="hero" className="hero-section" dir={isEnglish ? "ltr" : "rtl"} lang={isEnglish ? "en" : "ar"} aria-labelledby="hero-video-title">
+      <div className="hero-film">
+        <div className="hero-film__media" aria-hidden="true">
+          <img className="hero-film__poster" src={posterSrc} alt="" fetchPriority="high" loading="eager" />
+          {!reducedMotion && (
+            <video
+              ref={videoRef}
+              className={"hero-film__video" + (videoPlaying && !videoFailed ? " is-playing" : "") + (videoFailed ? " is-failed" : "")}
+              src={videoSrc}
+              poster={posterSrc}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              onLoadedData={revealVideoFrame}
+              onPlaying={revealVideoFrame}
+              onError={() => {
+                cancelFrame();
+                setVideoPlaying(false);
+                setVideoFailed(true);
+              }}
+            />
+          )}
+        </div>
+        <div className="hero-film__caption">
+          <div className="hero-film__copy">
+            <p className="hero-film__intro">{t("hero.videoIntro")}</p>
+            <h1 id="hero-video-title">
+              <Trans i18nKey="hero.videoTitle" components={{ accent: <span className="hero-film__accent" /> }} />
+            </h1>
           </div>
-        </Reveal>
-        <Reveal delay={180} className="hero-visual-wrap">
-          <img className="hero-visual hero-visual--xd" src={getMediaUrl(content.hero.image || ASSETS.hero)} alt={translate(content.hero.imageAlt || fallbackHomeContent.hero.imageAlt)} />
-          <div className="hero-float hero-float--left"><span>6</span><small>{t("hero.learning")}<br />{t("hero.participation")}</small></div>
-          <div className="hero-float hero-float--right"><Sparkles size={16} /><small>{t("hero.idea")}<br />{t("hero.impact")}</small></div>
-        </Reveal>
+        </div>
       </div>
-      <a className="scroll-cue" href="#about"><span>{t("hero.scroll")}</span><ArrowDown size={18} /></a>
     </section>
   );
 }
@@ -571,6 +595,9 @@ function Resources({ content }: { content: HomeContent }) {
               const isGraduate = location.slug === "postgraduate-studies";
                const isSimulation =
   location.slug === "clinical-simulation-center";
+            const fallbackImage = getMediaUrl(
+              locations.find((item) => item.slug === location.slug)?.image
+            ) || `${import.meta.env.BASE_URL}images/nearby-map_c38385fb.png`;
 
             return (
               <Reveal
@@ -692,16 +719,18 @@ window.setTimeout(() => {
 ) : (
 
     <img
-      src={
+      src={getMediaUrl(
         location.image?.includes("supabase.com/dashboard/")
-          ? `/images/${location.image.split("website").pop()}`
-          : location.image?.replace(
-              "/manus-storage/",
-              "/images/"
-            )
-      }
+          ? `/images/${location.image.split("website").pop()?.replace(/^\/+/, "")}`
+          : location.image
+      ) || fallbackImage}
       alt={location.title}
       className="resource-card__icon-image"
+      onError={(event) => {
+        if (event.currentTarget.getAttribute("src") !== fallbackImage) {
+          event.currentTarget.src = fallbackImage;
+        }
+      }}
     />
   )}
 </div>
@@ -799,14 +828,19 @@ const isEnglish = i18n.resolvedLanguage === "en";
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
-if (cmsLoading) {
   return (
-    <main dir={isEnglish ? "ltr" : "rtl"} aria-busy="true">
-      <SiteHeader />
-      <div style={{ minHeight: "100vh" }} />
-      <SiteFooter />
-    </main>
+    <>
+      <main className="home-page" dir={isEnglish ? "ltr" : "rtl"} aria-busy={cmsLoading || undefined}>
+        <SiteHeader />
+        {(cmsLoading || content.visibility.hero) && <Hero />}
+        {/* Keep the fallback sections mounted while published content loads. */}
+        {content.visibility.about && <About content={content} />}
+        {content.visibility.about && <StrategicGoals />}
+        <AccompanyingExhibition />
+        {content.visibility.pathways && <Pathways content={content} />}
+        {content.visibility.resources && <Resources content={content} />}
+      </main>
+      {!cmsLoading && <SiteFooter />}
+    </>
   );
-}
-  return <main dir={isEnglish ? "ltr" : "rtl"}><SiteHeader />{content.visibility.hero && <Hero content={content} pageTitle={pageTitle} />}{content.visibility.about && <About content={content} />}{content.visibility.about && <StrategicGoals />}<AccompanyingExhibition />{content.visibility.pathways && <Pathways content={content} />}{content.visibility.resources && <Resources content={content} />}<SiteFooter /></main>;
 }

@@ -3,7 +3,6 @@
 
 .clinical-skills-page {
   min-height: 100vh;
-  background: #ffffff;
   color: #101a5c;
 }
 
@@ -16,7 +15,6 @@
   min-height: 650px;
   padding: 130px 8% 110px;
   overflow: hidden;
-  background: #ffffff;
 }
 
 /* النصوص */
@@ -146,7 +144,6 @@
 
 .clinical-skills-page .clinical-skills-timeline {
   padding: 90px 8% 120px;
-  background: #f8fbfd;
   color: #101a5c;
   overflow: hidden;
 }
@@ -973,7 +970,6 @@
    ========================================= */
 
 .clinical-skills-page {
-  background: #0C0A65;
   color: #FFFFFF;
 }
 
@@ -982,7 +978,6 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  background: #0C0A65;
 }
 
 .clinical-skills-page .clinical-skills-hero-image {
@@ -1000,23 +995,6 @@
 }
 
 /* Pink to Navy */
-.clinical-skills-page .clinical-skills-hero::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-
-  background: linear-gradient(
-    to bottom,
-    rgba(221, 98, 130, 0.82) 0%,
-    rgba(221, 98, 130, 0.60) 22%,
-    rgba(12, 30, 133, 0.55) 45%,
-    rgba(12, 10, 101, 0.85) 70%,
-    rgba(12, 10, 101, 0.97) 88%,
-    #0C0A65 100%
-  );
-}
 
 .clinical-skills-page .clinical-skills-hero-content {
   position: relative;
@@ -1039,7 +1017,6 @@
 
 /* TIMELINE */
 .clinical-skills-page .clinical-skills-timeline {
-  background: #0C0A65;
   color: #FFFFFF;
 }
 
@@ -1235,17 +1212,6 @@
     font-size: 15px;
     line-height: 2;
     color: #E2E7FF;
-  }
-
-  .clinical-skills-page .clinical-skills-hero::after {
-    background: linear-gradient(
-      to bottom,
-      rgba(221, 98, 130, 0.82) 0%,
-      rgba(221, 98, 130, 0.55) 22%,
-      rgba(12, 30, 133, 0.60) 45%,
-      rgba(12, 10, 101, 0.88) 70%,
-      #0C0A65 100%
-    );
   }
 
   .clinical-skills-page .clinical-skills-timeline {

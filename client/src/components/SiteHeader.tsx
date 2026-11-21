@@ -1,12 +1,11 @@
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Link, useLocation } from "wouter";
 import { Menu, X } from "lucide-react";
-import { defaultShell, loadPublishedShell, ShellLink } from "@/lib/siteShell";
-import { supabase } from "@/lib/supabase";
+import { defaultShell, loadPublishedShell, resolveShellLogoUrl, ShellLink } from "@/lib/siteShell";
 import { useTranslation } from "react-i18next";
 export default function SiteHeader() {
+  const [logoUrl, setLogoUrl] = useState(defaultShell.header.logoUrl);
   const [location, navigate] = useLocation(); const isHome = location === "/"; const [menuOpen, setMenuOpen] = useState(false); const [activeSection, setActiveSection] = useState("hero"); const [shell, setShell] = useState(defaultShell);
-  const [shellReady, setShellReady] = useState(!supabase);
    const navRef = useRef<HTMLElement | null>(null); const itemRefs = useRef<Record<string, HTMLElement | null>>({}); const [indicator, setIndicator] = useState({ left: 0, width: 0, top: 0 });
 const { i18n, t } = useTranslation();
 const currentLanguage = i18n.resolvedLanguage === "en" ? "en" : "ar";
@@ -14,6 +13,24 @@ const currentLanguage = i18n.resolvedLanguage === "en" ? "en" : "ar";
 const toggleLanguage = (language: "en" | "ar") => {
   void i18n.changeLanguage(language);
 };
+
+useEffect(() => {
+  const url = resolveShellLogoUrl(shell.header.logoUrl || defaultShell.header.logoUrl);
+  if (url === defaultShell.header.logoUrl) {
+    setLogoUrl(url);
+    return;
+  }
+  // Keep the verified local logo visible until the configured image decodes.
+  let active = true;
+  const image = new Image();
+  image.src = url;
+  void image.decode().then(() => {
+    if (active) setLogoUrl(url);
+  }).catch(() => {
+    if (active) setLogoUrl(defaultShell.header.logoUrl);
+  });
+  return () => { active = false; };
+}, [shell.header.logoUrl]);
 
 useEffect(() => {
   let cancelled = false;
@@ -27,10 +44,6 @@ useEffect(() => {
       }
     } catch (error) {
       console.error("Header loading error:", error);
-    } finally {
-      if (!cancelled) {
-        setShellReady(true);
-      }
     }
   };
 
@@ -183,18 +196,10 @@ const goToSection = (link: ShellLink) => {
   }
 };
 
-if (!shellReady) {
-  return (
-    <header className="site-header" aria-busy="true">
-      <div className="header-inner" />
-    </header>
-  );
-}
-
-  const logo = <img src={shell.header.logoUrl || defaultShell.header.logoUrl} alt="مؤتمر التخصصات الصحية" />;
+  const logo = <img src={logoUrl} fetchPriority="high" alt="مؤتمر التخصصات الصحية" onError={() => setLogoUrl(defaultShell.header.logoUrl)} />;
   return <header className={`site-header shell-header--${shell.header.background} shell-header-text--${shell.header.textColor} shell-header-height--${shell.header.height} shell-header-logo--${shell.header.logoSize}`}><div className="header-inner"><button className="mobile-menu" onClick={() => setMenuOpen(!menuOpen)} aria-label="فتح القائمة">{menuOpen ? <X size={20} /> : <Menu size={20} />}</button><a className="header-logo" href={import.meta.env.BASE_URL} aria-label="العودة للرئيسية" onClick={() => setActiveSection("hero")}><div className="brand-mark brand-mark--compact">{logo}</div></a><nav ref={navRef} className={menuOpen ? "nav-links nav-links--open" : "nav-links"} aria-label="التنقل الرئيسي">{links.map((item) => { const href = !isHome && item.kind === "section"
   ? `${import.meta.env.BASE_URL}#${item.href.replace(/^#/, "")}`
-  : item.href; return isHome && item.kind === "section" ? <button ref={(node) => { itemRefs.current[item.href] = node; }} key={`${item.order}-${item.label}`} onClick={() => goToSection(item)} className={isHome && activeSection === item.href.slice(1) ? "active" : ""}>{item.label}</button> : <a ref={(node) => { itemRefs.current[item.href] = node; }} key={`${item.order}-${item.label}`} href={href}
+  : item.href; return isHome && item.kind === "section" ? <button ref={(node) => { itemRefs.current[item.href] = node; }} key={`${item.order}-${item.href}`} onClick={() => goToSection(item)} className={isHome && activeSection === item.href.slice(1) ? "active" : ""}>{item.label}</button> : <a ref={(node) => { itemRefs.current[item.href] = node; }} key={`${item.order}-${item.href}`} href={href}
 onClick={(event) => {
   if (item.kind === "section") {
     event.preventDefault();

@@ -3,7 +3,6 @@
 
 .poster-oral-page {
   min-height: 100vh;
-  background: #ffffff;
   color: #101a5c;
 }
 
@@ -16,7 +15,6 @@
   min-height: 650px;
   padding: 130px 8% 110px;
   overflow: hidden;
-  background: #ffffff;
 }
 
 /* النصوص */
@@ -146,7 +144,6 @@
 
 .poster-oral-page .poster-oral-timeline {
   padding: 90px 8% 120px;
-  background: #f8fbfd;
   color: #101a5c;
   overflow: hidden;
 }
@@ -900,15 +897,11 @@
    ========================================= */
 
 .poster-oral-page {
-  background: #0C0A65;
   color: #FFFFFF;
 }
 
 /* Hero: preserve the background image
    and gradient from the TSX file */
-.poster-oral-page .poster-oral-hero {
-  background-color: #0C0A65;
-}
 
 /* Hero typography */
 .poster-oral-page .poster-oral-hero h1 {
@@ -939,7 +932,6 @@
 
 /* Timeline section */
 .poster-oral-page .poster-oral-timeline {
-  background: #0C0A65;
   color: #FFFFFF;
 }
 
@@ -1015,7 +1007,6 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  background-color: #0C0A65;
 }
 
 /* Full background image */
@@ -1031,26 +1022,6 @@
   height: 100%;
   object-fit: cover;
   object-position: center;
-}
-
-
-/* Posters - Yellow to Navy Image Overlay */
-
-.poster-oral-page .poster-oral-hero::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-
-  background: linear-gradient(
-    to bottom,
-    rgba(255, 208, 103, 0.55) 0%,
-    rgba(255, 208, 103, 0.30) 25%,
-    rgba(12, 30, 133, 0.55) 50%,
-    rgba(12, 10, 101, 0.90) 78%,
-    #0C0A65 100%
-  );
 }
 
 
@@ -1096,20 +1067,6 @@
   .poster-oral-page .poster-oral-hero-image img {
     object-fit: cover;
     object-position: 55% center;
-  }
-
-  /* Smooth gradient for readable text */
-  .poster-oral-page .poster-oral-hero::after {
-
-background: linear-gradient(
-  to bottom,
-  rgba(255, 208, 103, 0.58) 0%,
-  rgba(255, 208, 103, 0.36) 20%,
-  rgba(12, 30, 133, 0.48) 42%,
-  rgba(12, 10, 101, 0.82) 65%,
-  rgba(12, 10, 101, 0.96) 85%,
-  #0C0A65 100%
-);
   }
 
   /* Remove unused decorative circle */

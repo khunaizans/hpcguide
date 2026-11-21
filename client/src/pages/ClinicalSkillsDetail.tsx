@@ -250,122 +250,123 @@ if (isLoading) {
 
 
   return (
-    <main className="clinical-skills-page" dir={isEnglish ? "ltr" : "rtl"} lang={isEnglish ? "en" : "ar"}>
-      <SiteHeader />
+    <>
+      <main className="clinical-skills-page" dir={isEnglish ? "ltr" : "rtl"} lang={isEnglish ? "en" : "ar"}>
+        <SiteHeader />
 
 
 
-<section className="clinical-skills-hero">
-  <div
-    className="clinical-skills-hero-image"
-    aria-hidden="true"
-  >
-    {clinicalImageSrc && (
-      <img src={clinicalImageSrc} alt="" />
-    )}
-  </div>
-
-  <div className="clinical-skills-hero-content">
-
-<Link
-  href="/#pathways"
-  className="detail-back hpc-pathways-back"
->
-  {isEnglish ? <ArrowLeft size={18} /> : <ArrowRight size={18} />}
-  {localize("الرجوع إلى المسارات")}
-</Link>
-
-    <span className="clinical-skills-eyebrow">{isEnglish ? t("clinicalSkills.track") : "المسار 05"}</span>
-
-    <h1><PathwayName slug="clinical-skills">
-      {route?.title || "مسار المهارات الإكلينيكية"}
-    </PathwayName></h1>
-
-    <p className="clinical-skills-description">
-      {localize(route?.details || route?.description || "")}
-    </p>
-  </div>
-
-  <div className="clinical-skills-visual" aria-hidden="true">
-    <div className="clinical-skills-orbit" />
-    <div className="clinical-skills-visual-core">
-      RESEARCH
-    </div>
-  </div>
-</section>
-
-
-<section
-  className="clinical-skills-timeline"
-  aria-labelledby="poster-timeline-title"
->
-  <div className="clinical-skills-timeline-heading">
-    <span>{localize("رحلة المشاركة")}</span>
-    <h2 id="poster-timeline-title">{localize("الخط الزمني")}</h2>
-  </div>
-<div className="clinical-skills-timeline-main">
-
-  {timelineEvents.length > 0 ? (
-    <PosterTimeline events={timelineEvents.map(event => ({ ...event, date: localize(event.date), title: localize(event.title) }))} />
-  ) : (
-    <p>{localize("سيتم عرض المواعيد بعد نشرها من لوحة Admin.")}</p>
-  )}
-<section className="clinical-skills-requirements">
-  <div className="clinical-skills-requirements-heading">
-    <span>{localize("قبل المشاركة")}</span>
-    <h2>{localize("شروط التسجيل")}</h2>
-  </div>
-
-  {participationRequirements.length > 0 ? (
-
-<ol className="clinical-skills-requirements-list">
-  {participationRequirements.map((item, index) => (
-    <li
-      key={item.id}
-      className="clinical-skills-requirement"
+  <section className="clinical-skills-hero">
+    <div
+      className="clinical-skills-hero-image"
+      aria-hidden="true"
     >
-      <span className="clinical-skills-requirement-number">
-        {String(index + 1).padStart(2, "0")}
-      </span>
-      <p>{localize(item.text)}</p>
-    </li>
-  ))}
-</ol>
-  ) : (
-    <p>{localize("سيتم عرض شروط المشاركة بعد نشرها من لوحة Admin.")}</p>
-  )}
-</section>
-</div>
-<aside className="research-cta clinical-skills-registration">
+      {clinicalImageSrc && (
+        <img src={clinicalImageSrc} alt="" />
+      )}
+    </div>
 
-  <span className="research-cta__number">
-    05 <i></i>
-  </span>
+    <div className="clinical-skills-hero-content">
 
-  <div className="research-cta__icon">
-    <Sparkles size={20} />
-  </div>
-
-
-<h2>{localize(route?.ctaTitle || "مهتم بالمشاركة؟")}</h2>
-
-<p>{localize(route?.ctaDescription || "سجل الآن")}</p>
-
-
-
-{route?.ctaUrl ? (
-  <a
-    className="research-cta__button"
-    href={route.ctaUrl}
-    target="_blank"
-    rel="noopener noreferrer"
+  <Link
+    href="/#pathways"
+    className="detail-back hpc-pathways-back"
   >
-    {localize(route.ctaLabel || "رابط التسجيل")}
-    <ExternalLink size={15} />
-  </a>
+    {isEnglish ? <ArrowLeft size={18} /> : <ArrowRight size={18} />}
+    {localize("الرجوع إلى المسارات")}
+  </Link>
 
-) : (
-  <>
+      <span className="clinical-skills-eyebrow">{isEnglish ? t("clinicalSkills.track") : "المسار 05"}</span>
+
+      <h1><PathwayName slug="clinical-skills">
+        {route?.title || "مسار المهارات الإكلينيكية"}
+      </PathwayName></h1>
+
+      <p className="clinical-skills-description">
+        {localize(route?.details || route?.description || "")}
+      </p>
+    </div>
+
+    <div className="clinical-skills-visual" aria-hidden="true">
+      <div className="clinical-skills-orbit" />
+      <div className="clinical-skills-visual-core">
+        RESEARCH
+      </div>
+    </div>
+  </section>
+
+
+  <section
+    className="clinical-skills-timeline"
+    aria-labelledby="poster-timeline-title"
+  >
+    <div className="clinical-skills-timeline-heading">
+      <span>{localize("رحلة المشاركة")}</span>
+      <h2 id="poster-timeline-title">{localize("الخط الزمني")}</h2>
+    </div>
+  <div className="clinical-skills-timeline-main">
+
+    {timelineEvents.length > 0 ? (
+      <PosterTimeline events={timelineEvents.map(event => ({ ...event, date: localize(event.date), title: localize(event.title) }))} />
+    ) : (
+      <p>{localize("سيتم عرض المواعيد بعد نشرها من لوحة Admin.")}</p>
+    )}
+  <section className="clinical-skills-requirements">
+    <div className="clinical-skills-requirements-heading">
+      <span>{localize("قبل المشاركة")}</span>
+      <h2>{localize("شروط التسجيل")}</h2>
+    </div>
+
+    {participationRequirements.length > 0 ? (
+
+  <ol className="clinical-skills-requirements-list">
+    {participationRequirements.map((item, index) => (
+      <li
+        key={item.id}
+        className="clinical-skills-requirement"
+      >
+        <span className="clinical-skills-requirement-number">
+          {String(index + 1).padStart(2, "0")}
+        </span>
+        <p>{localize(item.text)}</p>
+      </li>
+    ))}
+  </ol>
+    ) : (
+      <p>{localize("سيتم عرض شروط المشاركة بعد نشرها من لوحة Admin.")}</p>
+    )}
+  </section>
+  </div>
+  <aside className="research-cta clinical-skills-registration">
+
+    <span className="research-cta__number">
+      05 <i></i>
+    </span>
+
+    <div className="research-cta__icon">
+      <Sparkles size={20} />
+    </div>
+
+
+  <h2>{localize(route?.ctaTitle || "مهتم بالمشاركة؟")}</h2>
+
+  <p>{localize(route?.ctaDescription || "سجل الآن")}</p>
+
+
+
+  {route?.ctaUrl ? (
+    <a
+      className="research-cta__button"
+      href={route.ctaUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      {localize(route.ctaLabel || "رابط التسجيل")}
+      <ExternalLink size={15} />
+    </a>
+
+  ) : (
+    <>
     <button
       type="button"
       className="research-cta__button"
@@ -397,7 +398,8 @@ if (isLoading) {
 </section>
 
 
-      <SiteFooter />
     </main>
+    <SiteFooter />
+    </>
   );
 }

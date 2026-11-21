@@ -3,7 +3,6 @@
 
 .three-mt-page {
   min-height: 100vh;
-  background: #ffffff;
   color: #101a5c;
 }
 
@@ -16,7 +15,6 @@
   min-height: 650px;
   padding: 130px 8% 110px;
   overflow: hidden;
-  background: #ffffff;
 }
 
 /* النصوص */
@@ -146,7 +144,6 @@
 
 .three-mt-page .three-mt-timeline {
   padding: 90px 8% 120px;
-  background: #f8fbfd;
   color: #101a5c;
   overflow: hidden;
 }
@@ -922,7 +919,6 @@
    ========================================= */
 
 .three-mt-page {
-  background: #0C0A65;
   color: #FFFFFF;
 }
 
@@ -931,7 +927,6 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  background: #0C0A65;
 }
 
 .three-mt-page .three-mt-hero-image {
@@ -946,24 +941,6 @@
   height: 100%;
   object-fit: cover;
   object-position: center;
-}
-
-/* Orange to navy gradient */
-.three-mt-page .three-mt-hero::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background: linear-gradient(
-    to bottom,
-    rgba(255,145,77,0.82) 0%,
-    rgba(255,145,77,0.60) 22%,
-    rgba(12,30,133,0.55) 45%,
-    rgba(12,10,101,0.85) 70%,
-    rgba(12,10,101,0.97) 88%,
-    #0C0A65 100%
-  );
 }
 
 .three-mt-page .three-mt-hero-content {
@@ -988,7 +965,6 @@
 
 /* TIMELINE */
 .three-mt-page .three-mt-timeline {
-  background: #0C0A65;
   color: #FFFFFF;
 }
 
@@ -1174,17 +1150,6 @@
     font-size: 15px;
     line-height: 2;
     color: #E2E7FF;
-  }
-
-  .three-mt-page .three-mt-hero::after {
-    background: linear-gradient(
-      to bottom,
-      rgba(255,145,77,0.82) 0%,
-      rgba(255,145,77,0.55) 22%,
-      rgba(12,30,133,0.60) 45%,
-      rgba(12,10,101,0.88) 70%,
-      #0C0A65 100%
-    );
   }
 
   .three-mt-page .three-mt-timeline {

@@ -233,7 +233,7 @@ const debatesImage =
 
 const debatesImageSrc = getMediaUrl(debatesImage);
 
-  return (
+  return (<>
     <main className="scientific-debates-page" dir={isEnglish ? "ltr" : "rtl"} lang={isEnglish ? "en" : "ar"}>
       <SiteHeader />
 
@@ -353,7 +353,8 @@ const debatesImageSrc = getMediaUrl(debatesImage);
 </section>
 
 
-      <SiteFooter />
     </main>
+    <SiteFooter />
+    </>
   );
 }

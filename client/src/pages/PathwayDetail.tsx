@@ -133,24 +133,26 @@ if (pathway.slug === "3mt") {
 }
 
   return (
-    <main className="pathway-detail" dir="rtl">
-      <SiteHeader />
-      <div className="detail-pattern detail-pattern--top" aria-hidden="true"><span /><span /><span /><i>AI</i></div>
-      <section className={`detail-hero detail-hero--${pathway.tone}`}>
-        <div className="detail-hero-copy">
-          <Link className="detail-back" href="/#pathways"><ArrowRight size={16} /> الرجوع إلى المسارات</Link>
-          <p className="eyebrow"><span /> المسار {pathway.eyebrow}</p>
-          <h1><PathwayName slug={pathway.slug} number={pathway.eyebrow}>{pathway.title}</PathwayName></h1>
-          <p>{pathway.details}</p>
-        </div>
-        <div className="detail-image-wrap"><img src={pathway.image} alt={pathway.title} /></div>
-      </section>
-      <section className="detail-content">
-        <div className="detail-pattern detail-pattern--content" aria-hidden="true"><span /><span /><span /><i>R</i></div>
-        <div><p className="detail-label">لماذا هذا المسار؟</p><h2>مساحتك لتتعلم<br /><span>وتصنع أثراً</span></h2></div>
-        <div className="detail-highlights">{pathway.highlights.map((highlight) => <div className="detail-highlight" key={highlight}><span><Check size={15} /></span><p>{highlight}</p></div>)}</div>
-      </section>
+    <>
+      <main className="pathway-detail" dir="rtl">
+        <SiteHeader />
+        <div className="detail-pattern detail-pattern--top" aria-hidden="true"><span /><span /><span /><i>AI</i></div>
+        <section className={`detail-hero detail-hero--${pathway.tone}`}>
+          <div className="detail-hero-copy">
+            <Link className="detail-back" href="/#pathways"><ArrowRight size={16} /> الرجوع إلى المسارات</Link>
+            <p className="eyebrow"><span /> المسار {pathway.eyebrow}</p>
+            <h1><PathwayName slug={pathway.slug} number={pathway.eyebrow}>{pathway.title}</PathwayName></h1>
+            <p>{pathway.details}</p>
+          </div>
+          <div className="detail-image-wrap"><img src={pathway.image} alt={pathway.title} /></div>
+        </section>
+        <section className="detail-content">
+          <div className="detail-pattern detail-pattern--content" aria-hidden="true"><span /><span /><span /><i>R</i></div>
+          <div><p className="detail-label">لماذا هذا المسار؟</p><h2>مساحتك لتتعلم<br /><span>وتصنع أثراً</span></h2></div>
+          <div className="detail-highlights">{pathway.highlights.map((highlight) => <div className="detail-highlight" key={highlight}><span><Check size={15} /></span><p>{highlight}</p></div>)}</div>
+        </section>
+      </main>
       <SiteFooter />
-    </main>
+    </>
   );
 }

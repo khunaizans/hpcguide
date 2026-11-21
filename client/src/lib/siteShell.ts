@@ -42,9 +42,19 @@ export type ShellFooter = {
 
 export type SiteShell = { header: ShellHeader; footer: ShellFooter };
 
-const logo = "/images/hpc-logo_739bab33.png";export const defaultShell: SiteShell = {
-  header: { logoUrl: logo, logoSize: "medium", logoHref: "/", background: "glass", textColor: "muted", height: "standard", links: [
-    { label: "الرئيسية", href: "#hero", kind: "section", visible: true, order: 0 }, { label: "عن المؤتمر", href: "#about", kind: "section", visible: true, order: 1 }, { label: "المسارات", href: "#pathways", kind: "section", visible: true, order: 2 }, { label: "المساعد", href: "#assistant", kind: "section", visible: true, order: 3 }, { label: "الخريطة", href: "#resources", kind: "section", visible: true, order: 4 }
+export function resolveShellLogoUrl(value: string): string {
+  const path = value.trim();
+  if (/^(?:https?:)?\/\//i.test(path) || /^(?:data|blob):/i.test(path)) return path;
+  if (path.startsWith("/manus-storage/")) return getMediaUrl(path);
+  const base = import.meta.env.BASE_URL;
+  const local = path.replace(/^\/+/, "");
+  const basePath = base.replace(/^\/+|\/+$/g, "");
+  return basePath && local.startsWith(`${basePath}/`) ? `/${local}` : `${base}${local}`;
+}
+
+const logo = resolveShellLogoUrl("/images/hpc-logo_739bab33.png");export const defaultShell: SiteShell = {
+  header: { logoUrl: logo, logoSize: "large", logoHref: "/", background: "glass", textColor: "muted", height: "standard", links: [
+    { label: "الرئيسية", href: "#hero", kind: "section", visible: true, order: 0 }, { label: "عن المؤتمر", href: "#about", kind: "section", visible: true, order: 1 }, { label: "المسارات", href: "#pathways", kind: "section", visible: true, order: 2 }, { label: "المساعد", href: "#assistant", kind: "section", visible: false, order: 3 }, { label: "الخريطة", href: "#resources", kind: "section", visible: true, order: 4 }
   ], buttons: [] },
   footer: { title: "مؤتمر التخصصات الصحية", description: "نلتقي لنحوّل المعرفة إلى أثر.", logoUrl: logo, copyright: "© HPC 2027", links: [], socials: [], partners: [], background: "white", textColor: "muted" }
 };
@@ -55,9 +65,11 @@ function mergeShell(value: unknown): SiteShell {
   return { header: { ...defaultShell.header, ...(raw.header ?? {}), links: Array.isArray(raw.header?.links) ? raw.header.links : defaultShell.header.links, buttons: Array.isArray(raw.header?.buttons) ? raw.header.buttons : [] }, footer: { ...defaultShell.footer, ...(raw.footer ?? {}), links: Array.isArray(raw.footer?.links) ? raw.footer.links : [], socials: Array.isArray(raw.footer?.socials) ? raw.footer.socials : [], partners: Array.isArray(raw.footer?.partners) ? raw.footer.partners : [] } };
 }
 
-export async function loadPublishedShell(): Promise<SiteShell> {
+export async function loadPublishedShell(signal?: AbortSignal): Promise<SiteShell> {
   if (!supabase) return defaultShell;
-  const { data } = await supabase.from("site_settings").select("setting_value").eq("setting_key", "shell_header_footer_published").maybeSingle();
+  let query = supabase.from("site_settings").select("setting_value").eq("setting_key", "shell_header_footer_published");
+  if (signal) query = query.abortSignal(signal);
+  const { data } = await query.maybeSingle();
   if (!data?.setting_value) return defaultShell;
   try { return mergeShell(typeof data.setting_value === "string" ? JSON.parse(data.setting_value) : data.setting_value); } catch { return defaultShell; }
 }

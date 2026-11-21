@@ -282,7 +282,6 @@ if (!isReady) {
         aria-busy="true"
         style={{
           minHeight: "100vh",
-          background: "#0C0A65",
         }}
       />
     </main>
@@ -290,7 +289,7 @@ if (!isReady) {
 }
 
 
-return (
+return (<>
   <main className="three-mt-page" dir={isEnglish ? "ltr" : "rtl"} lang={isEnglish ? "en" : "ar"}>
     <SiteHeader />
 
@@ -415,7 +414,8 @@ return (
 </aside>
 </section>
 
-<SiteFooter />
-</main>
+  </main>
+  <SiteFooter />
+  </>
 );
 }

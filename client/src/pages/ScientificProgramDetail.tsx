@@ -118,7 +118,7 @@ const heroImageSrc = (() => {
   return `${import.meta.env.BASE_URL}${path.replace(/^\//, "")}`;
 })();
 
-  return (
+  return (<>
     <main className="scientific-program-page" dir={isEnglish ? "ltr" : "rtl"} lang={isEnglish ? "en" : "ar"}>
       <SiteHeader />
 
@@ -215,7 +215,8 @@ const heroImageSrc = (() => {
 </section>
 
 
-      <SiteFooter />
     </main>
+    <SiteFooter />
+    </>
   );
 }

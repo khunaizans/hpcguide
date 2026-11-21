@@ -145,7 +145,6 @@
 @media (min-width: 769px) {
   .research-opportunity-detail .research-timeline-section {
     padding: 40px 3% 120px;
-    background: #f8fbfd;
   }
 }
 
@@ -395,7 +394,6 @@
   .research-opportunity-detail .research-intro {
     min-height: 560px;
     padding: 130px 8% 65px;
-    background: #ffffff;
   }
 
   .research-opportunity-detail .research-intro__glow {
@@ -641,7 +639,6 @@
    ========================================= */
 
 .research-opportunity-detail {
-  background: #0C0A65;
   color: #FFFFFF;
 }
 
@@ -650,7 +647,6 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  background: #0C0A65;
 }
 
 /* Image behind content */
@@ -666,24 +662,6 @@
   height: 100%;
   object-fit: cover;
   object-position: center;
-}
-
-/* Mint to navy gradient */
-.research-opportunity-detail .research-intro::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background: linear-gradient(
-    to bottom,
-    rgba(78, 198, 177, 0.70) 0%,
-    rgba(78, 198, 177, 0.48) 22%,
-    rgba(12, 30, 133, 0.55) 45%,
-    rgba(12, 10, 101, 0.85) 70%,
-    rgba(12, 10, 101, 0.97) 88%,
-    #0C0A65 100%
-  );
 }
 
 /* Keep original text positions */
@@ -719,7 +697,6 @@
 /* TIMELINE */
 .research-opportunity-detail
 .research-timeline-section {
-  background: #0C0A65;
   color: #FFFFFF;
 }
 
@@ -879,18 +856,6 @@
   .research-intro__description {
     font-size: 15px;
     line-height: 2;
-  }
-
-  .research-opportunity-detail
-  .research-intro::after {
-    background: linear-gradient(
-      to bottom,
-      rgba(78, 198, 177, 0.80) 0%,
-      rgba(78, 198, 177, 0.55) 22%,
-      rgba(12, 30, 133, 0.60) 45%,
-      rgba(12, 10, 101, 0.88) 70%,
-      #0C0A65 100%
-    );
   }
 
   .research-opportunity-detail

@@ -281,7 +281,7 @@ if (isLoading) {
   );
 }
 
-  return (
+  return (<>
     <main className="pathway-detail research-opportunity-detail" dir={isEnglish ? "ltr" : "rtl"} lang={isEnglish ? "en" : "ar"}>
       <SiteHeader />
 
@@ -358,7 +358,8 @@ if (isLoading) {
           </Reveal>
         </div>
       </section>
-      <SiteFooter />
     </main>
+    <SiteFooter />
+    </>
   );
 }

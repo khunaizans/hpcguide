@@ -232,7 +232,7 @@ const posterImage =
 const posterImageSrc = getMediaUrl(posterImage);
 
 
-  return (
+  return (<>
     <main className="poster-oral-page" dir={isEnglish ? "ltr" : "rtl"} lang={isEnglish ? "en" : "ar"}>
       <SiteHeader />
 
@@ -350,7 +350,8 @@ const posterImageSrc = getMediaUrl(posterImage);
 </section>
 
 
-      <SiteFooter />
     </main>
+    <SiteFooter />
+    </>
   );
 }

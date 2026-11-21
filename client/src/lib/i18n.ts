@@ -23,6 +23,8 @@ const resources = {
         response: "الرجاء التواصل عبر الإيميل أو منصة X، وسيتم الرد على سؤالك في أسرع وقت.",
       },
       hero: {
+        videoIntro: "تعرّف أكثر على",
+        videoTitle: "<accent>مؤتمر</accent> التخصصات الصحية",
         conference: "مؤتمر التخصصات الصحية",
         slogan: "نبحث لصحة الإنسان",
         guide: "دليل",
@@ -550,6 +552,8 @@ const resources = {
         missionDescription: "To strengthen scientific research in the health professions by fostering an interactive and collaborative environment that brings together students, healthcare practitioners, and experts, contributing to the development and sustainability of the healthcare sector.",
       },
       hero: {
+        videoIntro: "Discover more about",
+        videoTitle: "The Health Professions <accent>Conference</accent>",
         conference: "Health Professions Conference",
         slogan: "Researching for Human Health",
         guide: "Guide",

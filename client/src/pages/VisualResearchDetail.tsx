@@ -233,7 +233,6 @@ if (isLoading) {
       dir={isEnglish ? "ltr" : "rtl"}
       style={{
         minHeight: "100vh",
-        backgroundColor: "#0C0A65",
       }}
     >
       <SiteHeader />
@@ -243,14 +242,13 @@ if (isLoading) {
         aria-label={isEnglish ? t(`${translationSection}.loading`) : "جارٍ تحميل بيانات المسار"}
         style={{
           minHeight: "100vh",
-          backgroundColor: "#0C0A65",
         }}
       />
     </main>
   );
 }
 
-  return (
+  return (<>
     <main
       className={`poster-oral-page ${routeTheme}`}
       dir={isEnglish ? "ltr" : "rtl"}
@@ -370,7 +368,8 @@ if (isLoading) {
         </aside>
       </section>
 
-      <SiteFooter />
     </main>
+    <SiteFooter />
+    </>
   );
 }
