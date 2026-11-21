@@ -1783,16 +1783,49 @@ main:has(> .site-header) > section:not(.scientific-program-hero) {
   mask-image: var(--hpc-hero-fade);
 }
 
-/* A faint glow beneath the media vanishes at the section edge. */
+/* Full-width track glow on the masked image layer. */
+.scientific-program-hero-image { --hpc-pathway-glow: #0C1E85; }
+.poster-oral-hero-image { --hpc-pathway-glow: var(--route-accent, #FFD067); }
+.scientific-debates-hero-image { --hpc-pathway-glow: #62B4FF; }
+.research-intro__image { --hpc-pathway-glow: #4EC6B1; }
+.clinical-skills-hero-image { --hpc-pathway-glow: #DD6282; }
+.three-mt-hero-image { --hpc-pathway-glow: #FF914D; }
+
 :is(
-  .hero-section,
-  .scientific-program-hero,
-  .poster-oral-hero,
-  .research-intro,
-  .scientific-debates-hero,
-  .clinical-skills-hero,
-  .three-mt-hero
+  .scientific-program-hero-image,
+  .poster-oral-hero-image,
+  .scientific-debates-hero-image,
+  .research-intro__image,
+  .clinical-skills-hero-image,
+  .three-mt-hero-image
 ) {
+  /* Reveal the page behind the lower image and its tint together. */
+  --hpc-hero-fade: linear-gradient(
+    180deg,
+    #000 57%,
+    #000e 68%,
+    #0009 81%,
+    #0003 92%,
+    transparent 98%
+  );
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--hpc-pathway-glow) 34%, transparent) 0%,
+      color-mix(in srgb, var(--hpc-pathway-glow) 32%, transparent) 28%,
+      color-mix(in srgb, var(--hpc-pathway-glow) 24%, transparent) 52%,
+      color-mix(in srgb, var(--hpc-pathway-glow) 8%, transparent) 72%,
+      transparent 88%
+    );
+  }
+}
+
+.hero-section {
   background-image: radial-gradient(ellipse 48% 24% at 50% 76%, color-mix(in srgb, var(--hpc-page-background) 12%, transparent), transparent);
 }
 
@@ -1805,10 +1838,10 @@ main:has(> .site-header) > section:not(.scientific-program-hero) {
   .research-intro__copy,
   .scientific-debates-hero-content,
   .clinical-skills-hero-content,
-  .three-mt-hero-content,
-  .tower-detail__hero-copy
+  .three-mt-hero-content
 ) {
   isolation: isolate;
+  text-shadow: 0 1px 3px rgb(0 0 0 / 78%);
 }
 
 :is(
@@ -1825,7 +1858,18 @@ main:has(> .site-header) > section:not(.scientific-program-hero) {
   inset: -30% -22%;
   z-index: -1;
   pointer-events: none;
-  background: radial-gradient(ellipse, color-mix(in srgb, var(--hpc-page-background-dark) 65%, transparent) 18%, color-mix(in srgb, var(--hpc-page-background-dark) 40%, transparent) 45%, transparent 72%);
+  background: radial-gradient(
+    ellipse,
+    var(--hpc-hero-copy-shade, rgb(0 0 0 / 15%) 18%, rgb(0 0 0 / 6%) 45%),
+    transparent 72%
+  );
+}
+
+.tower-detail__hero-copy {
+  isolation: isolate;
+  --hpc-hero-copy-shade:
+    color-mix(in srgb, var(--hpc-page-background-dark) 65%, transparent) 18%,
+    color-mix(in srgb, var(--hpc-page-background-dark) 40%, transparent) 45%;
 }
 
 /* Maintain readable headings */
