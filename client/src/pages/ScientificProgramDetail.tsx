@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import "./ScientificProgramDetail.css";
 import PathwayName from "@/components/PathwayName";
 import { getMediaUrl } from "@/lib/mediaUrl";
-
+import LockedRegistrationAction from "@/components/LockedRegistrationAction";
 import { useEffect, useState } from "react";
 import { ArrowLeft, ArrowRight, Sparkles } from "lucide-react";
 import { Link } from "wouter";
@@ -26,19 +26,15 @@ export default function ScientificProgramDetail() {
   const normalizeCopy = (value: string) => value.normalize("NFKC").replace(/[\u0640\u064b-\u065f\u0670]/g, "").trim().replace(/\s+/g, " ").replace(/[.،]+$/, "");
   const localize = (value: string) => isEnglish ? Object.entries(copy).find(([arabic]) => normalizeCopy(arabic) === normalizeCopy(value))?.[1] ?? value : value;
   const englishText = isEnglish ? { direction: "ltr" as const, textAlign: "left" as const, overflowWrap: "anywhere" as const } : undefined;
-  const [route, setRoute] = useState<RouteRecord | null>(null);
+  const [route, setRoute] = useState<RouteRecord | null | undefined>(undefined);
 
   useEffect(() => {
     let active = true;
 
-  void loadPublishedRoute("scientific-program").then((data) => {
-  console.log("SCIENTIFIC CMS DEBUG:", data?.contentItems);
-
-  if (active && data) {
-    setRoute(data);
-  }
-});
-        return () => {
+    void loadPublishedRoute("scientific-program").then(data => {
+      if (active) setRoute(data ?? null);
+    });
+    return () => {
       active = false;
     };
   }, []);
@@ -53,14 +49,16 @@ useEffect(() => {
     return;
   }
 
+  if (typeof window.IntersectionObserver !== "function") {
+    elements.forEach(element => element.classList.add("scientific-in-view"));
+    return;
+  }
+
   const observer = new IntersectionObserver(
     (entries) => {
 
 entries.forEach((entry) => {
-  entry.target.classList.toggle(
-    "scientific-in-view",
-    entry.isIntersecting
-  );
+  entry.target.classList.toggle("scientific-in-view", entry.isIntersecting);
 });
 
     },
@@ -88,7 +86,7 @@ entries.forEach((entry) => {
       element.style.removeProperty("--scientific-delay");
     });
   };
-}, []);
+}, [route]);
 
 
 const lectures = route?.contentItems
@@ -117,6 +115,15 @@ const heroImageSrc = (() => {
 
   return `${import.meta.env.BASE_URL}${path.replace(/^\//, "")}`;
 })();
+
+  if (route === undefined) {
+    return (
+      <main className="scientific-program-page" dir={isEnglish ? "ltr" : "rtl"} lang={isEnglish ? "en" : "ar"}>
+        <SiteHeader />
+        <div className="cms-content-placeholder" aria-busy="true" />
+      </main>
+    );
+  }
 
   return (<>
     <main className="scientific-program-page" dir={isEnglish ? "ltr" : "rtl"} lang={isEnglish ? "en" : "ar"}>
@@ -199,14 +206,9 @@ const heroImageSrc = (() => {
 
   <p style={englishText}>{localize("اطّلع على تفاصيل البرنامج العلمي وفرص المشاركة.")}</p>
 
-  <a
-  href="https://hpcgate.ksau-hs.edu.sa/Home/Index"
-  target="_blank"
-  rel="noopener noreferrer"
-  className="scientific-registration-button"
->{localize("التسجيل الآن ↗")}</a>
-
-  <small></small>
+ <LockedRegistrationAction
+  buttonClassName="scientific-registration-button"
+/>
 </div>
 
 

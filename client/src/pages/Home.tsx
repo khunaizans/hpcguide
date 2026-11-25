@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
 import { Link, useLocation } from "wouter";
 import { Trans, useTranslation } from "react-i18next";
 import {
@@ -7,41 +7,16 @@ import {
   Clock3,
   Menu,
 } from "lucide-react";
-import { pathwayCards } from "@/lib/pathways";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import { locations } from "@/lib/locations";
 import PathwaysStats from "@/components/PathwaysStats";
-import { fallbackHomeContent, HomeContent, mapHomeContent } from "@/lib/homeCms";
-import {
-  loadPublishedRouteRecords,
-  loadRouteRecords,
-  routeToPathway,
-} from "@/lib/routesCms";
+import { fallbackHomeContent, type HomeContent } from "@/lib/homeCms";
+import { loadPublishedHome, readHomeSnapshot, readPreparedHome, saveHomeSnapshot, type PublishedHomeLoad } from "@/lib/homeData";
 import { supabase } from "@/lib/supabase";
 import { getMediaUrl } from "@/lib/mediaUrl";
-function useReveal() {
-  const ref = useRef<HTMLDivElement | null>(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const node = ref.current;
-    if (!node) return;
-
-const observer = new IntersectionObserver(
-  ([entry]) => {
-    setVisible(entry.isIntersecting);
-  },
-  { threshold: 0.16 }
-);
-
-    observer.observe(node);
-    return () => observer.disconnect();
-  }, []);
-
-  return { ref, visible };
-}
-
+import { homeScrollStorageKey, readHomeNavigation, type HomeNavigation, type HomeScrollPosition } from "@/lib/homeScroll";
+import { PublicShellSnapshotProvider, usePublicShell } from "@/contexts/PublicShellContext";
 
 function Reveal({
   children,
@@ -54,13 +29,11 @@ function Reveal({
   delay?: number;
   onClickCapture?: React.MouseEventHandler<HTMLDivElement>;
 }) {
-  const { ref, visible } = useReveal();
-
   return (
     <div
-      ref={ref}
-      className={`reveal ${visible ? "is-visible" : ""} ${className}`}
-      style={{ transitionDelay: `${delay}ms` }}
+      className={`home-reveal ${className}`}
+      data-reveal="pending"
+      style={{ "--home-reveal-delay": `${delay}ms` } as CSSProperties}
       onClickCapture={onClickCapture}
     >
       {children}
@@ -68,10 +41,10 @@ function Reveal({
   );
 }
 
-
 function Hero() {
   const { t, i18n } = useTranslation();
   const isEnglish = i18n.resolvedLanguage === "en";
+  const publishedHeaderHeight = usePublicShell()?.shell.header.height;
   const sectionRef = useRef<HTMLElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const frameCallback = useRef<number | null>(null);
@@ -130,10 +103,14 @@ function Hero() {
       "--hero-header-height", header.getBoundingClientRect().height + "px"
     );
     updateHeight();
+    if (typeof ResizeObserver !== "function") {
+      window.addEventListener("resize", updateHeight);
+      return () => window.removeEventListener("resize", updateHeight);
+    }
     const observer = new ResizeObserver(updateHeight);
     observer.observe(header);
     return () => observer.disconnect();
-  }, []);
+  }, [publishedHeaderHeight]);
 
   return (
     <section ref={sectionRef} id="hero" className="hero-section" dir={isEnglish ? "ltr" : "rtl"} lang={isEnglish ? "en" : "ar"} aria-labelledby="hero-video-title">
@@ -217,42 +194,6 @@ function ScrollProgress() {
 function StrategicGoals() {
   const { t, i18n } = useTranslation();
   const isEnglish = i18n.resolvedLanguage === "en";
-  const sectionRef = useRef<HTMLElement | null>(null);
-const [scrollProgress, setScrollProgress] = useState(0);
-
-useEffect(() => {
-  let frame = 0;
-
-  const updateProgress = () => {
-    const section = sectionRef.current;
-    if (!section) return;
-
-    const rect = section.getBoundingClientRect();
-    const viewportHeight = window.innerHeight;
-
-    const progress =
-      (viewportHeight - rect.top) /
-      (viewportHeight + rect.height);
-
-    setScrollProgress(Math.max(0, Math.min(1, progress)));
-  };
-
-  const onScroll = () => {
-    cancelAnimationFrame(frame);
-    frame = requestAnimationFrame(updateProgress);
-  };
-
-  updateProgress();
-
-  window.addEventListener("scroll", onScroll, { passive: true });
-  window.addEventListener("resize", onScroll);
-
-  return () => {
-    cancelAnimationFrame(frame);
-    window.removeEventListener("scroll", onScroll);
-    window.removeEventListener("resize", onScroll);
-  };
-}, []);
 
 const goals = [
   "الصحة الرقمية والرعاية الصحية في ضوء الرؤية",
@@ -267,39 +208,24 @@ const goals = [
 
   return (
     <section
-     ref={sectionRef}
       id="strategic-goals"
       className="strategic-goals-section"
       dir={isEnglish ? "ltr" : "rtl"}
       lang={isEnglish ? "en" : "ar"}
     >
       <div className="container">
-        <h2
-  className="strategic-goals-title"
-  style={{
-    opacity: scrollProgress >= 0.03 ? 1 : 0,
-    transform:
-      scrollProgress >= 0.03
-        ? "translateY(0)"
-        : "translateY(30px)",
-  }}
->
+        <h2 className="strategic-goals-title" data-reveal="pending" data-reveal-progress={0.03}>
   {isEnglish ? <>{t("strategicObjectives.headingLead")} <span>{t("strategicObjectives.headingAccent")}</span></> : <>الأهداف <span>الاستراتيجية</span></>}
 </h2>
 
         <div className="strategic-goals-grid">
-          {goals.map((goal, index) => {
-  const visible = scrollProgress >= 0.08 + index * 0.05;
-
-  return (
-    <div
-      className="strategic-goal"
-      key={goal}
-      style={{
-        opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(25px)",
-      }}
-    >
+          {goals.map((goal, index) => (
+            <div
+              className="strategic-goal"
+              key={goal}
+              data-reveal="pending"
+              data-reveal-progress={0.08 + index * 0.05}
+            >
 
               <svg
                 viewBox="0 0 52 42"
@@ -318,9 +244,8 @@ const goals = [
               </svg>
 
                 <p>{isEnglish ? t(`strategicObjectives.items.${index + 1}`, { defaultValue: goal }) : goal}</p>
-        </div>
-      );
-    })}
+            </div>
+          ))}
       </div>
     </div>
   </section>
@@ -385,14 +310,14 @@ function About({ content }: { content: HomeContent }) {
 />
         </Reveal>
         <div className="about-stack">
-          <Reveal delay={100} className="statement-card statement-card--vision">
+          <div className="statement-card statement-card--vision">
             <div className="statement-number">01</div>
             <div><p className="card-label">{about.visionLabel}</p><h3>{about.visionTitle}</h3><p>{about.visionText}</p></div>
-          </Reveal>
-          <Reveal delay={180} className="statement-card statement-card--mission">
+          </div>
+          <div className="statement-card statement-card--mission">
             <div className="statement-number">02</div>
             <div><p className="card-label">{about.missionLabel}</p><h3>{about.missionTitle}</h3><p>{about.missionText}</p></div>
-          </Reveal>
+          </div>
         </div>
       </div>
     </section>
@@ -497,7 +422,7 @@ const [, navigate] = useLocation();
   <Reveal
   key={card.eyebrow}
   delay={index * 65}
-  className={`pathway-card pathway-card--${card.tone} ${
+  className={`pathway-card pathway-card--${card.tone} hpc-route-${card.eyebrow.trim()} ${
   touchedCard === index ? "mobile-touched" : ""
 } ${
   card.eyebrow === "07"
@@ -564,6 +489,8 @@ onLoad={(e) => {
 
 
 function Resources({ content }: { content: HomeContent }) {
+  const { t, i18n } = useTranslation();
+  const isEnglish = i18n.resolvedLanguage === "en";
   const [towerRaised, setTowerRaised] = useState(false);
   const [tappedCard, setTappedCard] = useState<string | null>(null);
   const [, navigate] = useLocation();
@@ -576,15 +503,15 @@ function Resources({ content }: { content: HomeContent }) {
       <div className="container">
         <Reveal>
           <SectionHeading
-            eyebrow={content.resources.eyebrow}
+            eyebrow={isEnglish ? t("navigation.venue") : content.resources.eyebrow}
             title={
               <>
-                {content.resources.titleLine1}
+                {isEnglish ? t("venueGuide.home.titleLead") : content.resources.titleLine1}
                 <br />
-                <span>{content.resources.titleLine2}</span>
+                <span>{isEnglish ? t("venueGuide.home.titleAccent") : content.resources.titleLine2}</span>
               </>
             }
-            description={content.resources.description}
+            description={isEnglish ? t("venueGuide.home.description") : content.resources.description}
           />
         </Reveal>
 
@@ -595,6 +522,9 @@ function Resources({ content }: { content: HomeContent }) {
               const isGraduate = location.slug === "postgraduate-studies";
                const isSimulation =
   location.slug === "clinical-simulation-center";
+            const cardTitle = isEnglish
+              ? t(`venueGuide.venues.${location.slug}.title`, { defaultValue: location.title })
+              : location.title;
             const fallbackImage = getMediaUrl(
               locations.find((item) => item.slug === location.slug)?.image
             ) || `${import.meta.env.BASE_URL}images/nearby-map_c38385fb.png`;
@@ -602,7 +532,12 @@ function Resources({ content }: { content: HomeContent }) {
             return (
               <Reveal
                 key={location.slug}
-                delay={index * 70}
+                delay={
+  isTower ? 0 :
+  isGraduate ? 70 :
+  isSimulation ? 140 :
+  index * 70
+}
 
 
 className={`resource-card ${
@@ -622,7 +557,7 @@ className={`resource-card ${
                <Link
   href={location.link_url}
   className="resource-card__link"
-  aria-label={`استكشف ${location.title}`}
+  aria-label={t("venueGuide.explore", { title: cardTitle })}
 onClick={(event) => {
   if (
     event.ctrlKey ||
@@ -662,7 +597,7 @@ window.setTimeout(() => {
   <div className="tower-seamless__frame">
     <img
       src={`${import.meta.env.BASE_URL}images/tower-card-new.png`}
-      alt="البرج الإداري"
+      alt={t("venueGuide.venues.administrative-tower.title")}
       className="tower-seamless__base"
     />
   </div>
@@ -677,7 +612,7 @@ window.setTimeout(() => {
 </div>
 
 <div className="resource-card__tower-info">
-  <h3>البرج الإداري</h3>
+  <h3>{t("venueGuide.venues.administrative-tower.title")}</h3>
 </div>
 
 </>
@@ -691,7 +626,7 @@ window.setTimeout(() => {
   <div className="graduate-photo-window">
     <img
       src={`${import.meta.env.BASE_URL}images/graduate-studies-card-portrait.webp`}
-      alt="الدراسات العليا"
+      alt={isEnglish ? t("venueGuide.venues.postgraduate-studies.title") : "الدراسات العليا"}
       className="graduate-photo-image"
     />
   </div>
@@ -703,7 +638,7 @@ window.setTimeout(() => {
   <div className="simulation-photo-window">
     <img
       src={`${import.meta.env.BASE_URL}images/clinical-simulation-center.webp`}
-      alt="مركز المحاكاة السريرية"
+      alt={t("venueGuide.venues.clinical-simulation-center.title")}
       className="simulation-photo-base"
     />
   </div>
@@ -724,7 +659,7 @@ window.setTimeout(() => {
           ? `/images/${location.image.split("website").pop()?.replace(/^\/+/, "")}`
           : location.image
       ) || fallbackImage}
-      alt={location.title}
+      alt={cardTitle}
       className="resource-card__icon-image"
       onError={(event) => {
         if (event.currentTarget.getAttribute("src") !== fallbackImage) {
@@ -736,7 +671,7 @@ window.setTimeout(() => {
 </div>
 
                       <div className="resource-card__body">
-                        <h3>{location.title}</h3>
+                        <h3>{cardTitle}</h3>
                         <span className="resource-card__arrow">
                           <ChevronLeft size={19} />
                         </span>
@@ -754,93 +689,617 @@ window.setTimeout(() => {
 }
 
 
-export default function Home() {
-  const { i18n } = useTranslation();
-const isEnglish = i18n.resolvedLanguage === "en";
-  const [content, setContent] = useState<HomeContent>(fallbackHomeContent);
-  const [cmsLoading, setCmsLoading] = useState(Boolean(supabase));
-  const [pageTitle, setPageTitle] = useState("دليلك داخل HPC");
-  useEffect(() => {
-    let active = true;
-    const loadCmsHome = async () => {
-      if (!supabase) return;
-      try {
-        const { data: page, error: pageError } = await supabase.from("pages").select("id,is_visible").eq("slug", "home").eq("is_visible", true).maybeSingle();
-        if (pageError || !page) return;
-        const [{ data: sections, error: sectionsError }, { data: items, error: itemsError }] = await Promise.all([
-          supabase.from("sections").select("*").eq("page_id", page.id).order("sort_order", { ascending: true }),
-          supabase.from("items").select("*").order("sort_order", { ascending: true }),
-        ]);
-        if (!sectionsError && !itemsError && active && sections?.length) {
-  const cmsContent = mapHomeContent(
-    (sections ?? []) as Record<string, unknown>[],
-    (items ?? []) as Record<string, unknown>[]
-  );
+type HomeLoad = { status: "loading" } | PublishedHomeLoad;
 
-  setContent((current) => ({
-    ...cmsContent,
-    pathways: {
-      ...cmsContent.pathways,
-      cards: current.pathways.cards
-    }
-  }));
+const revealSelector = ".home-reveal[data-reveal], .pathways-history-stats[data-reveal], [data-reveal-progress]";
+
+function getRevealBounds(element: HTMLElement) {
+  const rect = element.getBoundingClientRect();
+  const offset = parseFloat(getComputedStyle(element).translate.split(" ")[1]) || 0;
+  return { top: rect.top - offset, bottom: rect.bottom - offset, height: rect.height, paintedTop: rect.top };
 }
+
+function getRevealOverlap({ top, bottom }: { top: number; bottom: number }, viewportTop: number, viewportBottom: number) {
+  return Math.min(viewportBottom, bottom) - Math.max(viewportTop, top);
+}
+
+export default function Home({ returning = false }: { returning?: boolean }) {
+  const { t, i18n } = useTranslation();
+  const isEnglish = i18n.resolvedLanguage === "en";
+  const publishedShell = usePublicShell();
+  const mainRef = useRef<HTMLElement>(null);
+  const scheduleRevealUpdate = useRef<(() => void) | null>(null);
+  const updateRevealTargets = useRef<(() => void) | null>(null);
+  const restoredReveals = useRef(new WeakSet<HTMLElement>());
+  const animateSectionEntry = useRef(false);
+
+  const activateSectionReveals = useRef<(() => void) | null>(null);
+  const pendingHeaderEntrance = useRef<HTMLElement | null>(null);
+  const syncHeaderEntrance = useRef<(() => void) | null>(null);
+  
+const [navigation] = useState<HomeNavigation>(() => {
+  const initial = readHomeNavigation();
+
+  const navigationEntry = performance.getEntriesByType(
+    "navigation"
+  )[0] as PerformanceNavigationTiming | undefined;
+
+  const reloadOnPathways =
+    !returning &&
+    navigationEntry?.type === "reload" &&
+    initial.hash === "#pathways";
+
+  if (reloadOnPathways) {
+    return {
+      hash: "#pathways",
+      intent: "section",
+      headerEntrance: false,
+    };
+  }
+
+  return initial;
+});
+
+  const pendingNavigation = useRef<HomeNavigation | null>(navigation);
+  const [prepared] = useState(() => navigation.intent ? readPreparedHome() : undefined);
+  const shell = publishedShell ?? prepared?.shell ?? null;
+  
+
+const [cached] = useState(() => {
+  const internal = returning || Boolean(navigation.intent);
+
+  if (!supabase) return;
+
+  const snapshot = readHomeSnapshot();
+  if (!snapshot) return;
+
+  return {
+    content: snapshot.content,
+    shell:
+      internal && publishedShell && !publishedShell.failed
+        ? publishedShell
+        : snapshot.shell,
+    internal: true,
+  };
+});
+
+  const [load, setLoad] = useState<HomeLoad>(() => prepared?.load ?? (supabase
+    ? { status: "loading" }
+    : { status: "success", content: fallbackHomeContent }));
+  const resolved = shell && load.status !== "loading";
+  // A return stays on one layout. Revalidation below prepares the snapshot for the next visit.
+  const usingCache = cached && (cached.internal || (load.status !== "empty" && (!resolved || load.status === "error" || shell?.failed)));
+  const content = usingCache ? cached.content : resolved
+    ? load.status === "success" ? load.content : fallbackHomeContent
+    : null;
+  const displayShell = usingCache ? cached.shell : resolved ? shell : null;
+  const ready = Boolean(content);
+  const cmsError = resolved && (load.status === "error" || shell?.failed);
+  const cmsEmpty = resolved && load.status === "empty";
+  const cmsMessage = cached?.internal ? undefined
+    : cmsEmpty ? "common.homeEmpty"
+    : !cmsError ? undefined
+    : usingCache ? "common.homeCached"
+    : load.status === "success" ? "common.homeShellError"
+    : "common.homeError";
+
+  useLayoutEffect(() => {
+    const main = mainRef.current;
+    if (!main) return;
+    history.scrollRestoration = "manual";
+    let entry: string;
+    let frame = 0;
+let returnFrame1 = 0;
+let returnFrame2 = 0;
+
+    const save = () => {
+      if (!ready || pendingNavigation.current || history.state?.hpcHomeEntry !== entry) return;
+      const y = window.scrollY;
+      const headerHeight = main.querySelector(".site-header")?.getBoundingClientRect().height ?? 0;
+      const line = (headerHeight + window.innerHeight) / 2;
+      const section = Array.from(main.querySelectorAll<HTMLElement>(":scope > section[id]"))
+        .find(element => {
+          const rect = element.getBoundingClientRect();
+          return rect.top <= line && rect.bottom > line;
+        });
+      const position: HomeScrollPosition = {
+        entry,
+        sectionId: section?.id,
+        offset: section ? -section.getBoundingClientRect().top : 0,
+        y,
+        hash: window.location.hash,
+      };
+      try {
+        sessionStorage.setItem(`${homeScrollStorageKey}:${entry}`, JSON.stringify(position));
       } catch {
-  /* Keep the static homepage snapshot as the safety fallback. */
-} finally {
-  if (active) setCmsLoading(false);
+        // Scrolling still works when storage is unavailable.
+      }
+    };
+
+    const applyNavigation = () => {
+      const target = pendingNavigation.current;
+      
+if (
+  target &&
+  !ready &&
+  (
+    target.headerEntrance ||
+    (target.scroll?.y ?? 0) > 0 ||
+    (target.hash && target.hash !== "#hero")
+  )
+) {
+  return;
 }
-    };
-    void loadCmsHome();
-    return () => { active = false; };
-  }, []);
-  useEffect(() => {
-    let active = true;
-    const loadHomePageTitle = async () => {
-      if (!supabase) return;
-      try {
-        const { data, error } = await supabase.from("pages").select("title").eq("slug", "home").maybeSingle();
-        if (!error && active && typeof data?.title === "string" && data.title.trim()) setPageTitle(data.title.trim());
-      } catch { /* Keep the original homepage title as the safety fallback. */ }
-    };
-    void loadHomePageTitle();
-    return () => { active = false; };
-  }, []);
-  useEffect(() => {
-    let active = true;
-    const loadPublishedRoutes = async () => {
-      try {
-        const routes = import.meta.env.DEV
-  ? await loadRouteRecords()
-  : await loadPublishedRouteRecords();
 
-        if (!active || !routes.length) return;
 
-        setContent((current) => ({ ...current, pathways: { ...current.pathways, cards: routes.map(routeToPathway) } }));
+      const savedEntry = target?.intent ? undefined : history.state?.hpcHomeEntry;
+      entry = savedEntry ?? crypto.randomUUID?.() ?? String(Date.now());
+      // The boot script defers the native fragment until the CMS sections exist.
+      if (history.state?.hpcHomeEntry !== entry || target?.intent || history.state?.hpcPendingHomeHash) {
+        const { hpcPendingHomeHash, hpcHomeIntent, hpcHeaderEntrance, ...state } = history.state ?? {};
+        const hash = target?.hash ?? window.location.hash;
+        history.replaceState({ ...state, hpcHomeEntry: entry }, "", location.pathname + location.search + hash);
+      }
 
-      } catch { /* Keep the existing pathway cards as the safety fallback. */ }
+      if (target) {
+        const saved = target.scroll;
+        let top = saved?.y ?? 0;
+        const header = main.querySelector(".site-header");
+        const savedSection = saved?.sectionId ? document.getElementById(saved.sectionId) : null;
+        const section = !saved && target.hash && target.hash !== "#hero"
+          ? document.getElementById(target.hash.slice(1))
+          : null;
+
+        if (savedSection && saved && saved.y > 0 && Number.isFinite(saved.offset)) {
+          top = window.scrollY + savedSection.getBoundingClientRect().top + saved.offset;
+        } else if (section) {
+          const headerHeight = header?.getBoundingClientRect().height ?? 0;
+          top = window.scrollY + section.getBoundingClientRect().top - headerHeight;
+        }
+
+        
+
+const isSectionRefresh =
+  target === navigation &&
+  ["#pathways", "#about", "#resources"].includes(target.hash) &&
+  (
+    performance.getEntriesByType("navigation")[0] as
+      PerformanceNavigationTiming | undefined
+  )?.type === "reload";
+
+const smoothArrival =
+  (returning || isSectionRefresh) &&
+  (target.intent === "section" || isSectionRefresh) &&
+  section !== null &&
+  !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+
+if (smoothArrival) {
+  const sectionId = section.id;
+
+  // Start at the homepage Hero without reloading the document.
+  window.scrollTo({
+    top: 0,
+    behavior: "instant",
+  });
+
+  // Allow Home to paint before starting the smooth scroll.
+  returnFrame1 = requestAnimationFrame(() => {
+    returnFrame2 = requestAnimationFrame(() => {
+      const destination = document.getElementById(sectionId);
+      if (!destination) return;
+
+      const headerHeight =
+        main.querySelector(".site-header")
+          ?.getBoundingClientRect().height ?? 0;
+
+      const destinationTop =
+        window.scrollY +
+        destination.getBoundingClientRect().top -
+        headerHeight;
+
+      window.scrollTo({
+        top: Math.max(0, destinationTop),
+        behavior: "smooth",
+      });
+    });
+  });
+
+} else if (
+  Math.abs(window.scrollY - Math.max(0, top)) > 0.5
+) {
+  window.scrollTo({
+    top: Math.max(0, top),
+    behavior: "instant",
+  });
+}
+
+        const entrance = target.headerEntrance && ready
+          ? section ?? (target.intent === "top" ? main.querySelector<HTMLElement>("#hero") : null)
+          : null;
+        pendingHeaderEntrance.current = entrance;
+        
+animateSectionEntry.current =
+  target.intent === "section" && !entrance;
+        syncHeaderEntrance.current?.();
+
+        
+if (animateSectionEntry.current) {
+  const activate = activateSectionReveals.current;
+  if (section && activate) {
+    const elements =
+  section.querySelectorAll<HTMLElement>(revealSelector);
+
+            elements.forEach(element => {
+              restoredReveals.current.delete(element);
+              element.dataset.reveal = "pending";
+            });
+            // A quick return can find the previous exit still fading out.
+            // Start the entrance from the painted pending state.
+            elements.forEach(element => {
+              const stats = element.classList.contains("pathways-history-stats");
+              const properties = stats ? ["opacity", "transform"] : ["opacity", "translate", "filter"];
+              element.getAnimations?.({ subtree: stats }).forEach(animation => {
+                if ("transitionProperty" in animation && properties.includes(String(animation.transitionProperty))) {
+                  animation.finish();
+                }
+              });
+            });
+            activate();
+          }
+        } else if (!entrance && window.scrollY > 0) {
+          const viewportTop = header?.getBoundingClientRect().bottom ?? 0;
+          const viewportBottom = window.innerHeight;
+
+          main.querySelectorAll<HTMLElement>(revealSelector).forEach(element => {
+            if (
+              getRevealOverlap(
+                getRevealBounds(element),
+                viewportTop,
+                viewportBottom
+              ) > 0
+            ) {
+              restoredReveals.current.add(element);
+              element.dataset.reveal = "instant";
+            }
+          });
+
+          scheduleRevealUpdate.current?.();
+        }
+
+        pendingNavigation.current = null;
+      }
+      save();
     };
-    void loadPublishedRoutes();
-    return () => { active = false; };
-  }, []);
+
+ 
+let lastHeaderHash: string | null = null;
+let dedupeFrame = 0;
+
+const handleHistory = (event: Event) => {
+  if (
+    location.pathname.replace(/\/+$/, "") !==
+    import.meta.env.BASE_URL.replace(/\/+$/, "")
+  ) {
+    return;
+  }
+
+  if (event.type === "hpc:home-navigation") {
+    const detail = (event as CustomEvent<HomeNavigation>).detail;
+    const requested = detail?.intent
+      ? detail
+      : readHomeNavigation();
+
+    if (!requested.intent || lastHeaderHash === requested.hash) {
+      return;
+    }
+
+    lastHeaderHash = requested.hash;
+
+    dedupeFrame = requestAnimationFrame(() => {
+      lastHeaderHash = null;
+      dedupeFrame = 0;
+    });
+
+    pendingNavigation.current = requested;
+  } else {
+    pendingNavigation.current = readHomeNavigation();
+  }
+
+  applyNavigation();
+};
+
+const scheduleSave = () => {
+  if (frame) return;
+
+  frame = requestAnimationFrame(() => {
+    frame = 0;
+    save();
+  });
+};
+
+
+    applyNavigation();
+    window.addEventListener("hpc:home-navigation", handleHistory);
+    window.addEventListener("hpc:save-home-position", save);
+    window.addEventListener("popstate", handleHistory);
+    window.addEventListener("scroll", scheduleSave, { passive: true });
+    window.addEventListener("pagehide", save);
+    return () => {
+      cancelAnimationFrame(frame);
+      cancelAnimationFrame(returnFrame1);
+cancelAnimationFrame(returnFrame2);
+      window.removeEventListener("hpc:home-navigation", handleHistory);
+      window.removeEventListener("hpc:save-home-position", save);
+      window.removeEventListener("popstate", handleHistory);
+      window.removeEventListener("scroll", scheduleSave);
+      window.removeEventListener("pagehide", save);
+    };
+  }, [ready]);
+
+  useLayoutEffect(() => {
+    const main = mainRef.current;
+    if (!main || !ready) return;
+
+    const header = main.querySelector(".site-header");
+    let targets = new Set<HTMLElement>();
+    let goals: Element | null = null;
+    let stats: Element | null = null;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    const positioned = restoredReveals.current;
+
+    let frame = 0;
+    let firstPaintFrame = 0;
+    let activationFrame = 0;
+
+    let allowRevealUpdate = true;
+    const headerAnimations = new Map<HTMLElement, Animation>();
+
+    const stopHeaderAnimation = (element: HTMLElement, animation: Animation) => {
+      animation.onfinish = null;
+      animation.cancel();
+      headerAnimations.delete(element);
+      delete element.dataset.headerEntrance;
+    };
+    const stopHeaderAnimations = () => {
+      headerAnimations.forEach((animation, element) => stopHeaderAnimation(element, animation));
+    };
+    
+const playHeaderAnimation = (element: HTMLElement) => {
+  const isHero = element.classList.contains("hero-film__copy");
+
+  
+const animation = element.animate(
+  isHero
+    ? [
+        {
+          opacity: 0.15,
+          translate: "0 32px",
+          filter: "blur(4px)",
+        },
+        {
+          opacity: 1,
+          translate: "0 0px",
+          filter: "blur(0px)",
+        },
+      ]
+    : [
+        {
+          opacity: 0.78,
+          translate: "0 16px",
+        },
+        {
+          opacity: 1,
+          translate: "0 0px",
+        },
+      ],
+  {
+    duration: isHero ? 900 : 400,
+    easing: "cubic-bezier(0.22, 1, 0.36, 1)",
+    fill: "both",
+  }
+);
+
+
+  headerAnimations.set(element, animation);
+
+  animation.onfinish = () => {
+    stopHeaderAnimation(element, animation);
+  };
+};
+
+
+    const update = () => {
+      frame = 0;
+
+      // Let the browser paint the pending state first.
+      // Otherwise the elements may appear without transition.
+      if (!allowRevealUpdate) return;
+
+      const section = pendingHeaderEntrance.current;
+      pendingHeaderEntrance.current = null;
+      if (reducedMotion.matches) stopHeaderAnimations();
+      const entrance = section && !reducedMotion.matches && typeof section.animate === "function" ? section : null;
+      const intro = entrance?.querySelector<HTMLElement>(".hero-film__copy, .home-reveal:has(> .section-heading)");
+      const viewportTop = header?.getBoundingClientRect().bottom ?? 0;
+      const viewportBottom = window.innerHeight;
+      // Preserve the statistics observer's 5% bottom margin, which was relative to root width.
+      const statsBottom = viewportBottom - document.documentElement.clientWidth * 0.05;
+      const goalsRect = goals?.getBoundingClientRect();
+      const goalsProgress = goalsRect ? (viewportBottom - goalsRect.top) / (viewportBottom + goalsRect.height) : 0;
+      const elements = Array.from(targets);
+      const next = elements.map(element => {
+        if (reducedMotion.matches) return "instant";
+        const trigger = element.dataset.revealProgress;
+        const bounds = getRevealBounds(element);
+        const bottom = element === stats ? statsBottom : viewportBottom;
+        const entering = element.dataset.reveal === "pending";
+        const minimumOverlap = entering ? Math.min(24, bounds.height * 0.16) : 0;
+        // A card hidden behind the header has left the visible viewport. Measure its layout
+        // bounds on exit so its own transition cannot bring it back into view.
+        const visible = trigger !== undefined
+          ? goalsProgress >= Number(trigger)
+          : getRevealOverlap(bounds, viewportTop, bottom) > minimumOverlap
+            && (!entering || element === intro || bounds.paintedTop < bottom);
+
+        // Release restored visibility when the element leaves the viewport.
+        if (entrance?.contains(element)) positioned.delete(element);
+        if (positioned.has(element)) {
+          const stillOnScreen =
+            getRevealOverlap(
+              bounds,
+              viewportTop,
+              viewportBottom
+            ) > 0;
+
+          if (stillOnScreen) {
+            return "instant";
+          }
+
+          positioned.delete(element);
+          return "pending";
+        }
+
+        return visible ? "revealed" : "pending";
+
+      });
+      elements.forEach((element, index) => {
+        const animate = next[index] === "revealed" && (element === intro || (element === stats && entrance?.contains(element)));
+        const active = headerAnimations.get(element);
+        if (active && next[index] !== "revealed") stopHeaderAnimation(element, active);
+        if (animate) element.dataset.headerEntrance = "";
+        if (element.dataset.reveal !== next[index]) element.dataset.reveal = next[index];
+        if (animate) playHeaderAnimation(element);
+      });
+      if (intro && entrance?.id === "hero") {
+        // A fresh Home mount also starts the Hero copy's own entrance.
+        // Settle that copy before animating it for this header click.
+        intro.getAnimations({ subtree: true }).forEach(animation => {
+          if ("animationName" in animation && animation.animationName === "hero-copy-enter") animation.finish();
+        });
+        intro.dataset.headerEntrance = "";
+        playHeaderAnimation(intro);
+      }
+    };
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+
+    scheduleRevealUpdate.current = schedule;
+
+    const syncEntrance = () => {
+      stopHeaderAnimations();
+      if (!pendingHeaderEntrance.current) return;
+      cancelAnimationFrame(firstPaintFrame);
+      cancelAnimationFrame(activationFrame);
+      cancelAnimationFrame(frame);
+      allowRevealUpdate = true;
+      update();
+    };
+    syncHeaderEntrance.current = syncEntrance;
+
+    const activateAfterPaint = () => {
+      allowRevealUpdate = false;
+      cancelAnimationFrame(firstPaintFrame);
+      cancelAnimationFrame(activationFrame);
+      firstPaintFrame = requestAnimationFrame(() => {
+        activationFrame = requestAnimationFrame(() => {
+          allowRevealUpdate = true;
+          animateSectionEntry.current = false;
+          schedule();
+        });
+      });
+    };
+    activateSectionReveals.current = activateAfterPaint;
+    if (animateSectionEntry.current) activateAfterPaint();
+
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    reducedMotion.addEventListener("change", schedule);
+    const revealObserver = typeof IntersectionObserver === "function"
+      ? new IntersectionObserver(schedule, { threshold: 0.16 })
+      : null;
+    updateRevealTargets.current = () => {
+      const next = new Set(main.querySelectorAll<HTMLElement>(revealSelector));
+      targets.forEach(element => {
+        if (!next.has(element) && element.dataset.revealProgress === undefined) revealObserver?.unobserve(element);
+      });
+      next.forEach(element => {
+        if (!targets.has(element) && element.dataset.revealProgress === undefined) revealObserver?.observe(element);
+      });
+      targets = next;
+      goals = main.querySelector("#strategic-goals");
+      stats = main.querySelector(".pathways-history-stats[data-reveal]");
+      if (pendingHeaderEntrance.current) syncEntrance();
+      else schedule();
+    };
+
+    const resizeObserver = typeof ResizeObserver === "function" ? new ResizeObserver(schedule) : null;
+    resizeObserver?.observe(main);
+    if (header) resizeObserver?.observe(header);
+    return () => {
+      scheduleRevealUpdate.current = null;
+      updateRevealTargets.current = null;
+      activateSectionReveals.current = null;
+      syncHeaderEntrance.current = null;
+      stopHeaderAnimations();
+      cancelAnimationFrame(frame);
+      cancelAnimationFrame(firstPaintFrame);
+      cancelAnimationFrame(activationFrame);
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      reducedMotion.removeEventListener("change", schedule);
+      revealObserver?.disconnect();
+      resizeObserver?.disconnect();
+    };
+  }, [ready]);
+
+  useLayoutEffect(() => {
+    updateRevealTargets.current?.();
+  }, [content]);
+
+  useLayoutEffect(() => {
+    if (!supabase || !resolved) return;
+    if (load.status === "success" && shell && !shell.failed) {
+      saveHomeSnapshot({ content: load.content, shell });
+    } else if (load.status === "empty") {
+      saveHomeSnapshot();
+    }
+  }, [load, resolved, shell]);
+
   useEffect(() => {
-    const onScroll = () => document.documentElement.style.setProperty("--scroll-y", `${window.scrollY}`);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+    if (!supabase || prepared) return;
+    const controller = new AbortController();
+    void loadPublishedHome(controller.signal).then(result => {
+      if (!controller.signal.aborted) setLoad(result);
+    });
+
+    return () => controller.abort();
+  }, [prepared]);
   return (
-    <>
-      <main className="home-page" dir={isEnglish ? "ltr" : "rtl"} aria-busy={cmsLoading || undefined}>
-        <SiteHeader />
-        {(cmsLoading || content.visibility.hero) && <Hero />}
-        {/* Keep the fallback sections mounted while published content loads. */}
-        {content.visibility.about && <About content={content} />}
-        {content.visibility.about && <StrategicGoals />}
-        <AccompanyingExhibition />
-        {content.visibility.pathways && <Pathways content={content} />}
-        {content.visibility.resources && <Resources content={content} />}
+    <PublicShellSnapshotProvider value={displayShell}>
+      <main
+        ref={mainRef}
+        className="home-page"
+        dir={isEnglish ? "ltr" : "rtl"}
+        aria-busy={!ready || undefined}
+      >
+        <SiteHeader contentReady={ready} />
+        {(content?.visibility.hero ?? true) && <Hero />}
+        {!ready && <p className="container home-cms-status" role="status">{t("common.loading")}…</p>}
+        {content && (
+          <>
+            {content.visibility.about && <About content={content} />}
+            {content.visibility.about && <StrategicGoals />}
+            <AccompanyingExhibition />
+            {content.visibility.pathways && <Pathways content={content} />}
+            {content.visibility.resources && <Resources content={content} />}
+          </>
+        )}
+        {cmsMessage && <p className="container home-cms-status" role="status">{t(cmsMessage)}</p>}
       </main>
-      {!cmsLoading && <SiteFooter />}
-    </>
+      {content && <SiteFooter />}
+    </PublicShellSnapshotProvider>
   );
 }

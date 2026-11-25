@@ -1,7 +1,7 @@
-import { useEffect, useState, type ReactNode } from "react";
+import { type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
-import { defaultShell, loadPublishedShell } from "@/lib/siteShell";
-import { supabase } from "@/lib/supabase";
+import { defaultShell } from "@/lib/siteShell";
+import { usePublicShell } from "@/contexts/PublicShellContext";
 
 function FooterBrand({
   english,
@@ -33,48 +33,10 @@ export default function SiteFooter() {
   const { t, i18n } = useTranslation();
   const isEnglish = i18n.resolvedLanguage === "en";
 
-  const [shell, setShell] = useState(defaultShell);
-  const [customized, setCustomized] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const snapshot = usePublicShell();
+  if (!snapshot) return null;
 
-  useEffect(() => {
-    let active = true;
-
-    const loadFooter = async () => {
-      try {
-        if (!supabase) return;
-
-        const { data, error } = await supabase
-          .from("site_settings")
-          .select("setting_value")
-          .eq("setting_key", "shell_header_footer_published")
-          .maybeSingle();
-
-        if (error) throw error;
-
-        if (data?.setting_value) {
-          const publishedShell = await loadPublishedShell();
-
-          if (active) {
-            setShell(publishedShell);
-            setCustomized(true);
-          }
-        }
-      } catch (error) {
-        console.error("Footer loading error:", error);
-      } finally {
-        if (active) setLoading(false);
-      }
-    };
-
-    void loadFooter();
-
-    return () => {
-      active = false;
-    };
-  }, []);
-
-  if (loading) return <span hidden data-site-footer-loading />;
+  const { shell, customized } = snapshot;
 
   if (!customized) {
     return (
@@ -149,23 +111,57 @@ export default function SiteFooter() {
     ? footer.copyrightEn?.trim() || footer.copyright
     : footer.copyright;
 
-  const socialLinks = socials.length > 0 && (
-    <div className="shell-footer-socials hpc-footer-socials">
-      {socials.map(item => (
-        <a
-          key={`${item.order}-${item.label}`}
-          href={item.href}
-          aria-label={
-            isEnglish ? item.labelEn?.trim() || item.label : item.label
-          }
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {item.icon}
-        </a>
-      ))}
+ const socialLinks = socials.length > 0 && (
+  <div className="shell-footer-socials hpc-footer-socials">
+
+    <a
+      className="hpc-footer-heading hpc-footer-side-link--right"
+      href="https://hpcgate.ksau-hs.edu.sa/Home/Index"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      {isEnglish ? "Conference Portal" : "بوابة المؤتمر"}
+    </a>
+
+    <div className="hpc-footer-follow">
+
+      <span className="hpc-footer-heading">
+        {isEnglish ? "Follow Us" : "تابعنا"}
+      </span>
+
+      <div className="hpc-footer-social-icons">
+        {socials.map(item => (
+          <a
+            key={`${item.order}-${item.label}`}
+            href={item.href}
+            aria-label={
+              isEnglish
+                ? item.labelEn?.trim() || item.label
+                : item.label
+            }
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {item.icon}
+          </a>
+        ))}
+      </div>
+
     </div>
-  );
+
+    <a
+      className="hpc-footer-heading hpc-footer-side-link--left"
+      href="https://chat.whatsapp.com/HXQhP4QKWGjKSLYh4JxITh"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      {isEnglish
+        ? "Join the Conference Community"
+        : "أنضم إلى مجتمع المؤتمر"}
+    </a>
+
+  </div>
+);
 
   return (
     <footer

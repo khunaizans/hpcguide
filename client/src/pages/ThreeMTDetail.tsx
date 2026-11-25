@@ -2,7 +2,7 @@ import { Link } from "wouter";
 import { useTranslation } from "react-i18next";
 import PathwayName from "@/components/PathwayName";
 import { getMediaUrl } from "@/lib/mediaUrl";
-
+import LockedRegistrationAction from "@/components/LockedRegistrationAction";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 
 import {
@@ -259,11 +259,7 @@ useEffect(() => {
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
-        } else {
-          entry.target.classList.remove("is-visible");
-        }
+        entry.target.classList.toggle("is-visible", entry.isIntersecting);
       });
     },
     { threshold: 0.15 }
@@ -388,28 +384,7 @@ return (<>
 <p>{localize(route?.ctaDescription || "سجل الآن")}</p>
 
 
-{route?.ctaUrl ? (
-  <a
-    className="research-cta__button"
-    href={route.ctaUrl}
-    target="_blank"
-    rel="noopener noreferrer"
-  >
-    {localize(route.ctaLabel || "رابط التسجيل")}
-    <ExternalLink size={15} />
-  </a>
-) : (
-  <button
-    type="button"
-    className="research-cta__button"
-    disabled
-    style={{
-      opacity: 0.65,
-      cursor: "not-allowed",
-    }}
-  >{localize("رابط التسجيل")}<ExternalLink size={15} />
-  </button>
-)}
+<LockedRegistrationAction />
 
 </aside>
 </section>

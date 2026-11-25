@@ -30,16 +30,18 @@ function fromPage(row: CmsRow, published: boolean): RouteRecord | undefined { co
 
 export async function loadRouteRecords(): Promise<RouteRecord[]> { const fallback = allFallbackRoutes(); if (!supabase) return fallback; const { data, error } = await supabase.from("pages").select("*").like("slug", "route-%").order("sort_order", { ascending: true }); if (error || !data) return fallback; const bySlug = new Map(data.map((row) => [String(row.slug).replace(/^route-/, ""), row])); const records = fallback.map((item) => fromPage(bySlug.get(item.slug) ?? {}, false) ?? item); data.forEach((row) => { const slug = String(row.slug).replace(/^route-/, ""); if (!fallback.some((item) => item.slug === slug)) { const custom = fromPage(row, false); if (custom) records.push(custom); } }); return records.sort((a, b) => a.order - b.order); }
 
-export async function loadPublishedRouteRecords(): Promise<RouteRecord[]> {
+export async function loadPublishedRouteRecords(signal?: AbortSignal, throwOnError = false): Promise<RouteRecord[]> {
   const fallback = allFallbackRoutes();
   if (!supabase) return fallback;
 
-  const { data, error } = await supabase
+  const query = supabase
     .from("pages")
     .select("*")
     .like("slug", "route-%")
     .order("sort_order", { ascending: true });
+  const { data, error } = await (signal ? query.abortSignal(signal) : query);
 
+  if (error && throwOnError) throw error;
   if (error || !data) return fallback;
 
   const bySlug = new Map(
@@ -80,6 +82,7 @@ export async function loadPublishedRoute(slug: string) {
     .from("pages")
     .select("*")
     .eq("slug", routeSlug(slug))
+    .abortSignal(AbortSignal.timeout(8000))
     .maybeSingle();
 
   if (error || !data) return base;

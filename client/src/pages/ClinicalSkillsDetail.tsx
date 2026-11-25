@@ -1,7 +1,7 @@
 import { Link } from "wouter";
 import { useTranslation } from "react-i18next";
 import PathwayName from "@/components/PathwayName";
-
+import LockedRegistrationAction from "@/components/LockedRegistrationAction";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 
 import {
@@ -213,11 +213,7 @@ useEffect(() => {
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
-        } else {
-          entry.target.classList.remove("is-visible");
-        }
+        entry.target.classList.toggle("is-visible", entry.isIntersecting);
       });
     },
     { threshold: 0.15 }
@@ -354,44 +350,7 @@ if (isLoading) {
 
 
 
-  {route?.ctaUrl ? (
-    <a
-      className="research-cta__button"
-      href={route.ctaUrl}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      {localize(route.ctaLabel || "رابط التسجيل")}
-      <ExternalLink size={15} />
-    </a>
-
-  ) : (
-    <>
-    <button
-      type="button"
-      className="research-cta__button"
-      disabled
-      aria-label={localize("رابط التسجيل غير متاح حاليًا")}
-      style={{
-        opacity: 0.65,
-        cursor: "not-allowed",
-      }}
-    >{localize("رابط التسجيل")}<ExternalLink size={15} />
-    </button>
-
-    <small
-      className="research-cta__note"
-      style={{
-        display: "block",
-        marginTop: "14px",
-        textAlign: "center",
-        fontSize: "12px",
-        color: "#68749a",
-      }}
-    >{localize("سيتم تفعيل رابط التسجيل في 27 ديسمبر 2026")}</small>
-  </>
-)}
-
+ <LockedRegistrationAction />
 
 </aside>
 

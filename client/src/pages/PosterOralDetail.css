@@ -42,6 +42,23 @@
   line-height: 1.35;
 }
 
+.poster-oral-page .poster-oral-hero-title {
+  text-wrap: balance;
+}
+
+@media (min-width: 769px) {
+  .poster-oral-page .poster-oral-hero-title {
+    min-block-size: 2lh;
+    align-content: end;
+  }
+
+  .poster-oral-page[dir="rtl"] .poster-oral-hero-title > span {
+    display: block;
+    max-inline-size: 8em;
+    margin-inline-end: auto;
+  }
+}
+
 .poster-oral-page .poster-oral-description {
   margin: 0;
   color: #64748b;
@@ -1074,8 +1091,15 @@
     display: none;
   }
 
-  /* Text container */
-  .poster-oral-page .poster-oral-hero-content {
+  /* Pathway number */
+  .poster-oral-page .poster-oral-eyebrow {
+    display: inline-block;
+    margin-bottom: 24px;
+    color: #FFFFFF;
+    font-size: 14px;
+  }
+
+  .poster-oral-page:where(.hpc-route-07) .poster-oral-hero-content {
     position: relative;
     z-index: 2;
     order: 0;
@@ -1085,31 +1109,74 @@
     text-align: right;
   }
 
-  /* Pathway number */
-  .poster-oral-page .poster-oral-eyebrow {
-    display: inline-block;
-    margin-bottom: 24px;
-    color: #FFFFFF;
-    font-size: 14px;
-  }
-
-  /* Main title */
-  .poster-oral-page .poster-oral-hero h1 {
+  .poster-oral-page:where(.hpc-route-07) .poster-oral-hero h1 {
     font-size: clamp(30px, 8vw, 40px);
     line-height: 1.4;
     margin: 0 0 30px;
     color: #FFFFFF;
   }
 
-  /* Description */
-  .poster-oral-page .poster-oral-description {
+  .poster-oral-page:where(.hpc-route-07) .poster-oral-description {
     font-size: 15px;
     line-height: 2;
     max-width: 100%;
     color: #E2E7FF;
   }
+
+ /* Text container — Mobile */
+.poster-oral-page:where(:not(.hpc-route-07)) .poster-oral-hero-content {
+  position: relative;
+  z-index: 2;
+
+  order: 0;
+  flex: none;
+
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+
+  direction: inherit;
+  text-align: start;
 }
 
+
+  /* Main title — Mobile */
+.poster-oral-page:where(:not(.hpc-route-07)) .poster-oral-hero h1 {
+  width: 100%;
+  max-width: 100%;
+
+  font-size: clamp(28px, 7.5vw, 36px);
+  font-weight: 800;
+  line-height: 1.35;
+
+  margin: 0 0 24px;
+
+  color: #FFFFFF;
+  text-align: start;
+  text-wrap: balance;
+
+  white-space: normal;
+  word-break: normal;
+}
+  /* Description — Mobile */
+.poster-oral-page:where(:not(.hpc-route-07)) .poster-oral-description {
+  width: 100%;
+  max-width: 100%;
+
+  margin: 0;
+
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.9;
+
+  color: #E2E7FF;
+  text-align: start;
+  text-wrap: pretty;
+
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+} /* End of mobile media query */
 /* =========================================
    HPC - Posters Unified Color Palette
    Colors only - preserve layout & animation
@@ -1304,4 +1371,89 @@
 }
 .poster-oral-page[dir="ltr"] .hpc-pathways-back {
   direction: ltr;
+}
+
+/* ==========================================
+   HPC - Cinematic Pathway Hero Gradient
+   Independent image fade and colored glow
+   ========================================== */
+
+/* Keep the original Hero layout */
+.poster-oral-page:where(:not(.hpc-route-07)) .poster-oral-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: transparent;
+}
+
+/* Image fades into the existing page background */
+.poster-oral-page:where(:not(.hpc-route-07)) .poster-oral-hero-image {
+  z-index: 0;
+
+
+
+-webkit-mask-image: linear-gradient(
+  to bottom,
+  #000 0%,
+  #000 40%,
+  rgba(0, 0, 0, 0.90) 48%,
+  rgba(0, 0, 0, 0.65) 62%,
+  rgba(0, 0, 0, 0.35) 77%,
+  rgba(0, 0, 0, 0.10) 90%,
+  transparent 100%
+);
+
+mask-image: linear-gradient(
+  to bottom,
+  #000 0%,
+  #000 40%,
+  rgba(0, 0, 0, 0.90) 48%,
+  rgba(0, 0, 0, 0.65) 62%,
+  rgba(0, 0, 0, 0.35) 77%,
+  rgba(0, 0, 0, 0.10) 90%,
+  transparent 100%
+);
+
+
+}
+
+/* Remove the old gradient INSIDE the masked image */
+.poster-oral-page:where(:not(.hpc-route-07)) .poster-oral-hero-image::after {
+  content: none !important;
+}
+
+
+/* ==========================================
+   HPC — Restore Pathway Color Glow
+   ========================================== */
+
+/* Use each pathway's own accent color */
+.poster-oral-page:where(:not(.hpc-route-07)) .poster-oral-hero {
+  --hero-glow-color: var(--route-accent, #FFD067);
+}
+
+/* Pathway color glow — upper half only */
+.poster-oral-page:where(:not(.hpc-route-07)) .poster-oral-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+
+
+background: linear-gradient(
+  to bottom,
+  color-mix(in srgb, var(--hero-glow-color) 58%, transparent) 0%,
+  color-mix(in srgb, var(--hero-glow-color) 52%, transparent) 16%,
+  color-mix(in srgb, var(--hero-glow-color) 34%, transparent) 30%,
+  color-mix(in srgb, var(--hero-glow-color) 14%, transparent) 42%,
+  transparent 52%
+);
+
+}
+
+/* Preserve text above the image and glow */
+.poster-oral-page:where(:not(.hpc-route-07)) .poster-oral-hero-content {
+  position: relative;
+  z-index: 2;
 }

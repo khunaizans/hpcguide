@@ -4,6 +4,7 @@ import { ArrowRight, Check } from "lucide-react";
 import { Link, useRoute } from "wouter";
 import { getPathway, type Pathway } from "@/lib/pathways";
 import { loadPublishedRoute, routeToPathway } from "@/lib/routesCms";
+import { supabase } from "@/lib/supabase";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
 import ResearchOpportunityDetail from "@/pages/ResearchOpportunityDetail";
@@ -21,14 +22,30 @@ function DetailVisual({ tone, title }: { tone: string; title: string }) {
 
 export default function PathwayDetail() {
   const [, params] = useRoute<{ slug: string }>("/pathways/:slug");
-  const basePathway = params ? getPathway(params.slug) : undefined;
-  const [pathway, setPathway] = useState<Pathway | undefined>(basePathway);
-  useEffect(() => { if (!params?.slug || params.slug === "research-opportunities") return; void loadPublishedRoute(params.slug).then((route) => { if (route) setPathway(routeToPathway(route)); }); }, [params?.slug]);
+  const slug = params?.slug;
+  const basePathway = slug ? getPathway(slug) : undefined;
+  const usesResearchLayout = slug?.startsWith("custom-") || slug === "research-review";
+  const needsLookup = Boolean(slug && !basePathway && !usesResearchLayout && supabase);
+  const [resolved, setResolved] = useState<{ slug: string; pathway?: Pathway }>();
+  const loading = needsLookup && resolved?.slug !== slug;
+  const pathway = basePathway ?? (resolved?.slug === slug ? resolved?.pathway : undefined);
+
+  useEffect(() => {
+    if (!slug || !needsLookup) return;
+    let active = true;
+    void loadPublishedRoute(slug).then(route => {
+      if (active) setResolved({ slug, pathway: route ? routeToPathway(route) : undefined });
+    }).catch(() => {
+      if (active) setResolved({ slug });
+    });
+    return () => { active = false; };
+  }, [needsLookup, slug]);
 
 /* Shared scroll animation for pathway pages */
 useEffect(() => {
   // Scientific Program already has its own animation
-  if (!pathway || pathway.slug === "scientific-program") {
+  const visualResearch = !pathway && slug?.startsWith("custom-");
+  if ((!pathway && !visualResearch) || pathway?.slug === "scientific-program") {
     return;
   }
 
@@ -40,15 +57,21 @@ useEffect(() => {
     return;
   }
 
+  if (typeof window.IntersectionObserver !== "function") return;
+
+  const repeatReveal = visualResearch || ["research-opportunities", "clinical-skills", "3mt"].includes(pathway?.slug ?? "");
   const observed = new Set<HTMLElement>();
+  const detailPath = window.location.pathname;
 
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
-        entry.target.classList.toggle(
-          "hpc-in-view",
-          entry.isIntersecting
-        );
+        if (repeatReveal) {
+          entry.target.classList.toggle("hpc-in-view", entry.isIntersecting);
+        } else if (entry.isIntersecting) {
+          entry.target.classList.add("hpc-in-view");
+          observer.unobserve(entry.target);
+        }
       });
     },
     {
@@ -58,15 +81,18 @@ useEffect(() => {
   );
 
   const observeElements = () => {
-    const elements = document.querySelectorAll<HTMLElement>(
+    if (window.location.pathname !== detailPath) return;
+    const root = document.querySelector(visualResearch ? "main.poster-oral-page.hpc-route-07" : "main");
+    if (!root) return;
+    const elements = root.querySelectorAll<HTMLElement>(
       [
-        "main section h1",
-        "main section h2",
-        "main section h3",
-        "main section p",
-        "main section [class*='-card']",
-        "main section .detail-highlights",
-        "main section .research-cta",
+        "section h1",
+        "section h2",
+        "section h3",
+        "section p",
+        "section [class*='-card']",
+        "section .detail-highlights",
+        "section .research-cta",
       ].join(", ")
     );
 
@@ -110,12 +136,15 @@ useEffect(() => {
       );
     });
   };
-}, [pathway?.slug]);
+}, [pathway?.slug, slug]);
 
 
-if (params?.slug?.startsWith("custom-")) {
+if (usesResearchLayout) {
   return <VisualResearchDetail />;
 }
+  if (loading) {
+    return <main className="pathway-detail" aria-busy="true"><SiteHeader /></main>;
+  }
   if (!pathway) {
     return <main className="pathway-not-found" dir="rtl"><h1>المسار غير موجود</h1><Link href="/#pathways">العودة إلى المسارات</Link></main>;
   }

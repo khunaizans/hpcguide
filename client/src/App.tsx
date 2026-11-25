@@ -1,4 +1,4 @@
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, useRef } from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
@@ -17,6 +17,8 @@ import AdminPage from "@/pages/AdminPage";
 import AdminRoutesPage from "@/pages/AdminRoutesPage";
 import AdminHomePage from "@/pages/AdminHomePage";
 import AssistantWidget from "@/components/AssistantWidget";
+import { PublicShellProvider } from "@/contexts/PublicShellContext";
+import { useHomeLocation } from "@/hooks/useHomeLocation";
 
 
 function ScrollToTop() {
@@ -24,7 +26,7 @@ function ScrollToTop() {
 
   useLayoutEffect(() => {
     // Preserve navigation to homepage sections
-    if (window.location.hash) return;
+    if (location === "/" || window.location.hash) return;
 
     // Start every new page from the top
     window.scrollTo({
@@ -39,13 +41,20 @@ function ScrollToTop() {
 
 // Website Routes
 function AppRoutes() {
+  const [location] = useLocation();
+  const previousLocation = useRef(location);
+  const returningHome = previousLocation.current !== "/" && !previousLocation.current.startsWith("/admin");
+  useLayoutEffect(() => { previousLocation.current = location; }, [location]);
+
   return (
     <Switch>
       <Route
   path="/locations/postgraduate-studies"
   component={GraduateStudiesPage}
 />
-      <Route path="/" component={Home} />
+      <Route path="/">
+        <Home returning={returningHome} />
+      </Route>
 
       <Route
         path="/pathways/:slug"
@@ -113,9 +122,11 @@ export default function App() {
       <ThemeProvider defaultTheme="light">
         <TooltipProvider>
           <Toaster />
-          <Router base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+          <Router base={import.meta.env.BASE_URL.replace(/\/$/, "")} hook={useHomeLocation}>
             <ScrollToTop />
-            <AppRoutes />
+            <PublicShellProvider>
+              <AppRoutes />
+            </PublicShellProvider>
             <PublicAssistant />
           </Router>
         </TooltipProvider>

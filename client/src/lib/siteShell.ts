@@ -65,13 +65,15 @@ function mergeShell(value: unknown): SiteShell {
   return { header: { ...defaultShell.header, ...(raw.header ?? {}), links: Array.isArray(raw.header?.links) ? raw.header.links : defaultShell.header.links, buttons: Array.isArray(raw.header?.buttons) ? raw.header.buttons : [] }, footer: { ...defaultShell.footer, ...(raw.footer ?? {}), links: Array.isArray(raw.footer?.links) ? raw.footer.links : [], socials: Array.isArray(raw.footer?.socials) ? raw.footer.socials : [], partners: Array.isArray(raw.footer?.partners) ? raw.footer.partners : [] } };
 }
 
-export async function loadPublishedShell(signal?: AbortSignal): Promise<SiteShell> {
-  if (!supabase) return defaultShell;
+export async function loadPublishedShell(signal?: AbortSignal): Promise<SiteShell | null> {
+  if (!supabase) return null;
   let query = supabase.from("site_settings").select("setting_value").eq("setting_key", "shell_header_footer_published");
   if (signal) query = query.abortSignal(signal);
-  const { data } = await query.maybeSingle();
-  if (!data?.setting_value) return defaultShell;
-  try { return mergeShell(typeof data.setting_value === "string" ? JSON.parse(data.setting_value) : data.setting_value); } catch { return defaultShell; }
+  const { data, error } = await query.maybeSingle();
+  if (error) throw error;
+  if (!data?.setting_value) return null;
+  const value: unknown = typeof data.setting_value === "string" ? JSON.parse(data.setting_value) : data.setting_value;
+  return value && typeof value === "object" && !Array.isArray(value) ? mergeShell(value) : null;
 }
 
 export async function saveShellSetting(key: "shell_header_footer_draft" | "shell_header_footer_published", value: SiteShell) {

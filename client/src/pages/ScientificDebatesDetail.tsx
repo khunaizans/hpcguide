@@ -1,7 +1,7 @@
 import { Link } from "wouter";
 import { useTranslation } from "react-i18next";
 import PathwayName from "@/components/PathwayName";
-
+import LockedRegistrationAction from "@/components/LockedRegistrationAction";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 
 import {
@@ -14,6 +14,7 @@ import { getPathway } from "@/lib/pathways";
 
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
+import "./PosterOralDetail.css";
 import "./ScientificDebatesDetail.css";
 import { Sparkles, ExternalLink, ArrowLeft, ArrowRight } from "lucide-react";
 import { getMediaUrl } from "@/lib/mediaUrl";
@@ -129,7 +130,7 @@ export default function ScientificDebatesDetail() {
   const copy = { ...resources.posterOral, ...resources.debateTrack.copy } as Record<string, string>;
   const normalize = (text: string) => text.normalize("NFKC").replace(/[\u0640\u064b-\u065f\u0670]/g, "").trim().replace(/\s+/g, " ");
   const localize = (text: string) => isEnglish ? Object.entries(copy).find(([key]) => normalize(key) === normalize(text))?.[1] ?? text : text;
-  const [route, setRoute] = useState<RouteRecord | null>(null);
+  const [route, setRoute] = useState<RouteRecord | null | undefined>(undefined);
 
   useEffect(() => {
     let active = true;
@@ -199,9 +200,9 @@ const participationRequirements = [
 
 useEffect(() => {
   const cards = document.querySelectorAll(
-  ".scientific-debates-page .scientific-debates-requirements-heading h2, " +
-  ".scientific-debates-page .scientific-debates-requirement, " +
-  ".scientific-debates-page .scientific-debates-registration"
+  ".scientific-debates-page .poster-oral-requirements-heading h2, " +
+  ".scientific-debates-page .poster-oral-requirement, " +
+  ".scientific-debates-page .poster-oral-registration"
 );
   if (!("IntersectionObserver" in window)) {
     cards.forEach((card) => card.classList.add("is-visible"));
@@ -211,11 +212,9 @@ useEffect(() => {
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
-        } else {
-          entry.target.classList.remove("is-visible");
-        }
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-visible");
+        observer.unobserve(entry.target);
       });
     },
     { threshold: 0.15 }
@@ -233,15 +232,24 @@ const debatesImage =
 
 const debatesImageSrc = getMediaUrl(debatesImage);
 
+  if (route === undefined) {
+    return (
+      <main className="poster-oral-page scientific-debates-page hpc-route-03" dir={isEnglish ? "ltr" : "rtl"} lang={isEnglish ? "en" : "ar"}>
+        <SiteHeader />
+        <div className="cms-content-placeholder" aria-busy="true" />
+      </main>
+    );
+  }
+
   return (<>
-    <main className="scientific-debates-page" dir={isEnglish ? "ltr" : "rtl"} lang={isEnglish ? "en" : "ar"}>
+    <main className="poster-oral-page scientific-debates-page hpc-route-03" dir={isEnglish ? "ltr" : "rtl"} lang={isEnglish ? "en" : "ar"}>
       <SiteHeader />
 
 
 
-<section className="scientific-debates-hero">
+<section className="poster-oral-hero">
   <div
-    className="scientific-debates-hero-image"
+    className="poster-oral-hero-image"
     aria-hidden="true"
   >
     {debatesImageSrc && (
@@ -249,7 +257,7 @@ const debatesImageSrc = getMediaUrl(debatesImage);
     )}
   </div>
 
-  <div className="scientific-debates-hero-content">
+  <div className="poster-oral-hero-content">
 
 <Link
   href="/#pathways"
@@ -259,20 +267,22 @@ const debatesImageSrc = getMediaUrl(debatesImage);
   {localize("الرجوع إلى المسارات")}
 </Link>
 
-    <span className="scientific-debates-eyebrow">{isEnglish ? t("debateTrack.track") : "المسار 03"}</span>
+    <span className="poster-oral-eyebrow">{isEnglish ? t("debateTrack.track") : "المسار 03"}</span>
 
-    <h1><PathwayName slug="scientific-debates">
-      {route?.title || "مسار المناظرات العلمية"}
-    </PathwayName></h1>
+    <h1>
+  <PathwayName slug="scientific-debates">
+    {route?.title || "مسار المناظرات العلمية"}
+  </PathwayName>
+</h1>
 
-    <p className="scientific-debates-description">
+    <p className="poster-oral-description">
       {localize(route?.details || route?.description || "")}
     </p>
   </div>
 
-  <div className="scientific-debates-visual" aria-hidden="true">
-    <div className="scientific-debates-orbit" />
-    <div className="scientific-debates-visual-core">
+  <div className="poster-oral-visual" aria-hidden="true">
+    <div className="poster-oral-orbit" />
+    <div className="poster-oral-visual-core">
       RESEARCH
     </div>
   </div>
@@ -280,14 +290,14 @@ const debatesImageSrc = getMediaUrl(debatesImage);
 
 
 <section
-  className="scientific-debates-timeline"
+  className="poster-oral-timeline"
   aria-labelledby="poster-timeline-title"
 >
-  <div className="scientific-debates-timeline-heading">
+  <div className="poster-oral-timeline-heading">
     <span>{localize("رحلة المشاركة")}</span>
     <h2 id="poster-timeline-title">{localize("الخط الزمني")}</h2>
   </div>
-<div className="scientific-debates-timeline-main">
+<div className="poster-oral-timeline-main">
 
   {timelineEvents.length > 0 ? (
     <PosterTimeline events={timelineEvents.map(event => ({ ...event, date: localize(event.date), title: localize(event.title) }))} />
@@ -297,21 +307,21 @@ const debatesImageSrc = getMediaUrl(debatesImage);
 
 {participationRequirements.length > 0 && (
 
-<section className="scientific-debates-requirements">
-  <div className="scientific-debates-requirements-heading">
+<section className="poster-oral-requirements">
+  <div className="poster-oral-requirements-heading">
     <span>{localize("قبل المشاركة")}</span>
     <h2>{localize("شروط التسجيل")}</h2>
   </div>
 
   {participationRequirements.length > 0 ? (
 
-<ol className="scientific-debates-requirements-list">
+<ol className="poster-oral-requirements-list">
   {participationRequirements.map((item, index) => (
     <li
       key={item.id}
-      className="scientific-debates-requirement"
+      className="poster-oral-requirement"
     >
-      <span className="scientific-debates-requirement-number">
+      <span className="poster-oral-requirement-number">
         {String(index + 1).padStart(2, "0")}
       </span>
       <p>{localize(item.text)}</p>
@@ -324,7 +334,7 @@ const debatesImageSrc = getMediaUrl(debatesImage);
 </section>
 )}
 </div>
-<aside className="research-cta scientific-debates-registration">
+<aside className="research-cta poster-oral-registration">
 
   <span className="research-cta__number">
     03 <i></i>
@@ -338,16 +348,7 @@ const debatesImageSrc = getMediaUrl(debatesImage);
 
   <p>{localize("سجل الآن")}</p>
 
-  <a
-    className="research-cta__button"
-    href="https://hpcgate.ksau-hs.edu.sa/Home/Index"
-    target="_blank"
-    rel="noopener noreferrer"
-  >{localize("رابط التسجيل")}<ExternalLink size={15} />
-  </a>
-
-  <small className="research-cta__note">
-  </small>
+  <LockedRegistrationAction />
 </aside>
 
 </section>

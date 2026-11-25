@@ -1,4 +1,3 @@
-
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import "./PathwaysStats.css";
@@ -59,84 +58,68 @@ type Props = {
 };
 
 
-function AnimatedStatNumber({
-  value,
-  visible,
-}: {
-  value: number;
-  visible: boolean;
-}) {
-  const [displayed, setDisplayed] = useState(0);
+function AnimatedStatNumber({ value }: { value: number }) {
+  const [displayed, setDisplayed] = useState(() =>
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches ? value : 0
+  );
   const numberRef = useRef<HTMLElement | null>(null);
 
- useEffect(() => {
-  if (!visible) {
-    setDisplayed(0);
-    return;
-  }
-
-  let frameId = 0;
+  useEffect(() => {
+    const card = numberRef.current?.closest(".pathways-stat-card");
+    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let observer: IntersectionObserver | null = null;
-    let started = false;
+    let frame = 0;
+    let active = false;
 
-    const startAnimation = () => {
-      if (started) return;
-      started = true;
-
-      let startTime: number | null = null;
-      const duration = 1200;
-
-      const animate = (time: number) => {
-        if (startTime === null) startTime = time;
-
-        const progress = Math.min(
-          (time - startTime) / duration,
-          1
-        );
-
-        const eased = 1 - Math.pow(1 - progress, 4);
-
-        setDisplayed(Math.round(value * eased));
-
-        if (progress < 1) {
-          frameId = requestAnimationFrame(animate);
-        } else {
-          setDisplayed(value);
-        }
-      };
-
-      frameId = requestAnimationFrame(animate);
+    const stop = () => {
+      cancelAnimationFrame(frame);
+      active = false;
     };
 
-    if (
-      window.matchMedia("(prefers-reduced-motion: reduce)")
-        .matches
-    ) {
-      setDisplayed(value);
-    } else if (
-      "IntersectionObserver" in window &&
-      numberRef.current
-    ) {
-      observer = new IntersectionObserver(
-        (entries) => {
-          if (entries.some((entry) => entry.isIntersecting)) {
-            startAnimation();
-            observer?.disconnect();
-          }
-        },
-        { threshold: 0.2 }
-      );
+    const start = () => {
+      active = true;
+      let startTime: number | undefined;
+      const animate = (time: number) => {
+        startTime ??= time;
+        const progress = Math.min((time - startTime) / 1600, 1);
+        setDisplayed(Math.round(value * (1 - (1 - progress) ** 3)));
+        if (progress < 1) frame = requestAnimationFrame(animate);
+      };
+      frame = requestAnimationFrame(animate);
+    };
 
-      observer.observe(numberRef.current);
-    } else {
-      startAnimation();
-    }
+    const observe = () => {
+      observer?.disconnect();
+      stop();
+      if (motion.matches || !card || typeof IntersectionObserver !== "function") {
+        setDisplayed(value);
+        return;
+      }
 
+      setDisplayed(0);
+      // The gap between thresholds absorbs the existing card reveal offset.
+      observer = new IntersectionObserver(entries => {
+        if (motion.matches) return;
+        const entry = entries.at(-1);
+        if (!entry) return;
+        if (active && entry.intersectionRatio <= 0.02) {
+          stop();
+          setDisplayed(0);
+        } else if (!active && entry.intersectionRatio >= 0.35) {
+          start();
+        }
+      }, { threshold: [0.02, 0.35] });
+      observer.observe(card);
+    };
+
+    observe();
+    motion.addEventListener("change", observe);
     return () => {
       observer?.disconnect();
-      cancelAnimationFrame(frameId);
+      motion.removeEventListener("change", observe);
+      stop();
     };
-  }, [value, visible]);
+  }, [value]);
 
   return (
     <strong ref={numberRef}>
@@ -151,35 +134,6 @@ export default function PathwaysStats({
   const { t, i18n } = useTranslation();
   const isEnglish = i18n.resolvedLanguage === "en";
   const [selectedYear, setSelectedYear] = useState("2026");
-const statsRef = useRef<HTMLDivElement | null>(null);
-const [statsVisible, setStatsVisible] = useState(false);
-
-useEffect(() => {
-  const element = statsRef.current;
-  if (!element) return;
-
-  if (
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
-    !("IntersectionObserver" in window)
-  ) {
-    setStatsVisible(true);
-    return;
-  }
-
-  const observer = new IntersectionObserver(
-    ([entry]) => {
-      setStatsVisible(entry.isIntersecting);
-    },
-    {
-      threshold: 0.12,
-      rootMargin: "0px 0px -5% 0px",
-    }
-  );
-
-  observer.observe(element);
-
-  return () => observer.disconnect();
-}, []);
   const selected =
     editions.find((item) => item.year === selectedYear) ??
     editions[editions.length - 1];
@@ -188,10 +142,8 @@ useEffect(() => {
 
   return (
     <div
-  ref={statsRef}
-  className={`pathways-history-stats ${
-    statsVisible ? "is-visible" : ""
-  }`}
+  className="pathways-history-stats"
+  data-reveal="pending"
   dir={isEnglish ? "ltr" : "rtl"}
   lang={isEnglish ? "en" : "ar"}
 >
@@ -227,14 +179,12 @@ useEffect(() => {
   className="pathways-stat-card"
   key={stat.label}
   style={{
-  animationDelay: `${index * 100}ms`,
   ["--stat-delay" as string]: `${index * 100}ms`,
 }}
 >
             <AnimatedStatNumber
   key={`${selected.year}-${stat.label}`}
   value={stat.value}
-  visible={statsVisible}
 />
             <span>{isEnglish ? t(`keyFigures.labels.${stat.label}`, { defaultValue: stat.label }) : stat.label}</span>
           </div>

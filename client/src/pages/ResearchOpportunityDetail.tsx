@@ -6,7 +6,6 @@ import { ArrowLeft, ArrowRight, ExternalLink, Sparkles } from "lucide-react";
 import { Link } from "wouter";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
-
 import {
   loadPublishedRoute,
   routeToPathway,
@@ -56,37 +55,25 @@ export const researchOpportunityContent = {
 };
 
 
-function useReveal<T extends HTMLElement>() {
-  const ref = useRef<T | null>(null);
+function Reveal({ children, className = "", delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
+  const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const node = ref.current;
-    if (!node) return;
-
-    if (!("IntersectionObserver" in window)) {
+    const element = ref.current;
+    if (!element) return;
+    if (typeof window.IntersectionObserver !== "function") {
       setVisible(true);
       return;
     }
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setVisible(entry.isIntersecting);
-      },
-      { threshold: 0.18 }
-    );
-
-    observer.observe(node);
-
+    const observer = new IntersectionObserver(([entry]) => {
+      setVisible(entry.isIntersecting);
+    }, { threshold: 0.18 });
+    observer.observe(element);
     return () => observer.disconnect();
   }, []);
 
-  return { ref, visible };
-}
-
-
-function Reveal({ children, className = "", delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
-  const { ref, visible } = useReveal<HTMLDivElement>();
   return <div ref={ref} className={`research-reveal ${visible ? "is-visible" : ""} ${className}`} style={{ transitionDelay: `${delay}ms` }}>{children}</div>;
 }
 
@@ -243,10 +230,7 @@ useEffect(() => {
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
-        entry.target.classList.toggle(
-          "is-visible",
-          entry.isIntersecting
-        );
+        entry.target.classList.toggle("is-visible", entry.isIntersecting);
       });
     },
     {

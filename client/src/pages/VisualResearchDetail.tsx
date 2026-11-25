@@ -1,12 +1,12 @@
 import { useTranslation } from "react-i18next";
 import PathwayName from "@/components/PathwayName";
 import { getMediaUrl } from "@/lib/mediaUrl";
-
+import LockedRegistrationAction from "@/components/LockedRegistrationAction";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 
 import {
   loadPublishedRoute,
-  loadRouteRecords,
+  loadPublishedRouteRecords,
   routeToPathway,
   type RouteRecord,
 } from "@/lib/routesCms";
@@ -15,6 +15,7 @@ import { getPathway } from "@/lib/pathways";
 import { Link, useRoute } from "wouter";
 import SiteHeader from "@/components/SiteHeader";
 import SiteFooter from "@/components/SiteFooter";
+import "./PosterOralDetail.css";
 import "./VisualResearchDetail.css";
 import { Sparkles, ExternalLink, ArrowLeft, ArrowRight } from "lucide-react";
 
@@ -139,13 +140,12 @@ const [route, setRoute] = useState<RouteRecord | null>(null);
     };
   }
 
-  const request = import.meta.env.DEV
-    ? loadRouteRecords().then(
-        (routes) => routes.find((item) => item.slug === slug) ?? null
-      )
-    : loadPublishedRoute(slug);
-
-  void request
+  void loadPublishedRoute(slug)
+    .then(async (data) => {
+      if (data || slug !== "research-review") return data;
+      const records = await loadPublishedRouteRecords();
+      return records.find(record => record.eyebrow.trim() === "08");
+    })
     .then((data) => {
       if (!active) return;
 
@@ -188,10 +188,11 @@ useEffect(() => {
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
+        if (entry.target.closest(".hpc-route-07")) {
+          entry.target.classList.toggle("is-visible", entry.isIntersecting);
+        } else if (entry.isIntersecting) {
           entry.target.classList.add("is-visible");
-        } else {
-          entry.target.classList.remove("is-visible");
+          observer.unobserve(entry.target);
         }
       });
     },
@@ -231,6 +232,7 @@ if (isLoading) {
     <main
       className={`poster-oral-page ${routeTheme}`}
       dir={isEnglish ? "ltr" : "rtl"}
+      lang={isEnglish ? "en" : "ar"}
       style={{
         minHeight: "100vh",
       }}
@@ -248,10 +250,14 @@ if (isLoading) {
   );
 }
 
+  const isResearchReview = routeTheme === "hpc-route-08";
+  const heroTitle = <PathwayName slug={slug} number={route?.eyebrow}>{route?.title || ""}</PathwayName>;
+
   return (<>
     <main
       className={`poster-oral-page ${routeTheme}`}
       dir={isEnglish ? "ltr" : "rtl"}
+      lang={isEnglish ? "en" : "ar"}
     >
       <SiteHeader />
 
@@ -281,7 +287,7 @@ if (isLoading) {
             {isEnglish ? t(`${translationSection}.track`) : <>المسار {route?.eyebrow || "—"}</>}
           </span>
 
-          <h1><PathwayName slug={slug} number={route?.eyebrow}>{route?.title || ""}</PathwayName></h1>
+          <h1>{heroTitle}</h1>
 
           <p className="poster-oral-description">
             {localize(route?.details || route?.description || "")}
@@ -350,21 +356,7 @@ if (isLoading) {
           <h2>{localize("مهتم بالمشاركة؟")}</h2>
           <p>{localize("سجل الآن")}</p>
 
-          {route?.ctaUrl?.trim() ? (
-            <a
-              className="research-cta__button"
-              href={route.ctaUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {localize(route.ctaLabel || "رابط التسجيل")}
-              <ExternalLink size={15} />
-            </a>
-          ) : (
-            <span className="research-cta__note">{isEnglish ? t(`${translationSection}.unavailable`) : "رابط التسجيل غير متاح حاليًا"}</span>
-          )}
-
-          <small className="research-cta__note" />
+          <LockedRegistrationAction />
         </aside>
       </section>
 

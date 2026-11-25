@@ -2,7 +2,7 @@ import { Link } from "wouter";
 import { useTranslation } from "react-i18next";
 import PathwayName from "@/components/PathwayName";
 import { getMediaUrl } from "@/lib/mediaUrl";
-
+import LockedRegistrationAction from "@/components/LockedRegistrationAction";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 
 import {
@@ -132,7 +132,7 @@ export default function PosterOralDetail() {
       .reduce((text, key) => normalize(text).includes(normalize(key)) ? normalize(text).split(normalize(key)).join(copy[key]) : text, value);
   };
   const localizeDate = (value: string) => isEnglish ? value.replace(/ديسمبر/g, "December").replace(/مارس/g, "March").replace(/أبريل/g, "April") : value;
-  const [route, setRoute] = useState<RouteRecord | null>(null);
+  const [route, setRoute] = useState<RouteRecord | null | undefined>(undefined);
 
   useEffect(() => {
     let active = true;
@@ -208,11 +208,9 @@ useEffect(() => {
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("is-visible");
-        } else {
-          entry.target.classList.remove("is-visible");
-        }
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-visible");
+        observer.unobserve(entry.target);
       });
     },
     { threshold: 0.15 }
@@ -231,6 +229,15 @@ const posterImage =
 
 const posterImageSrc = getMediaUrl(posterImage);
 
+
+  if (route === undefined) {
+    return (
+      <main className="poster-oral-page" dir={isEnglish ? "ltr" : "rtl"} lang={isEnglish ? "en" : "ar"}>
+        <SiteHeader />
+        <div className="cms-content-placeholder" aria-busy="true" />
+      </main>
+    );
+  }
 
   return (<>
     <main className="poster-oral-page" dir={isEnglish ? "ltr" : "rtl"} lang={isEnglish ? "en" : "ar"}>
@@ -335,16 +342,7 @@ const posterImageSrc = getMediaUrl(posterImage);
 
   <p>{localize("سجل الآن")}</p>
 
-  <a
-    className="research-cta__button"
-    href="https://hpcgate.ksau-hs.edu.sa/Home/Index"
-    target="_blank"
-    rel="noopener noreferrer"
-  >{localize("رابط التسجيل")}<ExternalLink size={15} />
-  </a>
-
-  <small className="research-cta__note">
-  </small>
+ <LockedRegistrationAction />
 </aside>
 
 </section>

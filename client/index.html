@@ -19,6 +19,64 @@
     <link rel="preload" href="/fonts/thmanyahsans-Bold.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/thmanyahsans-Black.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/images/hpc-logo_739bab33.png" as="image" fetchpriority="high" />
+    <style>
+      /* The first-paint poster and the React film share the same fade. */
+      :root {
+        --hpc-home-hero-fade: linear-gradient(
+          to bottom,
+          #000 55%,
+          rgb(0 0 0 / 96%) 64%,
+          rgb(0 0 0 / 83%) 74%,
+          rgb(0 0 0 / 57%) 84%,
+          rgb(0 0 0 / 24%) 93%,
+          rgb(0 0 0 / 4%) 98%,
+          transparent 100%
+        );
+      }
+
+      /* Match the homepage film until React supplies its poster and header. */
+      html[data-home-boot] #root:empty {
+        --boot-header-height: 121px;
+        --boot-film-height: clamp(480px, 72svh, 840px);
+        --boot-film-position: 45%;
+      }
+
+      @media (max-width: 900px) {
+        html[data-home-boot] #root:empty { --boot-header-height: 67px; }
+        html[data-home-boot="compact"] #root:empty { --boot-header-height: 101px; }
+      }
+
+      @media (max-width: 600px) {
+        html[data-home-boot] #root:empty {
+          --boot-film-height: clamp(420px, 68svh, 620px);
+          --boot-film-position: 50%;
+        }
+      }
+
+      html[data-home-boot] #root:empty::before,
+      html[data-home-boot] #root:empty::after {
+        content: "";
+        position: fixed;
+        inset-inline: 0;
+        pointer-events: none;
+      }
+
+      html[data-home-boot] #root:empty::before {
+        inset-block: 0;
+        background: linear-gradient(#fff, #fff) top / 100% var(--boot-header-height) no-repeat #1b2e40;
+      }
+
+      html[data-home-boot] #root:empty::after {
+        inset-block-start: var(--boot-header-height);
+        block-size: var(--boot-film-height);
+        background:
+          radial-gradient(ellipse 50% 50% at center, rgb(27 46 64 / 40%) 0%, rgb(27 46 64 / 25%) 38%, rgb(27 46 64 / 10%) 76%, transparent 100%)
+            center 46% / min(100%, 1160px) clamp(200px, 40%, 300px) no-repeat,
+          url("/videos/hpc-hero-poster.webp") center var(--boot-film-position) / cover no-repeat;
+        -webkit-mask-image: var(--hpc-home-hero-fade);
+        mask-image: var(--hpc-home-hero-fade);
+      }
+    </style>
     <link rel="stylesheet" href="/src/index.css" />
     <link rel="icon" type="image/png" href="/hpc-icon.png?v=12" />
 
@@ -34,70 +92,26 @@
 ) {
   window.history.replaceState(null, "", route);
 }
+        if (location.pathname.replace(/\/+$/, "") === "%BASE_URL%".replace(/\/+$/, "")) {
+          document.documentElement.dataset.homeBoot =
+            history.state?.hpcHeaderHeight === "compact" ? "compact" : "standard";
+          history.scrollRestoration = "manual";
+          // Home positions its fragment after CMS sections mount. Keep the browser
+          // from running a second fragment scroll during document load.
+          if (location.hash && !location.hash.startsWith("#:~:")) {
+            history.replaceState(
+              { ...history.state, hpcPendingHomeHash: location.hash },
+              "",
+              location.pathname + location.search
+            );
+          }
+        }
       })();
     </script>
   </head>
 
   <body>
     <div id="root"></div>
-    <!-- Only used before React's first commit; the same root replaces it atomically. -->
-    <template id="home-first-paint">
-      <main class="home-page" data-home-first-paint aria-busy="true" style="min-height:calc(100svh + 1px)">
-        <header class="site-header shell-header--glass shell-header-text--muted shell-header-height--standard shell-header-logo--large">
-          <div class="header-inner">
-            <button class="mobile-menu" type="button" aria-label="فتح القائمة" onclick="this.parentElement.querySelector('nav').classList.toggle('nav-links--open')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16" /></svg></button>
-            <a class="header-logo" href="%BASE_URL%"><div class="brand-mark brand-mark--compact"><img src="/images/hpc-logo_739bab33.png" alt="مؤتمر التخصصات الصحية" fetchpriority="high" /></div></a>
-            <nav class="nav-links"><a href="#hero" class="active" data-first-paint-nav="home">الرئيسية</a><a href="#about" data-first-paint-nav="about">عن المؤتمر</a><a href="#pathways" data-first-paint-nav="pathways">المسارات</a><a href="#resources" data-first-paint-nav="venue">الخريطة</a></nav>
-            <div class="site-language-switch" role="group" aria-label="Language / اللغة" dir="ltr" data-language="ar"><button type="button" lang="en" aria-pressed="false">EN</button><button type="button" lang="ar" aria-pressed="true">AR</button></div>
-          </div>
-        </header>
-        <section id="hero" class="hero-section" aria-labelledby="hero-video-title">
-          <div class="hero-film">
-            <div class="hero-film__media" aria-hidden="true"><img class="hero-film__poster" src="/videos/hpc-hero-poster.webp" alt="" fetchpriority="high" /></div>
-            <div class="hero-film__caption"><div class="hero-film__copy"><p class="hero-film__intro">تعرّف أكثر على</p><h1 id="hero-video-title"><span class="hero-film__accent">مؤتمر</span> التخصصات الصحية</h1></div></div>
-          </div>
-        </section>
-      </main>
-    </template>
-    <script>
-      (() => {
-        if (location.pathname.replace(/\/+$/, "") !== "%BASE_URL%".replace(/\/+$/, "")) return;
-        const root = document.getElementById("root");
-        const template = document.getElementById("home-first-paint");
-        root.append(template.content.cloneNode(true));
-        const applyLanguage = (language) => {
-          const english = language === "en";
-          document.documentElement.lang = language;
-          document.documentElement.dir = english ? "ltr" : "rtl";
-          root.querySelector("main").dir = document.documentElement.dir;
-          const hero = root.querySelector("#hero");
-          hero.lang = language;
-          hero.dir = document.documentElement.dir;
-          const labels = english
-            ? { home: "Home", about: "About the Conference", pathways: "Tracks", venue: "Venue Guide" }
-            : { home: "الرئيسية", about: "عن المؤتمر", pathways: "المسارات", venue: "الخريطة" };
-          root.querySelectorAll("[data-first-paint-nav]").forEach((link) => { link.textContent = labels[link.dataset.firstPaintNav]; });
-          root.querySelector(".hero-film__intro").textContent = english ? "Discover more about" : "تعرّف أكثر على";
-          root.querySelector("h1").innerHTML = english
-            ? 'The Health Professions <span class="hero-film__accent">Conference</span>'
-            : '<span class="hero-film__accent">مؤتمر</span> التخصصات الصحية';
-          const languageSwitch = root.querySelector(".site-language-switch");
-          languageSwitch.dataset.language = language;
-          languageSwitch.querySelectorAll("button").forEach((button) => {
-            button.setAttribute("aria-pressed", String(button.lang === language));
-            button.onclick = () => {
-              try { localStorage.setItem("hpc-guide-language", button.lang); } catch {}
-              applyLanguage(button.lang);
-            };
-          });
-        };
-        let language = "ar";
-        try { if (localStorage.getItem("hpc-guide-language") === "en") language = "en"; } catch {}
-        applyLanguage(language);
-        root.querySelector("#hero").style.setProperty("--hero-header-height", root.querySelector(".site-header").getBoundingClientRect().height + "px");
-        template.remove();
-      })();
-    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
