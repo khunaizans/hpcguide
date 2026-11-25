@@ -35,38 +35,38 @@
       }
 
       /* Match the homepage film until React supplies its poster and header. */
-      html[data-home-boot] #root:empty {
+      html[data-home-boot] #root:not(:has(.home-page)) {
         --boot-header-height: 121px;
         --boot-film-height: clamp(480px, 72svh, 840px);
         --boot-film-position: 45%;
       }
 
       @media (max-width: 900px) {
-        html[data-home-boot] #root:empty { --boot-header-height: 67px; }
-        html[data-home-boot="compact"] #root:empty { --boot-header-height: 101px; }
+        html[data-home-boot] #root:not(:has(.home-page)) { --boot-header-height: 67px; }
+        html[data-home-boot="compact"] #root:not(:has(.home-page)) { --boot-header-height: 101px; }
       }
 
       @media (max-width: 600px) {
-        html[data-home-boot] #root:empty {
+        html[data-home-boot] #root:not(:has(.home-page)) {
           --boot-film-height: clamp(420px, 68svh, 620px);
           --boot-film-position: 50%;
         }
       }
 
-      html[data-home-boot] #root:empty::before,
-      html[data-home-boot] #root:empty::after {
+      html[data-home-boot] #root:not(:has(.home-page))::before,
+      html[data-home-boot] #root:not(:has(.home-page))::after {
         content: "";
         position: fixed;
         inset-inline: 0;
         pointer-events: none;
       }
 
-      html[data-home-boot] #root:empty::before {
+      html[data-home-boot] #root:not(:has(.home-page))::before {
         inset-block: 0;
         background: linear-gradient(#fff, #fff) top / 100% var(--boot-header-height) no-repeat #1b2e40;
       }
 
-      html[data-home-boot] #root:empty::after {
+      html[data-home-boot] #root:not(:has(.home-page))::after {
         inset-block-start: var(--boot-header-height);
         block-size: var(--boot-film-height);
         background:
@@ -76,6 +76,14 @@
         -webkit-mask-image: var(--hpc-home-hero-fade);
         mask-image: var(--hpc-home-hero-fade);
       }
+
+      /* HPC - Prevent Blue Loading Flash */
+
+html[data-home-boot]:not(:has(.home-page)),
+html[data-home-boot]:not(:has(.home-page)) body {
+  background: #1b2e40 !important;
+}
+
     </style>
     <link rel="stylesheet" href="/src/index.css" />
     <link rel="icon" type="image/png" href="/hpc-icon.png?v=12" />

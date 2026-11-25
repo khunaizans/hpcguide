@@ -1277,6 +1277,11 @@ const animation = element.animate(
 
     return () => controller.abort();
   }, [prepared]);
+
+  if (!ready) {
+  return null;
+}
+  
   return (
     <PublicShellSnapshotProvider value={displayShell}>
       <main
@@ -1286,8 +1291,7 @@ const animation = element.animate(
         aria-busy={!ready || undefined}
       >
         <SiteHeader contentReady={ready} />
-        {(content?.visibility.hero ?? true) && <Hero />}
-        {!ready && <p className="container home-cms-status" role="status">{t("common.loading")}…</p>}
+        {content?.visibility.hero && <Hero />}
         {content && (
           <>
             {content.visibility.about && <About content={content} />}
