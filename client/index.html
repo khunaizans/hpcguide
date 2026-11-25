@@ -18,7 +18,7 @@
     <link rel="preload" href="/fonts/thmanyahsans-Regular.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/thmanyahsans-Bold.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/thmanyahsans-Black.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/images/hpc-logo_739bab33.png" as="image" fetchpriority="high" />
+    <link rel="preload" href="/images/hpc-logo_739bab33-optimized.png" as="image" fetchpriority="high" />
     <style>
       /* The first-paint poster and the React film share the same fade. */
       :root {
@@ -35,38 +35,38 @@
       }
 
       /* Match the homepage film until React supplies its poster and header. */
-      html[data-home-boot] #root:not(:has(.home-page)) {
+      html[data-home-boot] #root:not(:has(main)) {
         --boot-header-height: 121px;
         --boot-film-height: clamp(480px, 72svh, 840px);
         --boot-film-position: 45%;
       }
 
       @media (max-width: 900px) {
-        html[data-home-boot] #root:not(:has(.home-page)) { --boot-header-height: 67px; }
-        html[data-home-boot="compact"] #root:not(:has(.home-page)) { --boot-header-height: 101px; }
+        html[data-home-boot] #root:not(:has(main)) { --boot-header-height: 67px; }
+        html[data-home-boot="compact"] #root:not(:has(main)) { --boot-header-height: 101px; }
       }
 
       @media (max-width: 600px) {
-        html[data-home-boot] #root:not(:has(.home-page)) {
+        html[data-home-boot] #root:not(:has(main)) {
           --boot-film-height: clamp(420px, 68svh, 620px);
           --boot-film-position: 50%;
         }
       }
 
-      html[data-home-boot] #root:not(:has(.home-page))::before,
-      html[data-home-boot] #root:not(:has(.home-page))::after {
+      html[data-home-boot] #root:not(:has(main))::before,
+      html[data-home-boot] #root:not(:has(main))::after {
         content: "";
         position: fixed;
         inset-inline: 0;
         pointer-events: none;
       }
 
-      html[data-home-boot] #root:not(:has(.home-page))::before {
+      html[data-home-boot] #root:not(:has(main))::before {
         inset-block: 0;
         background: linear-gradient(#fff, #fff) top / 100% var(--boot-header-height) no-repeat #1b2e40;
       }
 
-      html[data-home-boot] #root:not(:has(.home-page))::after {
+      html[data-home-boot] #root:not(:has(main))::after {
         inset-block-start: var(--boot-header-height);
         block-size: var(--boot-film-height);
         background:
@@ -79,14 +79,14 @@
 
       /* HPC - Prevent Blue Loading Flash */
 
-html[data-home-boot]:not(:has(.home-page)),
-html[data-home-boot]:not(:has(.home-page)) body {
+html[data-home-boot]:not(:has(#root main)),
+html[data-home-boot]:not(:has(#root main)) body {
   background: #1b2e40 !important;
 }
 
     </style>
     <link rel="stylesheet" href="/src/index.css" />
-    <link rel="icon" type="image/png" href="/hpc-icon.png?v=12" />
+    <link rel="icon" type="image/png" href="/images/hpc-logo_739bab33-optimized.png" />
 
     <script>
       (function () {

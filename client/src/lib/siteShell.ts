@@ -52,7 +52,7 @@ export function resolveShellLogoUrl(value: string): string {
   return basePath && local.startsWith(`${basePath}/`) ? `/${local}` : `${base}${local}`;
 }
 
-const logo = resolveShellLogoUrl("/images/hpc-logo_739bab33.png");export const defaultShell: SiteShell = {
+const logo = resolveShellLogoUrl("/images/hpc-logo_739bab33-optimized.png");export const defaultShell: SiteShell = {
   header: { logoUrl: logo, logoSize: "large", logoHref: "/", background: "glass", textColor: "muted", height: "standard", links: [
     { label: "الرئيسية", href: "#hero", kind: "section", visible: true, order: 0 }, { label: "عن المؤتمر", href: "#about", kind: "section", visible: true, order: 1 }, { label: "المسارات", href: "#pathways", kind: "section", visible: true, order: 2 }, { label: "المساعد", href: "#assistant", kind: "section", visible: false, order: 3 }, { label: "الخريطة", href: "#resources", kind: "section", visible: true, order: 4 }
   ], buttons: [] },

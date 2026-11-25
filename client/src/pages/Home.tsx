@@ -596,7 +596,7 @@ window.setTimeout(() => {
 <div className="tower-seamless">
   <div className="tower-seamless__frame">
     <img
-      src={`${import.meta.env.BASE_URL}images/tower-card-new.png`}
+      src={`${import.meta.env.BASE_URL}images/tower-card-new.webp`}
       alt={t("venueGuide.venues.administrative-tower.title")}
       className="tower-seamless__base"
     />
@@ -604,7 +604,7 @@ window.setTimeout(() => {
 
   <div className="tower-seamless__cap" aria-hidden="true">
     <img
-      src={`${import.meta.env.BASE_URL}images/tower-roof-from-original-aligned.png`}
+      src={`${import.meta.env.BASE_URL}images/tower-roof-from-original-aligned.webp`}
       alt=""
       className="tower-seamless__roof"
     />
@@ -645,7 +645,7 @@ window.setTimeout(() => {
 
   {/* طبقة المبنى المعزولة */}
   <img
-    src={`${import.meta.env.BASE_URL}images/clinical-simulation-building-cutout.png`}
+    src={`${import.meta.env.BASE_URL}images/clinical-simulation-building-cutout.webp`}
     alt=""
     aria-hidden="true"
     className="simulation-building-popout"
@@ -1278,7 +1278,13 @@ const animation = element.animate(
     return () => controller.abort();
   }, [prepared]);
 
-  if (!ready) {
+  useLayoutEffect(() => {
+  if (ready) {
+    document.documentElement.removeAttribute("data-home-boot");
+  }
+}, [ready]);
+
+if (!ready) {
   return null;
 }
   

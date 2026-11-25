@@ -5,9 +5,9 @@ import VenueDetail, { VenueMap } from "./VenueDetail";
 import "./AdministrativeTowerPage.css";
 
 const MEDIA = {
-  tower: `${import.meta.env.BASE_URL}images/administrative-tower-hero1.png`,
-  planOne: `${import.meta.env.BASE_URL}images/tower-plan-1.png`,
-  planTwo: `${import.meta.env.BASE_URL}images/tower-plan-2.png`,
+  tower: `${import.meta.env.BASE_URL}images/administrative-tower-hero1.webp`,
+  planOne: `${import.meta.env.BASE_URL}images/tower-plan-1.webp`,
+  planTwo: `${import.meta.env.BASE_URL}images/tower-plan-2.webp`,
 };
 
 function PlanImage({ src, label }: { src: string; label: string }) {

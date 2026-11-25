@@ -52,7 +52,7 @@ export default function SiteFooter() {
               aria-label={t("footer.backHome")}
             >
               <img
-                src={`${import.meta.env.BASE_URL}images/hpc-logo_739bab33.png`}
+                src={`${import.meta.env.BASE_URL}images/hpc-logo_739bab33-optimized.png`}
                 alt={t("footer.title")}
               />
             </a>

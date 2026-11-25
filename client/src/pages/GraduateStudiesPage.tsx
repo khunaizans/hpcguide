@@ -11,7 +11,7 @@ export default function GraduateStudiesPage() {
       title={title}
       titleId="graduate-page-title"
       description={t("heroDescription")}
-      image={`${import.meta.env.BASE_URL}images/graduate-studies-hero.webp`}
+      image={`${import.meta.env.BASE_URL}images/graduate-studies-hero-optimized.webp`}
       imageAlt={title}
     >
       <VenueMap

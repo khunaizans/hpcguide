@@ -425,3 +425,12 @@
     animation: posterHeroReveal 0.9s ease both;
   }
 }
+/* HPC - Venue Mobile Section Spacing */
+
+@media (max-width: 768px) {
+
+  .venue-detail .venue-hero + .venue-section {
+    padding-top: 30svh !important;
+  }
+
+}
